@@ -6,3 +6,8 @@ docs/
 perf-results/
 temporary screenshots/
 node_modules/
+
+# Added by the CLI link step — the OIDC token in .env.local and the project
+# link in .vercel are local credentials, not build input.
+.env*
+.vercel

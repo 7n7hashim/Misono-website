@@ -11,3 +11,5 @@ temporary screenshots/*.png
 
 .DS_Store
 *.log
+.vercel
+.env*
