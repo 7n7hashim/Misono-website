@@ -1,0 +1,8 @@
+# Kept out of the build upload — none of it is reachable from the four pages,
+# and build.mjs derives its copy list from the markup, so none of it can reach
+# dist/ anyway. This just stops it crossing the wire on every deploy.
+_archive/
+docs/
+perf-results/
+temporary screenshots/
+node_modules/
