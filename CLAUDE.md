@@ -957,6 +957,39 @@ Two notes on the harness itself. A comparison that flip-flops between identical 
 comparing a build against *itself* before chasing it. And `naturalWidth` cannot be used
 to identify a file any more; see the srcset note above.
 
+## Deploying — Vercel
+`vercel.json` is the deploy config and it carries **no comments**, deliberately. Vercel
+validates it against a strict schema that rejects *any* additional property, so the
+`"//": "..."` convention fails the deploy outright — `Invalid vercel.json - should NOT
+have additional property`. The reasoning for every line therefore lives here:
+
+- **`outputDirectory: "dist"`.** `npm run build` runs `build.mjs`, which writes `dist/`;
+  Vercel looks for `public/` by default. **The build succeeds and the deploy fails after
+  it**, which reads as a build error and is not one — the log ends with four green page
+  rows and then `No Output Directory named "public"`.
+- **The `headers` mirror `serve.mjs` PROD=1 exactly.** One year immutable for
+  `/assets/img/r/` and `/assets/fonts/`, one day for the rest of `/assets/` and
+  `/brand_assets/`, revalidate for HTML. Immutable is safe on those two paths **because
+  those filenames are content-addressed by width** — `bake-responsive.mjs` regenerates
+  them wholesale and a changed image gets a changed name. Do not extend it to anything
+  hand-named.
+- **Rule ORDER is load-bearing.** Vercel applies every matching rule and the last match
+  wins per header key, so the general `/assets/(.*)` must come BEFORE the two specific
+  paths. Reversed, the immutable rules are silently overwritten by the one-day rule and
+  nothing anywhere reports it.
+- **`cleanUrls: false`, deliberately.** Every internal link on the site is an explicit
+  `menu.html` / `about.html` / `contact.html`, including in the ending block copied
+  byte-for-byte across four pages. `cleanUrls` puts all of them behind a 308.
+
+`.vercelignore` keeps `_archive/`, `docs/`, `perf-results/`, the screenshot scratch and
+the CLI's own `.env*` / `.vercel` credentials out of the upload. Verified by building
+from a copy with those directories removed: same 203 assets, all four pages, exit 0.
+
+**A git-connected redeploy rebuilds the commit it was pointed at, not `main`'s tip.** A
+redeploy triggered from the dashboard after a fix was pushed cloned the commit *before*
+the fix and failed identically — check the `Cloning ... (Commit: xxxxxxx)` line in the
+log against `git rev-parse --short origin/main` before concluding the fix did not work.
+
 ## `_archive/`
 The whole previous site, moved rather than deleted because this project has no git
 history. Contains the old `index.html`, `assets/site.js`, every baked image and video,
