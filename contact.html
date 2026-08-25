@@ -1,0 +1,4365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Misono — We’re at Your Service</title>
+<link rel="preload" as="image" type="image/avif"
+      imagesrcset="assets/img/r/contact-hero-1040.avif 1040w, assets/img/r/contact-hero-1270.avif 1270w, assets/img/r/contact-hero-1520.avif 1520w, assets/img/r/contact-hero-2000.avif 2000w"
+      imagesizes="105.7vw" fetchpriority="high">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Misono. Reach the counter.">
+
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-normal-300-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jost-normal-300-400.woff2">
+
+<!-- Arms the entrance below the fold. Without it `.js .touch__*` never
+     matches and .touch renders FINISHED rather than blank, which is the
+     correct way round for that failure — same contract as menu.html. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<style>
+  /* =====================================================================
+     PERFORMANCE — self-hosted type and the <picture> box tree.
+     Added by the 2026-08-24 load-time pass; see apply-perf-shell.mjs for the
+     reasoning behind every number in here. Nothing below changes a typeface,
+     a weight, a size or a colour.
+     ===================================================================== */
+
+  @font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 300 400;
+    font-display: swap;
+    src: url(assets/fonts/cormorant-garamond-normal-300-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  @font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 300 400;
+    font-display: swap;
+    src: url(assets/fonts/jost-normal-300-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  /* Georgia, bent onto Cormorant's metrics, so the ~150ms before the webfont
+     arrives is not a differently-shaped page. 86.8% is the measured width
+     ratio of the two over a mixed sample; the vertical overrides are
+     Cormorant's own ascent and descent expressed against that adjusted em. */
+  @font-face {
+    font-family: 'Cormorant Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Times');
+    size-adjust: 86.8%;
+    ascent-override: 106%;
+    descent-override: 33.4%;
+    line-gap-override: 0%;
+  }
+
+  /* <picture> generates NO box. Several of these photographs are flex or
+     grid items of their own parent — .beyond__track img is `flex: none` in
+     a max-content row whose width the marquee's translate is a percentage
+     of — and a wrapper would take that slot instead of the <img>. With
+     display:contents the <img> is the flex item again and every measured
+     layout is byte-for-byte what it was. Selector matching is untouched:
+     every rule on this site reaches these images by class or as a
+     descendant, never as a direct child. */
+  picture { display: contents; }
+
+  /* ---------------------------------------------------------------------
+     Misono — contact, opening hero.
+
+     This section continues about.html's opening: same layer stack
+     (media / warm / wash / bed / grain / lift), same topbar, same entrance
+     vocabulary. What did NOT carry across is the arithmetic, and the reason
+     is worth stating once at the top because it decided three declarations
+     further down.
+
+     about.html's frame is a lit core in a dark room. This one is the inverse.
+     Measured on the two delivered files:
+
+                            whole   top-left 10%   centre 10%
+       about-craft.jpg       71.1        26.7         117.5
+       contact-hero source   49.5       116.3          41.2
+
+     The lit thing here is the pendant, and it sits in a CORNER; the middle of
+     the frame — where the heading goes — is already dark. So about.html's bed
+     could not come across: it is built to subdue a hinoki counter at 117, and
+     dropped on a centre of 41 it crushes the mural to featureless black. The
+     photograph would still be in the DOM and gone from the screen.
+
+     The correction is split two ways on purpose, neither of them hard:
+     the bake lifts the frame to a mean of 60 (see bake-contact-hero.py for
+     the shadow-share table that stopped it going further), and the bed here
+     comes down from 0.60/0.42 to 0.34/0.22. All the way in the bake the frame
+     goes hazy; all the way in the CSS it goes black.
+
+     No vignette is baked into the file, unlike every other bake on this site.
+     A baked vignette would put out the pendant, which is the only lamp in the
+     picture. The vignette is the wash below, which is re-derived per section
+     anyway.
+
+     Painted numbers this file was verified against are recorded at the foot
+     of the <style>, beside the measurement note.
+     --------------------------------------------------------------------- */
+
+  :root {
+    /* Established in index.html. Only the tokens this page actually uses are
+       here, and that is deliberate rather than lazy: a token that is used but
+       not defined fails SILENTLY, which has bitten about.html twice — see the
+       token table in CLAUDE.md. Keeping the list to what is used means the
+       list can be checked against the file.
+
+       IF THE RESERVE AND ENDING BLOCKS ARE EVER TRANSPLANTED HERE, this
+       :root is not sufficient. Those blocks additionally need --cream (which
+       is the hinge the peach adaptation turns, not a colour), --ground,
+       --menu-ink, --menu-body, --menu-accent and --ember. Add them with the
+       blocks, in one go, or the copies will fail quietly the way they did on
+       about.html.
+
+       THE GROUND SET BELOW WAS ADDED 2026-08-17 with the .touch and .details
+       sections. Seven tokens, and the list was arrived at by checking every
+       var() in this file against this block rather than by reasoning about
+       it — the two eases in particular were nearly missed, because they are
+       declared in MENU.HTML's :root and read like site-wide tokens. Used
+       without being defined they do not error: every eased transform simply
+       falls back to `ease`, and an entrance built on two solved overshoot
+       curves quietly loses the overshoot that is its entire character. */
+    --ink:       #0B0806;
+
+    /* The site's ground. Both sections below the hero sit on it, because a
+       photograph is the only reason to leave it and neither has one. `body`
+       stays on --ink; see the note there. */
+    --ground:      #F7E8DF;
+
+    /* Re-derived on the peach rather than carried, and re-derived a second
+       time against #F5E5DB — the foot of .details' closing gradient, which
+       is the BINDING ground on this page, not the flat peach:
+
+                        on #F7E8DF   on #F5E5DB   needs
+         --menu-ink        13.60        13.25      4.5
+         --menu-body        6.32         6.16      4.5
+         --menu-accent      4.78         4.66      4.5
+         --res-gold         3.26         3.17      3.0  (non-text)
+         --res-hair         1.74          --       decorative only
+
+       Neither of the two that matter has room to spend: --res-gold clears
+       3:1 at the foot by 0.17 and --menu-accent clears 4.5 by 0.16. Deepen
+       that gradient's tail and BOTH must be re-derived. */
+    --menu-ink:    #2F1B19;
+    --menu-body:   #63504A;
+    --menu-accent: #99551C;
+
+    /* NOT A COLOUR, and it must not be used as one. It is the name the
+       transplanted reserve and ending blocks use for "my ground", and
+       re-pointing this single property is what moves both of them onto the
+       peach without editing a byte of the copies — see the adaptation block
+       at the foot of this file. It is superseded as a value and appears
+       nowhere on any page as one.
+
+       Added 2026-08-17 with those two blocks. CLAUDE.md said a transplant
+       here would need --cream AND --ember; only --cream is real. --ember is
+       declared on index.html and about.html and READ NOWHERE on the site —
+       menu.html carries both copies, does not declare it, and is fine. */
+    --cream:       #FCF8F5;
+
+    /* Focus rings on the peach. The topbar above spells its own ring out in
+       rgba() because it sits on a photograph and predates this block. */
+    --misono-indigo: #3A5280;
+
+    /* Non-text boundary only, at 3.26:1 on the peach. Here it is a 1px rule
+       on a photograph, which is exactly the role the token is scoped to. */
+    --res-gold:  #AC7634;
+
+    /* Decorative on the peach, and this page is the first thing on the site
+       to set TYPE in it — a new role for the token, so it is measured rather
+       than assumed. Against the painted bed under the eyebrow it clears AA;
+       the reading is at the foot of this file. */
+    --res-hair:  #D4AD7E;
+
+    /* 2.4% of about.html's reference width, at both ends. Carried, not
+       re-derived: it is the same bar on the same kind of frame. */
+    --open-inset: clamp(20px, 2.4vw, 40px);
+    --open-link:  max(10.5px, 0.76vw);
+    --open-gap:   clamp(26px, 2.58vw, 46px);
+
+    --ease-quiet:  cubic-bezier(0.22, 0.61, 0.36, 1);
+    /* A longer tail than --ease-quiet, as on about.html: the type travels a
+       full line height and on the site's UI ease it arrives and stops, which
+       reads as a slide rather than a settle. */
+    --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* The push-in's own ease, and the only new one on this page. BOTH of the
+       site's existing eases are UI eases — they are front-loaded, because a
+       control should answer immediately — and a camera move is the one thing
+       on this site that must not be. Measured as the share of the scale
+       travel completed against the share of the duration:
+
+                                  0.10   0.20   0.35   0.50   0.75
+         --ease-reveal            0.494  0.752  0.914  0.972  0.998
+         --ease-quiet             0.271  0.501  0.738  0.873  0.976
+         linear                   0.100  0.200  0.350  0.500  0.750
+         --ease-push              0.037  0.145  0.475  0.757  0.956
+
+       On --ease-reveal the push is three-quarters over in the first fifth of
+       its duration and then crawls, which reads as a snap followed by
+       nothing — it was built that way and the timeline capture is what
+       caught it. This one is slow-in AND slow-out, so the frame is brought
+       up to speed and set back down. linear is the honest alternative and
+       was rejected only because it stops dead. */
+    --ease-push:   cubic-bezier(0.40, 0.05, 0.25, 1);
+
+    /* The .touch entrance's two curves, carried VERBATIM from menu.html
+       rather than re-derived. Both overshoot — they end above 1 and come
+       back — which is the difference between an element that has been
+       placed on its mark and one that has settled there.
+
+       Carried rather than re-solved on purpose: y2 is NOT the overshoot.
+       The peak of cubic-bezier(x1,y1,x2,y2) sits around t=0.8 and well
+       below y2 — y2=1.12 peaks at 1.026 and y2=1.20 at 1.055 — so these
+       were solved against the travel they drive, and re-picking either by
+       eye would throw that away. Read against the travel here: 2.6% of a
+       field's 150px of Z is a few pixels of overshoot, 5.5% of the display
+       lines' 240px is a line that comes past the page and drops back. */
+    --ease-settle: cubic-bezier(0.18, 0.84, 0.26, 1.12);
+    --ease-pop:    cubic-bezier(0.15, 0.90, 0.22, 1.20);
+
+    /* Written per frame by the second loop at the foot of this file, 0 when
+       .touch's top reaches the bottom of the window and 1 when its foot
+       leaves the top. Drives the two decorative planes and nothing else.
+       As with --par, the default IS the rest state. */
+    --drift: 0.5;
+
+    /* How far the photograph lags the page, and the only number the parallax
+       has. 12svh over one viewport of scroll is a 12% differential — enough
+       to feel like depth, small enough that nobody catches it moving. The
+       media box is grown by exactly this much and hung exactly this far
+       above its section, so the travel can never open a gap at either edge. */
+    --par-travel: 12svh;
+
+    /* Written per frame by the loop at the foot of this file, 0 at the top of
+       the section and 1 when it has fully left. The default matters: with the
+       script blocked or not yet run, 0 is the rest state. */
+    --par: 0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    /* As on index.html and about.html: the body stays on --ink behind a
+       full-viewport photograph, so a frame that fails to load leaves white
+       type on black rather than white type on nothing. */
+    background: var(--ink);
+    color: #fff;
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* ---------------------------------------------------------------- hero */
+
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 32rem;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Base plane — the photograph, and the only thing that parallaxes.
+     It is hung --par-travel ABOVE the section and grown by the same amount,
+     so at --par 0 it overhangs the top and at --par 1 it has travelled down
+     to overhang the bottom. Neither end can reveal the ground behind it,
+     which is what a parallax built by translating a flush box always does. */
+  .hero__media {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(-1 * var(--par-travel));
+    height: calc(100% + var(--par-travel));
+    z-index: 0;
+    transform: translate3d(0, calc(var(--par) * var(--par-travel)), 0);
+  }
+
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Left of centre, and not by much. Centred, a 1.6:1 window puts the
+       waiter's head under the heading's second half; this walks the pendant
+       back into frame and drops the head clear of the line. It is also the
+       direction the phone crop wants — see the 640 block. */
+    object-position: 44% 50%;
+    /* A whisper, matching the opening on about.html. The wash does the work;
+       a filter deep enough to be seen would flatten the tungsten this frame
+       is lit by, which is the whole of its character. */
+    filter: contrast(1.04) saturate(0.99);
+    /* The push-in. Settles from 1.075 to 1.04 and stops — this is the
+       image "revealing itself", and it is the ONLY transform this element
+       carries, which is why the parallax lives on the parent. Two transforms
+       on one element is one transform. */
+    transform: scale(1.04);
+    animation: push-in 2200ms var(--ease-push) both;
+  }
+
+  /* Elevated plane — grade. Multiply, so the warm core deepens rather than
+     hazes and the shadows keep their colour instead of going grey. */
+  .hero__warm {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 104% at 44% 46%,
+        rgba(228, 156, 78, 0.10) 0%,
+        rgba(38, 21, 10, 0.32) 74%);
+    mix-blend-mode: multiply;
+  }
+
+  /* The wash. Same three passes as about.html's, and the ellipse is doing a
+     different job here: there it held a lit core against dark corners, here
+     the bright thing IS a corner. The radial's falloff is what takes the
+     pendant down from 131 in the file to 44 as painted, so it is kept steep
+     even though the centre needs less help than that file's.
+
+     THE BOTTOM BAND IS LIGHTER THAN about.html's AND STILL MEASURES HALF ITS
+     READING, and that gap is the photograph rather than the wash — the same
+     class of thing that file records about its own top strip. Its last 60px
+     are a lit kitchen floor that needs a 0.58 band to reach 15. This frame's
+     last 60px are the waiter's black uniform and an unlit counter, which
+     arrive at 8 with a 0.40 band and would arrive at 7 with a 0.58 one.
+     Measured both ways: 0.56/0.22 gave 7.4 and 0.40/0.16 gives 8.1. Stacking
+     black on black bought 0.7 of a luminance point and cost the lower edge
+     its last readable detail, so the band is the lighter of the two. Do not
+     chase the 15 — there is nothing down there to darken. */
+  .hero__wash {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(76% 68% at 46% 50%,
+        rgba(6, 4, 3, 0.00)  0%,
+        rgba(6, 4, 3, 0.16) 50%,
+        rgba(6, 4, 3, 0.52) 76%,
+        rgba(6, 4, 3, 0.82) 100%),
+      linear-gradient(180deg,
+        rgba(6, 4, 3, 0.44) 0%,
+        rgba(6, 4, 3, 0.18) 12%,
+        rgba(6, 4, 3, 0.00) 26%),
+      linear-gradient(0deg,
+        rgba(6, 4, 3, 0.40) 0%,
+        rgba(6, 4, 3, 0.16) 13%,
+        rgba(6, 4, 3, 0.00) 30%);
+  }
+
+  /* A bed that travels with the type rather than a scrim over the frame —
+     the hero's own device on index.html, and about.html's.
+
+     0.24/0.14 against that file's 0.60/0.42, for the reason set out at the
+     top: its centre measures 117 and needs subduing, this one measures 41
+     and needs almost nothing. Taken to its values the mural stops being a
+     mural. Verified with the type hidden, so the reading is the bed and not
+     the letters.
+
+     IT IS THE EYEBROW, NOT THE HEADING, THAT SETS THE FLOOR HERE, which is
+     the opposite of how a hero usually works. White at 255 on this band has
+     roughly 16:1 and needs 3:1, so the heading would tolerate a far lighter
+     bed than this. --res-hair at 12.4px is held to 4.5:1, and it runs out
+     first: measured against its own strip, 0.34/0.22 gave 6.09:1 and this
+     gives the reading recorded at the foot of the file. Lighten it further
+     and the eyebrow, not the heading, is what fails. */
+  .hero__bed {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    width: 128%;
+    height: 46%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    background: radial-gradient(50% 50% at 50% 50%,
+      rgba(6, 4, 3, 0.24) 0%,
+      rgba(6, 4, 3, 0.14) 60%,
+      rgba(6, 4, 3, 0.00) 100%);
+  }
+
+  /* Grain, at the threshold of visibility. It is here to break the banding
+     across the large flat corners of the vignette, not to be seen — and this
+     frame needs it more than most: it is 47% shadow, which is where 8-bit
+     banding lives. */
+  .hero__grain {
+    position: absolute;
+    inset: -100%;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* The frame arrives black and lifts into the shot, the way a cut opens.
+     Opacity on a single layer, nothing else, and it is gone before anyone
+     can interact with the page. */
+  .hero__lift {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: var(--ink);
+    animation: lift 1200ms var(--ease-quiet) both;
+  }
+
+  /* ---------------------------------------------------------------- top */
+
+  .topbar {
+    position: absolute;
+    z-index: 7;
+    left: var(--open-inset);
+    right: var(--open-inset);
+    top: clamp(18px, 4vh, 34px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .topbar__brand {
+    position: relative;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: max(13px, 1.07vw);
+    line-height: 1;
+    letter-spacing: 0.16em;
+    /* Indent-correct: tracking adds a trailing space after the final O. */
+    margin-right: -0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.94);
+    text-shadow: 0 1px 14px rgba(8, 5, 3, 0.70);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  .topbar__brand:hover,
+  .topbar__brand:focus-visible { color: #fff; }
+
+  /* The hit area goes to 44px OUTSIDE layout, so the bar's measured
+     alignment is not traded away to buy a tap target. */
+  .topbar__brand::before {
+    content: "";
+    position: absolute;
+    left: -0.3em;
+    right: -0.3em;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  .topbar__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--open-gap);
+  }
+
+  .topbar__link {
+    position: relative;
+    padding: 0.5em 0.15em;
+    font-size: var(--open-link);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    margin-right: -0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.64);
+    text-shadow: 0 1px 14px rgba(8, 5, 3, 0.70);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  .topbar__link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  /* Hairline underline, wiping out from the centre — the site's own link
+     idiom. The hero's accent rule below is this same gesture, enlarged. */
+  .topbar__link::after {
+    content: "";
+    position: absolute;
+    left: 0.15em;
+    right: calc(0.15em + 0.16em);
+    bottom: 0.34em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform 260ms var(--ease-quiet);
+  }
+
+  .topbar__link:hover,
+  .topbar__link:focus-visible { color: #fff; }
+
+  .topbar__link:hover::after,
+  .topbar__link:focus-visible::after { transform: scaleX(1); }
+
+  /* The page you are on is stated, not linked away from. */
+  .topbar__link[aria-current="page"] { color: #fff; }
+  .topbar__link[aria-current="page"]::after { transform: scaleX(1); }
+
+  .topbar__brand:focus-visible,
+  .topbar__link:focus-visible {
+    outline: 1.5px solid rgba(255, 255, 255, 0.92);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 9px rgba(58, 82, 128, 0.30);
+    border-radius: 2px;
+  }
+
+  /* ---------------------------------------------------------------- type */
+
+  /* Centred by the flex box, NOT by top: 50% with a translate. The reserve
+     section records why and it applies here: a transform moves the paint but
+     not the layout box, and the layout box is what proves nothing is being
+     clipped. It also means all three children share one `rise` keyframe
+     instead of needing about.html's separate `rise-centred` variant. */
+  .hero__type {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--open-inset);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .hero__eyebrow {
+    margin: 0 -0.34em 0 0;   /* indent-correct for the tracking below */
+    font-size: max(10.5px, 0.86vw);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--res-hair);
+    text-shadow: 0 1px 14px rgba(8, 5, 3, 0.72);
+  }
+
+  /* The signature, and the only flourish on the page: the site's link
+     underline — a hairline wiping out from a 50% origin — taken off a 10px
+     link and made the hinge of the composition. It is the one element with a
+     gesture of its own, which is what stops it reading as an ornament. */
+  .hero__rule {
+    width: clamp(26px, 2.4vw, 40px);
+    height: 1px;
+    margin: clamp(20px, 2.2vh, 30px) 0;
+    background: var(--res-gold);
+    transform-origin: 50% 50%;
+  }
+
+  .hero__title {
+    margin: 0 -0.20em 0 0;   /* indent-correct, so the centring is optical */
+    max-width: min(92%, 1180px);
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    /* 2.83vw, which about.html measured to a cap height of 1.875% of the
+       viewport width against its reference's 1.877%. Carried, and measured
+       again here: 1.875%.
+
+       CAP HEIGHT IS THE INVARIANT ACROSS THE SITE'S TWO PHOTOGRAPHIC
+       OPENINGS, NOT INK WIDTH, and it is worth saying because the opposite
+       looks tempting. This heading was 21 characters and is 22 since
+       2026-08-18 ("We're" -> "We are"), against the 21 about.html's
+       reference set before that page's own 26-character line forced it to
+       let the reference's 49.5% ink width go — so the obvious guess is that
+       both numbers finally hold together here. They do not. Measured, this
+       line lands at 46.7% of the width (43.3% before the rewording), because
+       character count does not decide ink width; glyph widths do.
+
+       The rewording changes nothing structural: cap height is set by
+       font-size, not by the string, so it is untouched at 1.875%. Only the
+       ink width moves, and it was already the number this section does not
+       hold. Re-measured after the change — see the table at the foot.
+
+       Chasing 49.5% would mean setting this page's type LARGER than
+       about.html's — a cap of about 2.05% against its 1.875% — to make a
+       shorter sentence occupy a longer line. That is the inconsistency, not
+       the cure. Two openings on the same site should share a type size and
+       differ in length, which is what they now do. */
+    font-size: clamp(1.6rem, 2.83vw, 3.6rem);
+    line-height: 1.24;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    /* Three layers, as on the hero wordmark: a tight edge to separate the
+       hairline serif from the photograph, a mid halo, and a wide warm one so
+       the line sits inside the room's light rather than on top of it. */
+    text-shadow:
+      0 1px 2px  rgba(8, 5, 3, 0.42),
+      0 4px 30px rgba(8, 5, 3, 0.52),
+      0 2px 74px rgba(46, 24, 8, 0.44);
+  }
+
+  /* ------------------------------------------------------------ entrance */
+
+  /* The bar settles first, then the frame's own furniture, and the sentence
+     lands last. Everything is over inside 1.6s; an entrance the reader is
+     aware of waiting through has outstayed its welcome.
+
+     These are plain CSS animations on load rather than the house
+     IntersectionObserver contract, on purpose — this is the first screen, so
+     there is nothing to observe, and it means screenshot.mjs captures the
+     finished state instead of the armed one. about.html's statement section
+     is the cautionary case. */
+  .topbar__brand,
+  .topbar__nav,
+  .hero__eyebrow,
+  .hero__title {
+    animation: rise 820ms var(--ease-quiet) both;
+  }
+  .topbar__brand  { animation-delay: 120ms; }
+  .topbar__nav    { animation-delay: 200ms; }
+  .hero__eyebrow  { animation-delay: 560ms; }
+  .hero__rule     { animation: draw 900ms var(--ease-reveal) 680ms both; }
+  .hero__title    { animation-delay: 760ms; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes draw {
+    from { opacity: 0; transform: scaleX(0); }
+    to   { opacity: 1; transform: scaleX(1); }
+  }
+
+  @keyframes lift {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+
+  /* Deliberately shallow — 3.5% over 2.2s. A deep push would visibly soften a
+     frame this large, and the point is that the shot appears to be settling,
+     not zooming. At this depth the ease matters more than the distance does;
+     see --ease-push for the table that decided it. */
+  @keyframes push-in {
+    from { transform: scale(1.075); }
+    to   { transform: scale(1.04); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__img      { animation: none; transform: scale(1.02); }
+    .hero__lift     { animation: none; opacity: 0; }
+    .topbar__brand,
+    .topbar__nav,
+    .hero__eyebrow,
+    .hero__title    { animation: none; opacity: 1; transform: none; }
+    .hero__rule     { animation: none; opacity: 1; transform: none; }
+    .topbar__brand,
+    .topbar__link,
+    .topbar__link::after { transition: none; }
+
+    /* EVERY property derived from --par is put back BY NAME, and none of
+       this is achieved by resetting --par itself. The loop writes --par as an
+       INLINE style on .hero, and an inline custom property beats a media
+       query — about.html's experience section records the same finding. The
+       loop also refuses to start under reduced motion, but that is the belt;
+       this is the braces, and it is the half that holds if the loop is ever
+       changed. */
+    .hero__media {
+      top: 0;
+      height: 100%;
+      transform: none;
+    }
+  }
+
+  /* ------------------------------------------------------------- narrow */
+
+  @media (max-width: 900px) {
+    /* 21 characters on one line stops being type and starts being a hairline
+       at this width. The heading wraps, and the size comes off the viewport
+       rather than staying at the desktop share. */
+    .hero__title {
+      max-width: min(86%, 520px);
+      font-size: clamp(1.45rem, 5.6vw, 2.4rem);
+      letter-spacing: 0.17em;
+      margin-right: -0.17em;
+      line-height: 1.32;
+    }
+
+    /* Wrapped, the line is twice as tall, so the bed has to be too. */
+    .hero__bed { width: 126%; height: 56%; }
+  }
+
+  @media (max-width: 640px) {
+    /* A phone crops to a tall slice of a 3:2 frame — about 31% of its width.
+       Centred, that slice is the waiter's face with the heading across it.
+       This walks the window left onto the pendant and the mural, which is
+       the calm half of the photograph and the half that still reads as a
+       room rather than as a portrait. */
+    .hero__img { object-position: 34% 50%; }
+
+    /* The measured wash is for a 1.6:1 window, not a 0.46:1 one. Stacking it
+       on a slice that is already the dark part of the frame turns the room to
+       mud, so the ellipse opens and the end bands come down. */
+    .hero__wash {
+      background:
+        radial-gradient(98% 64% at 46% 50%,
+          rgba(6, 4, 3, 0.00)  0%,
+          rgba(6, 4, 3, 0.18) 52%,
+          rgba(6, 4, 3, 0.48) 100%),
+        linear-gradient(180deg,
+          rgba(6, 4, 3, 0.62) 0%,
+          rgba(6, 4, 3, 0.10) 18%,
+          rgba(6, 4, 3, 0.00) 34%),
+        linear-gradient(0deg,
+          rgba(6, 4, 3, 0.58) 0%,
+          rgba(6, 4, 3, 0.14) 20%,
+          rgba(6, 4, 3, 0.00) 38%);
+    }
+
+    .hero__eyebrow { letter-spacing: 0.30em; margin-right: -0.30em; }
+    .topbar__nav   { gap: clamp(18px, 5.4vw, 30px); }
+  }
+
+  @media (max-width: 380px) {
+    /* Three links plus the wordmark stop fitting one line here. */
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .topbar__nav { margin-left: -0.15em; }
+  }
+
+  /* ============================================================== touch */
+  /* GET IN TOUCH. Spec:
+     docs/superpowers/specs/2026-08-17-contact-getintouch-design.md
+
+     Two columns above 1000px — a masthead and a four-field enquiry form —
+     stacked below it, at the reservation section's own breakpoint.
+
+     THE FORM DOES NOT SUBMIT. That was chosen, not overlooked; see the
+     markup, where it is flagged the way contact-hero.jpg is.
+
+     Every length is a multiple of --tu so the block scales as ONE piece.
+     This is the site's most expensive lesson, paid for twice: a viewport
+     share alone is not enough, and pixels are never clawed back by
+     compressing individual gaps — that keeps the type big and throws away
+     the rhythm the block was measured for. */
+
+  .touch {
+    /* The reservation column's --u, in every respect. 1vw until the window
+       gets short, then 1.62svh, then an 8.6px floor below which the section
+       is allowed to run past one screen rather than shrink the labels out
+       of legibility. */
+    --tu: max(8.6px, min(1vw, 1.62svh));
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--ground);
+    color: var(--menu-ink);
+    /* A flat peach across a whole viewport reads as a swatch. Same bloom as
+       menu.html's opening, and it fades to TRANSPARENT rather than to
+       --ground — interpolating to the ground colour looks equivalent and is
+       not, because the ellipse rarely finishes inside the box and the edge
+       would then sit one step off the section below it. */
+    background-image:
+      radial-gradient(112% 82% at 50% 44%,
+        rgba(255, 247, 243, 0.52) 0%,
+        rgba(255, 247, 243, 0.20) 42%,
+        rgba(255, 247, 243, 0)    79%);
+    padding: calc(var(--tu) * 8) 0;
+  }
+
+  /* Paper. A whisper of grain so the peach reads as stock rather than as a
+     flat fill. It earns more here than on cream — a tinted ground shows
+     banding across a soft radial that a near-white hides. */
+  .touch::before {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .touch ::selection { background: rgba(153, 85, 28, 0.18); color: var(--menu-ink); }
+
+  /* ------------------------------------------------ the drifting planes */
+
+  /* Two decorative planes in ONE perspective box at opposite Z, drifting at
+     opposite rates off a single number. about.html's ichie device, and the
+     site's one-number-per-section contract: the loop writes --drift and
+     both planes derive their transform here. There is no GSAP on this site.
+
+     The apparent size difference between them is the perspective doing its
+     job, not a sizing error — each font-size below is pre-divided by its own
+     projection so the pair land at the sizes they were chosen at:
+
+       kanji  z=-300  against 900px  ->  scale 0.750   12tu renders as  9.0tu
+       mon    z=-160  against 900px  ->  scale 0.849   30tu renders as 25.5tu */
+  .touch__deco {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* EACH MARK GETS ITS OWN PERSPECTIVE BOX, and the perspective is NOT on
+     .touch__deco. That was the first build and it was measured wrong:
+     one shared box has one perspective-origin — its own centre — so a mark
+     sitting in the right margin is projected TOWARD the middle and lands on
+     top of the form. Measured at 1440x900 the drag was 135px, which put the
+     kanji 62px over the form's right edge and the mon 61px under the
+     masthead. Neither read as a bug; both read as clumsy placement.
+
+     Given its own box, a plane's perspective-origin is its own centre, so
+     translateZ scales the mark about that centre and never moves it. This is
+     about.html's statement section exactly — five lines, five boxes, "so
+     translateZ scales a line about its own centre and never moves it, and
+     the measured composition holds exactly at rest".
+
+     Note this is the OPPOSITE choice from the entrance above, where the
+     shared origin IS the effect — it is what opens the field stack outward
+     with no per-field translateX. Same property, two jobs: one wants the
+     lateral drag, one must not have it. */
+  .touch__plane {
+    position: absolute;
+    perspective: 900px;
+  }
+
+  .touch__plane--kanji {
+    right: calc(var(--tu) * 2.5);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .touch__plane--mon {
+    left: calc(var(--tu) * 1);
+    bottom: 9%;
+  }
+
+  /* NO JAPANESE WEBFONT IS LOADED ON THIS SITE, deliberately: loading a CJK
+     face for six decorative glyphs is not a trade worth making. These render
+     in whatever the visitor's OS supplies — Hiragino on Apple, Yu Gothic on
+     Windows, Noto on Android, and tofu on a Linux box with no CJK fonts at
+     all. about.html's ichie section already ships 一期一会 under exactly this
+     exposure, so it is an existing risk rather than a new one, and at this
+     alpha a tofu fallback is close to invisible either way. */
+  .touch__kanji {
+    display: block;
+    margin: 0;
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP",
+                 "Hiragino Sans", "Yu Gothic", "Noto Sans JP", serif;
+    font-size: calc(var(--tu) * 9.5);
+    font-weight: 300;
+    line-height: 1;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 0.06em;
+    /* NOWRAP IS LOAD-BEARING, not tidiness. Six glyphs at this size are
+       taller than the window, so vertical-rl breaks them into a SECOND
+       column — and rl means that column lands to the LEFT, so the phrase
+       reads out of order: おいわ / せ合問 instead of お問い合わせ. It looks like
+       a decorative texture rather than like broken type, which is exactly
+       why it survived the first build. */
+    white-space: nowrap;
+    /* The ending wordmark's alpha, and for the same reason: present and
+       almost not there. Measured there as a +9 luminance delta, which is
+       within a few points of the same on this ground. */
+    color: rgba(47, 27, 25, 0.042);
+    user-select: none;
+    transform: translate3d(0, calc((var(--drift) - 0.5) * -7svh), -260px);
+  }
+
+  /* The mon, from brand_assets/misono-mark-mono.svg — drawn to take its
+     colour from CSS, which is what makes this possible at all.
+
+     IT IS A RECONSTRUCTION, traced from a photograph of printed material by
+     an earlier session, and brand_assets/README.md says to check it against
+     real artwork before shipping. At this alpha the exposure is small; it is
+     recorded rather than left to be discovered.
+
+     Its <defs> are inlined WITH it in this section's markup. about.html
+     referenced #mm-petal and #mm-core without ever defining them and drew
+     nothing at all for days — a section that reaches outside itself for
+     nothing cannot fail that way. */
+  .touch__mon {
+    display: block;
+    width: calc(var(--tu) * 16);
+    height: auto;
+    color: rgba(47, 27, 25, 0.05);
+    transform: translate3d(0, calc((var(--drift) - 0.5) * 11svh), -120px);
+  }
+
+  /* ------------------------------------------------------- the two columns */
+
+  .touch__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tu) * 5.4);
+    /* 7.18% — the inset .carte and .ending__nav already use. */
+    padding: 0 7.18%;
+  }
+
+  /* --------------------------------------------------------- the masthead */
+
+  /* Perspective is a PROPERTY on the parent, never a perspective() function
+     inside a child's transform. That is what lets every rest state below be
+     a true `transform: none`, and a true identity transform is what stops
+     Chrome rasterising a hairline Cormorant at 300 once and stretching it.
+     NOTHING IN THIS SECTION CARRIES will-change, for the same reason. */
+  .touch__masthead { perspective: 1100px; }
+
+  .touch__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--tu) * 1.1);
+    margin: 0;
+    font-weight: 400;
+    font-size: max(10.5px, calc(var(--tu) * 0.78));
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .touch__eyebrow::after {
+    content: "";
+    flex: none;
+    width: calc(var(--tu) * 3.1);
+    height: max(1px, 0.07vw);
+    background: var(--res-hair);
+  }
+
+  /* DECLARED A SECOND TIME, on the h2 itself, and this is load-bearing:
+     `perspective` reaches an element's DIRECT CHILDREN and stops. The two
+     display lines are grandchildren — masthead > h2 > span — so on the
+     masthead alone the property would reach the eyebrow and go no further,
+     and the lines' translateZ would have no camera to be projected through.
+
+     That failure does not error, does not warn and does not look broken. It
+     looks like a heading that fades up while the fields move in depth, i.e.
+     like a decision. menu.html shipped exactly this and it had to be
+     measured out. A line reporting apparent scale 1.000 at t=0 is this bug,
+     not a subtle animation — shoot-touch.mjs prints the number. */
+  .touch__title {
+    perspective: 1100px;
+    margin: calc(var(--tu) * 2.4) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    /* 4.8tu, up from 3.9 on 2026-08-18. This is the section's focal point and
+       at 3.9 it was not behaving like one — it read as a column heading
+       beside a form rather than as the thing the composition is about.
+
+       4.8 puts it at 69px at 1440, deliberately just ABOVE the location
+       bands' 4.1tu headings and well above the hero's 40px. It is the
+       largest type on the page and that is the intent; past about 5.4 it
+       stops being editorial and starts being a banner, and "TOUCH" begins
+       to crowd its column. */
+    font-size: calc(var(--tu) * 4.8);
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  /* Authored lines, not a wrap — each is its own depth plane, and a wrap
+     would put both in one box and one plane. */
+  .touch__title span { display: block; }
+
+  .touch__rule {
+    width: calc(var(--tu) * 2.6);
+    height: max(1.5px, 0.099vw);
+    /* 3tu, up from 1.8. The brief asked for the heading to have room, and
+       the room a display line actually needs is BELOW it — 69px of Cormorant
+       with a 2.6tu tick 26px under it reads as a caption attached to the
+       heading rather than as a mark separating it from the paragraph. */
+    margin: calc(var(--tu) * 3) 0 0;
+    border: 0;
+    background: var(--res-hair);
+    transform-origin: 0 50%;
+  }
+
+  .touch__body {
+    max-width: 32ch;
+    margin: calc(var(--tu) * 2.4) 0 0;
+    font-weight: 300;
+    font-size: max(13.5px, calc(var(--tu) * 1.02));
+    line-height: 1.9;
+    color: var(--menu-body);
+  }
+
+  /* ------------------------------------------------------------ the form */
+
+  .touch__form {
+    perspective: 1200px;
+    display: flex;
+    flex-direction: column;
+    /* 3.2tu. It went 3.5 -> 2.6 when the pair had to be squeezed into one
+       screen, and the architecture change bought that back: collapsing the
+       two sections' meeting paddings into one interval returned about 150px,
+       which is spent HERE rather than banked. A form whose fields breathe is
+       the difference between elegant and merely small. */
+    gap: calc(var(--tu) * 3.2);
+  }
+
+  /* A FIELD IS A HAIRLINE, NOT A BOX. No border, no fill, no radius, no
+     shadow. `.topbar__link::after`, `.ending__link::after` and `.hero__rule`
+     are all the same gesture — a hairline that wipes out from a 50% origin —
+     and this is the first place on the site where it becomes a CONTROL
+     rather than an ornament. That continuity is why the form reads as
+     belonging to this site instead of having been dropped onto it. */
+  .field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* A real label, never a placeholder. Placeholder text has to clear 4.5:1
+     like any other text AND it disappears the moment a guest starts typing —
+     so the one thing telling them what the field is for is gone exactly when
+     they might want to check it. */
+  .field__label {
+    font-size: max(10px, calc(var(--tu) * 0.76));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    color: var(--menu-accent);      /* 4.78:1 */
+    /* Both properties named rather than `all`. */
+    transition:
+      color            320ms var(--ease-quiet),
+      letter-spacing   320ms var(--ease-quiet),
+      transform        320ms var(--ease-quiet);
+  }
+
+  /* The label answers the focus as well as the rule does. It deepens to full
+     ink and opens its tracking by 0.04em — a change you feel rather than
+     watch, which is the whole register of this page.
+
+     :focus-within on the FIELD, not :focus on the input, so the label and
+     the rule below are driven by one state and can never disagree. The
+     translate is 1px: enough to register as a lift, small enough that a
+     10px letterspaced label does not appear to jump a line. */
+  .field:focus-within .field__label {
+    color: var(--menu-ink);
+    letter-spacing: 0.24em;
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .field__label { transition: none; }
+    .field:focus-within .field__label { transform: none; }
+  }
+
+  .field__input {
+    width: 100%;
+    margin: 0;
+    padding: calc(var(--tu) * 0.9) 0 calc(var(--tu) * 0.72);
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-family: inherit;
+    font-weight: 300;
+    font-size: max(15px, calc(var(--tu) * 1.12));
+    line-height: 1.5;
+    color: var(--menu-ink);         /* 13.60:1 */
+    caret-color: var(--menu-accent);
+    appearance: none;
+  }
+
+  .field__input:focus { outline: none; }   /* the rule below IS the state */
+
+  .field__input--area {
+    /* 6.5tu, down from 8. Still three lines of the 1.12tu input face, which
+       is what a message box has to show to read as one rather than as a
+       tall single-line field. */
+    min-height: calc(var(--tu) * 6.5);
+    /* `resize: vertical` is the more useful default and it is given up on
+       purpose. Chrome paints a native grip in the corner that cannot be
+       styled or hidden cross-browser, and on a form whose whole idea is
+       that there are no boxes — only hairlines — that grip is the single
+       un-designed pixel on the page. The height it costs is bought back
+       above; past it the field scrolls. */
+    resize: none;
+  }
+
+  /* Chrome paints autofilled inputs on a hard blue-white and there is no
+     property that turns it off — an inset shadow the size of the field is
+     the only thing that covers it. A boxless form is exactly where that
+     would do the most damage, so it is handled rather than discovered. */
+  .field__input:-webkit-autofill,
+  .field__input:-webkit-autofill:hover,
+  .field__input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--menu-ink);
+    -webkit-box-shadow: 0 0 0 100px var(--ground) inset;
+    caret-color: var(--menu-accent);
+  }
+
+  /* --res-gold, NOT --res-hair. This underline is the only thing identifying
+     where the control is, which makes it a UI component boundary under WCAG
+     1.4.11 and puts a 3:1 floor on it. --res-hair measures 1.74:1 and is
+     documented decorative-only; this clears at 3.26:1 on the peach. */
+  .field__rule {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: max(1px, 0.07vw);
+    background: var(--res-gold);
+    transition: background-color 260ms var(--ease-quiet);
+  }
+
+  /* The state, and the site's own idiom: a second hairline in full ink
+     wiping out from a 50% origin. Scale only, so nothing but a transform
+     animates and it costs no layout. */
+  .field__rule::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--menu-ink);
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform 380ms var(--ease-quiet);
+  }
+
+  .field:hover .field__rule { background: var(--menu-accent); }
+  .field__input:focus + .field__rule::after { transform: scaleX(1); }
+
+  /* The ring is separate from the rule, and only for keyboard users — the
+     rule already answers "which field am I in" for everyone else. Drawn
+     outside the field so it never sits on the type. */
+  .field__input:focus-visible + .field__rule {
+    outline: 1.5px solid var(--misono-indigo);
+    outline-offset: 4px;
+  }
+
+  /* --------------------------------------------------------- SEND MESSAGE */
+
+  /* The reservation CTA's mechanism, written fresh because there is no
+     reserve block on this page to copy from. The convergence is deliberate:
+     it is the site's button, and nobody should later "unify" two controls
+     that are already the same control on purpose.
+
+     520ms everywhere, matched to the fill. `.menu__cta`'s 420ms causes a
+     visible dip — the lettering reaches the ground colour while the ink is
+     still short of the right edge. */
+  .touch__send {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--tu) * 2.2);
+    width: min(100%, 19rem);
+    margin: calc(var(--tu) * 0.4) 0 0;
+    padding: calc(var(--tu) * 1.2) calc(var(--tu) * 1.9);
+    /* Square, where the menu's CTA is a pill: against four hairlines and a
+       drifting mon, the one straight-edged shape is the column's spine. */
+    border: max(1.5px, 0.12vw) solid var(--res-gold);
+    border-radius: 0;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--menu-accent);
+    transition: color 520ms var(--ease-quiet),
+                border-color 520ms var(--ease-quiet);
+  }
+
+  .touch__send::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--menu-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  /* Tracking leaves a space after the final letter, sitting the lettering
+     half of it left of centre. Half the tracking back squares it up — the
+     same correction .reserve__ctalbl and .menu__cta make. */
+  .touch__sendlbl {
+    font-size: max(11.5px, calc(var(--tu) * 0.84));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .touch__arrow {
+    flex: none;
+    width: calc(var(--tu) * 1.9);
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  .touch__send:hover,
+  .touch__send:focus-visible { color: var(--ground); border-color: var(--menu-ink); }
+
+  .touch__send:hover::before,
+  .touch__send:focus-visible::before { transform: scaleX(1); }
+
+  .touch__send:hover .touch__arrow,
+  .touch__send:focus-visible .touch__arrow { transform: translateX(22%); }
+
+  .touch__send:active { transform: translateY(1px); }
+
+  .touch__send:focus-visible {
+    outline: 1.5px solid var(--menu-ink);
+    outline-offset: 5px;
+  }
+
+  /* ---------------------------------------------------- the entrance */
+
+  /* The house contract: .js arms it, .is-in settles it, an
+     IntersectionObserver adds the class once and disconnects. An arrival,
+     not a scroll effect — coming back up the page must not replay it.
+
+     --in-* are per-element so the shared transition is written once. The
+     fade is deliberately SHORTER than the move: the move is the thing worth
+     watching, so each element is fully opaque well before it stops moving.
+     Fading and travelling over the same span reads as a cross-dissolve and
+     throws the depth away. */
+  .js .touch__eyebrow,
+  .js .touch__title span,
+  .js .touch__rule,
+  .js .touch__body,
+  .js .field,
+  .js .touch__send {
+    opacity: 0;
+    transition:
+      opacity   var(--in-fade, 800ms)  var(--ease-quiet)                  var(--in-delay, 0ms),
+      transform var(--in-move, 1100ms) var(--in-ease, var(--ease-settle)) var(--in-delay, 0ms);
+  }
+
+  /* The masthead comes FORWARD past the page and drops back; the fields come
+     from BEHIND and rise. Two different gestures on purpose — ten elements
+     making one move reads as a house effect applied ten times.
+
+     s = p / (p - z) is the apparent scale each arrives at. The eyebrow and
+     the two display lines carry menu.html's own depths unchanged: they are
+     the same elements doing the same job, and re-deriving them would have
+     made them differ for no reason. */
+  .js .touch__eyebrow { --in-delay: 0ms;   --in-move: 1200ms; transform: translate3d(0, 6px, -80px); }
+
+  .js .touch__title span:nth-child(1) {
+    --in-delay: 190ms; --in-move: 1500ms; --in-fade: 850ms; --in-ease: var(--ease-pop);
+    transform: translate3d(0, 14px, -210px) rotateX(7deg);    /* 0.840 */
+  }
+  .js .touch__title span:nth-child(2) {
+    --in-delay: 330ms; --in-move: 1500ms; --in-fade: 850ms; --in-ease: var(--ease-pop);
+    transform: translate3d(0, 16px, -240px) rotateX(8deg);    /* 0.821 */
+  }
+
+  /* Drawn, not moved — it is 1px tall and depth would be wasted on it. */
+  .js .touch__rule {
+    --in-delay: 470ms; --in-move: 900ms; --in-ease: var(--ease-reveal);
+    transform: scaleX(0);
+  }
+
+  .js .touch__body { --in-delay: 560ms; --in-move: 1200ms; transform: translate3d(0, 10px, -60px); }
+
+  /* One after another, 90ms apart, and PROGRESSIVELY DEEPER down the stack
+     so they do not arrive as one plane sliding forward.
+
+     The stack also opens outward as it lands, and nothing here writes a
+     translateX to do it: .touch__form's perspective-origin is its own
+     centre, so a field pushed back in Z is projected TOWARD that centre and
+     its travel back out to its own row comes free from the projection coming
+     undone. Row positions are decided by the layout and by nothing else,
+     which is also why the effect scales itself down on a narrow viewport
+     with no media query. */
+  .js .field:nth-child(1)  { --in-delay: 660ms; transform: translate3d(0, 18px, -150px); }  /* 0.889 */
+  .js .field:nth-child(2)  { --in-delay: 750ms; transform: translate3d(0, 18px, -170px); }  /* 0.876 */
+  .js .field:nth-child(3)  { --in-delay: 840ms; transform: translate3d(0, 18px, -190px); }  /* 0.863 */
+  .js .field:nth-child(4)  { --in-delay: 930ms; transform: translate3d(0, 18px, -210px); }  /* 0.851 */
+  .js .touch__send { --in-delay: 1060ms; --in-move: 1000ms; transform: translate3d(0, 16px, -120px); } /* 0.909 */
+
+  /* THE CONTACT DETAILS ARRIVE ON THE SAME TIMELINE, driven by .touch's
+     class through a sibling selector rather than by an observer of their own.
+
+     That is deliberate: given their own observer they would fire when THEY
+     crossed the threshold, which on a composition that fits one screen means
+     the foot of the block animating seconds after the head of it, as though
+     it were a separate section. It is not one any more, so it should not
+     arrive like one. `~` works because .details immediately follows .touch.
+
+     They come last and from shallower depth than the fields — this is the
+     composition settling, not another entrance. */
+  .js .details__rule,
+  .js .details__item {
+    opacity: 0;
+    transition:
+      opacity   760ms var(--ease-quiet) var(--in-delay, 0ms),
+      transform 1000ms var(--ease-settle) var(--in-delay, 0ms);
+  }
+
+  .js .details__rule { --in-delay: 1180ms; transform: scaleX(0.82); transform-origin: 0 50%; }
+  .js .details__item:nth-child(1) { --in-delay: 1290ms; transform: translate3d(0, 12px, 0); }
+  .js .details__item:nth-child(2) { --in-delay: 1380ms; transform: translate3d(0, 12px, 0); }
+
+  .js .touch.is-in ~ .details .details__rule,
+  .js .touch.is-in ~ .details .details__item {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .details__rule,
+    .js .details__item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Settled. `transform: none` is what makes this the measured composition
+     again rather than an approximation of it. Whole entrance: 2060ms. */
+  .js .touch.is-in .touch__eyebrow,
+  .js .touch.is-in .touch__title span,
+  .js .touch.is-in .touch__rule,
+  .js .touch.is-in .touch__body,
+  .js .touch.is-in .field,
+  .js .touch.is-in .touch__send {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ============================================================ details */
+  /* The page's ending. The client declined the ending block, so this has to
+     CLOSE rather than merely stop — which is what the gradient below does.
+
+     56svh, not 100. about.html's figures section learned this: ~16tu of ink
+     in a full viewport reads unfinished rather than generous. The first fix
+     for an underfilled section is more ink, never a shorter section, which
+     is why the two values are set as large as they are. */
+  .details {
+    --tu: max(8.6px, min(1vw, 1.62svh));
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* NO min-height. It had one while this was a band of its own; as the foot
+       of one composition it is sized by its ink, and the interval above it is
+       set once — .touch's padding-bottom is zero and the connector rule's own
+       margins do the work — instead of by two sections' paddings meeting.
+       That duplication was costing about 150px and buying nothing. */
+    padding: 0 7.18% calc(var(--tu) * 3);
+
+    /* THE CLOSING GRADIENT IS GONE, removed 2026-08-18, and it is the single
+       change that does most of the work here. It existed when this block was
+       the page's ending and had to close it; since the locations, the FAQ and
+       the transplanted reserve block were added it closes nothing, and a tint
+       under one half of a composition is exactly what made the phone and
+       email read as a separate band however the spacing was tuned.
+
+       Two consequences, both good and both measured rather than assumed:
+
+         · CONTRAST IMPROVES. #F5E5DB was this page's binding ground, where
+           --res-gold cleared 3:1 by only 0.17 and --menu-accent cleared 4.5
+           by 0.16. The binding ground is now --ground #F7E8DF, which is
+           lighter, so both gain: 3.26:1 and 4.80:1.
+         · THE SEAM INTO .locale DISAPPEARS. It was a measured step of 4 per
+           channel; both sides are now #F7E8DF and it is 0.
+
+       THE GROUND MUST STILL BE DECLARED, and the first attempt at this did
+       not. Dropping the gradient with nothing in its place falls through to
+       `body { background: var(--ink) }` — the black the hero photograph sits
+       on — and the section renders as a black band with unreadable type.
+       EVERY MEASUREMENT STILL PASSED while it did: heights, grid alignment
+       and the pair-fit are geometry, and none of them look at colour. It took
+       a screenshot to catch. */
+    background: var(--ground);
+    color: var(--menu-ink);
+  }
+
+  .details ::selection { background: rgba(153, 85, 28, 0.18); color: var(--menu-ink); }
+
+  /* THE CONNECTOR. This was a 2.6tu tick centred under a centred block; it
+     is now a full-width hairline spanning the composition, and that change of
+     role is the point. A centred mark belongs to whatever is centred beneath
+     it and therefore announced the details as their own thing. A rule that
+     runs the full measure of the grid above it belongs to BOTH — it reads as
+     the fold in one composition rather than as the cap of a second.
+
+     Fades to nothing at both ends, which is this site's idiom everywhere a
+     hairline separates rather than tabulates: .details' old vertical divider,
+     .reserve__metaitem's, and the gradient tails on both. */
+  .details__rule {
+    width: 100%;
+    height: max(1px, 0.07vw);
+    /* 4tu above, 3tu below. The top margin is not optional: with .touch's
+       padding-bottom at zero this rule lands immediately under the form, and
+       at margin-top 0 it ran THROUGH the bottom edge of the Send Message
+       button. The interval between the form and the contact details is now
+       set here and only here, which is the whole reason .touch stopped
+       carrying a bottom padding. */
+    margin: calc(var(--tu) * 4) 0 calc(var(--tu) * 3);
+    border: 0;
+    background: linear-gradient(to right,
+      rgba(212, 173, 126, 0) 0%,
+      var(--res-hair) 12%,
+      var(--res-hair) 88%,
+      rgba(212, 173, 126, 0) 100%);
+  }
+
+  /* TWO COLUMNS FROM 700px, STACKED BELOW IT. Asked for explicitly on
+     2026-08-18. This file previously recorded side-by-side as tried twice and
+     rejected, so the reasoning that beat it is worth keeping rather than
+     deleting — it is still true, and it is what the arrangement below is
+     built to answer.
+
+     The failure was never "two columns". It was that the email is 26
+     characters and the phone 15, so:
+
+       · sized to CONTENT, the pair centres as a group and the divider lands
+         ~100px left of the page's axis while .details__rule sits dead on it —
+         two marks that both read as "the middle", disagreeing by 100px;
+       · given EQUAL CELLS with the text centred in each, the divider goes
+         back on the axis and the disparity moves inside it: the email nearly
+         touches the rule while the number sits far off it.
+
+     THE ANSWER IS EQUAL CELLS, CONTENT CENTRED IN EACH, AND CELLS WIDE
+     ENOUGH THAT THE GUTTER IS NEVER THE TIGHT DIMENSION.
+
+     Two alignments were worked through against where the ink actually lands
+     before settling on this, and both fail for the same reason:
+
+       · both columns LEFT-aligned puts the left column's ink hard against
+         the block's outer edge and the right column's against the divider,
+         which lands the pair's centre of mass ~87px LEFT of the page axis;
+       · phone right-aligned and email left-aligned — each hugging the
+         divider at an equal inset — is symmetric about the divider but not
+         about the page: the email is 130px wider, so the block's centre of
+         mass sits ~65px RIGHT of the axis.
+
+     Either way the composition disagrees with .details__rule about where the
+     middle is, which is the ORIGINAL failure wearing a different hat.
+     Centring each value inside its own equal cell is the only arrangement
+     that is symmetric BY CONSTRUCTION: the two cells are mirrors, so the ink
+     centres land at equal distances either side of the axis whatever the
+     strings happen to be.
+
+     What that costs is the one thing the old note called fatal — the email
+     sits closer to the divider than the number does. It is only fatal when
+     the cells are tight. At 62tu the cells are 446px at 1440, so the gaps
+     are 78px and 143px: both generous, neither crowded. The disparity is
+     still there and is now simply the difference between a short fact and a
+     long one, which is what it always was. */
+  .details__list {
+    display: flex;
+    flex-direction: column;
+    /* Left, not centred, at every width — so the stacked arrangement is the
+       same composition as the two-column one, read one column at a time. */
+    align-items: flex-start;
+    gap: calc(var(--tu) * 3.4);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .details__item {
+    position: relative;
+    padding: 0;
+  }
+
+  /* Fades out toward both ends rather than ruling edge to edge — a seam
+     between two things, not a table rule. `.reserve__metaitem`'s divider,
+     turned and made symmetrical because this pair is centred on one axis
+     rather than left-aligned in two columns. */
+  .details__item + .details__item::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(var(--tu) * -1.7);
+    width: calc(var(--tu) * 15);
+    height: max(1px, 0.08vw);
+    transform: translateX(-50%);
+    background: linear-gradient(to right,
+      rgba(212, 173, 126, 0) 0%,
+      var(--res-hair) 34%,
+      var(--res-hair) 66%,
+      rgba(212, 173, 126, 0) 100%);
+  }
+
+  .details__label {
+    display: block;
+    font-size: max(10px, calc(var(--tu) * 0.76));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  /* THE DISPLAY FACE, not body type. That is the whole difference between a
+     contact information block and contact details that are part of the
+     design — the number and the address become typography. */
+  .details__value {
+    position: relative;
+    display: inline-block;
+    margin-top: calc(var(--tu) * 1.35);
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    /* Grown from 2.35tu. At that size the block stood 130px of ink inside
+       504px and read sparse — about.html's figures problem, where the fix is
+       always MORE INK rather than a shorter section. The section came down
+       to 48svh as well, but the type did most of the work: two lines cannot
+       fill a screen, so they have to be worth looking at. Bounded by the
+       email, which is 26 characters and the widest thing here. */
+    font-size: calc(var(--tu) * 2.7);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--menu-ink);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  /* 44px hit area from OUTSIDE layout, so the measured rhythm above is not
+     traded away to buy a tap target — the topbar's own correction. */
+  .details__value::before {
+    content: "";
+    position: absolute;
+    left: -0.3em;
+    right: -0.3em;
+    top: 50%;
+    height: max(44px, 100%);
+    transform: translateY(-50%);
+  }
+
+  /* The site's link idiom, one last time. */
+  .details__value::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.12em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform 260ms var(--ease-quiet);
+  }
+
+  .details__value:hover,
+  .details__value:focus-visible { color: var(--menu-accent); }
+
+  .details__value:hover::after,
+  .details__value:focus-visible::after { transform: scaleX(1); }
+
+  .details__value:active { transform: translateY(1px); }
+
+  .details__value:focus-visible {
+    outline: 1.5px solid var(--misono-indigo);
+    outline-offset: 6px;
+    border-radius: 1px;
+  }
+
+  /* ------------------------------------------------- reduced motion */
+
+  /* EVERY property the armed state touches is put back BY NAME, and none of
+     it is achieved by resetting --drift. The loop writes --drift as an
+     INLINE style and an inline custom property beats a media query — the
+     experience section on about.html records the same finding, and the
+     since-removed --enter there parked four frames 648px below their row
+     precisely because it had no rest state of its own.
+
+     The loop also refuses to start under reduced motion. That is the belt;
+     this is the braces, and it is the half that holds if the loop is ever
+     changed. */
+  @media (prefers-reduced-motion: reduce) {
+    .js .touch__eyebrow,
+    .js .touch__title span,
+    .js .touch__rule,
+    .js .touch__body,
+    .js .field,
+    .js .touch__send {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .touch__kanji { transform: translateZ(-260px); }
+    .touch__mon   { transform: translateZ(-120px); }
+
+    .field__rule,
+    .field__rule::after,
+    .touch__send,
+    .touch__send::before,
+    .touch__arrow,
+    .details__value,
+    .details__value::after { transition: none; }
+
+    .touch__send:active,
+    .details__value:active { transform: none; }
+  }
+
+  /* 1000px — the site's own two-column breakpoint, shared with .touch and
+     the reservation section, and documented there as the width below which
+     "two columns stop being a composition and start being a squeeze". That
+     is exactly what happens here: built at 700 the email cleared the divider
+     by 13px at 700x900, which is not a gutter, it is a near miss. */
+  /* ONE GRID FOR THE WHOLE COMPOSITION, from 1000px — the site's own
+     two-column breakpoint, shared with .touch and the reservation section.
+
+     THIS IS THE ARCHITECTURE CHANGE, 2026-08-18. Until now .details was a
+     different composition from the block above it in every respect that
+     matters: centred where .touch is a two-column grid, capped at 78tu where
+     the form is capped at 66, with its own tinted ground and its own centred
+     rule. Nothing aligned across the boundary, so no amount of spacing was
+     ever going to stop it reading as a second section — the two blocks did
+     not agree about where anything was.
+
+     They now share one grid: same width, same centring, same two columns.
+     PHONE sits under the masthead and EMAIL under the form, so each falls on
+     a column the eye has already been taught by the row above. The email is
+     the longer fact and lands in the wider column, which is the same reason
+     the form is the wider column — the grid earns its proportions twice.
+
+     Left-aligned, not centred, and that finally settles the argument this
+     file has had with itself twice. Centring two facts of very different
+     length inside equal cells is what produced a divider 100px off the page
+     axis in one build and gutters of 167 against 52 in the next. Aligned to
+     a column edge the question does not arise: what aligns is the grid, and
+     the email simply runs further right than the number does. */
+  @media (min-width: 1000px) {
+    .details__list {
+      display: grid;
+      /* Identical to .touch__inner's, and they must stay identical — the
+         alignment between the two rows IS the composition. Change one and
+         change the other. */
+      grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+      gap: calc(var(--tu) * 5.5);
+      align-items: start;
+      width: min(100% - 14.36%, calc(var(--tu) * 66));
+      margin-inline: auto;
+    }
+
+    .details__rule {
+      width: min(100% - 14.36%, calc(var(--tu) * 66));
+      margin-inline: auto;
+    }
+
+    .details__item { text-align: left; padding-inline: 0; }
+
+    /* The vertical divider is GONE. It existed to separate two centred cells
+       that had nothing else to relate to; between two columns of a grid that
+       already runs the height of the composition it is one line too many,
+       and the brief asked for zones without unnecessary rules. */
+    .details__item + .details__item::before { content: none; }
+  }
+
+  /* --------------------------------------------------- side by side */
+
+  /* The reservation section's breakpoint, for the same reason: below it the
+     two columns stop being a composition and start being a squeeze. */
+  @media (min-width: 1000px) {
+    /* SIZED BY ITS OWN CONTENT, not pinned to the viewport. It carried
+       min-height: 100svh until 2026-08-18, from when this was the page's
+       second and last section and a full screen was the whole point.
+
+       With .details, the locations and the FAQ below it that stopped being
+       true and started costing: the block's ink is 561px at 1440x900, so the
+       remaining 339px was slack the section had no use for, and it read as
+       two oversized blocks with a hole between them rather than as one
+       composition. The padding is what sets the air now, which means the air
+       scales with the type instead of with the window.
+
+       5tu, down from 6. Not lower: below about 4tu the masthead's descenders
+       start to crowd the top of the form on a short window, and "not
+       cramped" was the explicit brief. */
+    .touch {
+      display: flex;
+      align-items: center;
+      /* Top padding only. The bottom is zero on purpose: .details now
+         follows as the foot of the same composition, so the interval between
+         the form and the contact details is set ONCE, by the connector rule's
+         own margins, instead of by a section's bottom padding meeting
+         another's top padding. That duplication was costing about 150px and
+         buying nothing. */
+      padding: calc(var(--tu) * 5) 0 0;
+    }
+
+    /* THE BLOCK IS CAPPED AND CENTRED, not run out to the 7.18% inset. Built
+       to that inset the two columns sat 370px apart at 1440 with nothing
+       between them — and a hole in the middle of a composition is not the
+       same thing as negative space, however much of it there is. The air
+       belongs in the MARGINS, where the two decorative marks live.
+
+       66tu is 950px at 1440, leaving 245px each side. The floor keeps a
+       7.18% inset from ever being crossed on a narrower window, so this can
+       only ever pull the block IN. */
+    .touch__inner {
+      width: min(100% - 14.36%, calc(var(--tu) * 66));
+      margin-inline: auto;
+      padding: 0;
+      display: grid;
+      /* 0.82fr against 1fr. The masthead is display type and a 32ch
+         paragraph — it needs about 300px and gets 389; the form gets 475,
+         which is a field you can read a typed name across rather than one
+         stretched to fill a column. The form is also the TALLER of the two
+         and sets the section's height, which is what frees the masthead to
+         be as spare as it is. */
+      grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+      /* TOP-ALIGNED, not centred, and this is the difference between two
+         blocks floating near each other and one composition. Centred, the
+         masthead sat in the middle-left with nothing to relate to; aligned,
+         its eyebrow and the form's first label share a datum and the eye
+         reads across.
+
+         `start` is also what makes the masthead's own emptiness work: it is
+         the shorter column by 250px, and that space below it is where the
+         mon sits. */
+      align-items: start;
+      gap: calc(var(--tu) * 5.5);
+    }
+
+    /* The masthead is 270px of natural ink in a 330px column. Left in a
+       wider one, the leftover shows up as a gap in the MIDDLE of the
+       composition rather than as margin, which is the one place air stops
+       reading as air. */
+    .touch__masthead { max-width: calc(var(--tu) * 26); }
+
+    /* THE COLUMN IS SPLIT, not merely top-aligned. The form is the taller of
+       the two by around 200px, and top-aligning both left that difference as
+       one undifferentiated hole under the paragraph — the "huge empty area"
+       the brief warns against, which is not the same thing as whitespace.
+
+       Stretching the masthead to the row and pushing the paragraph down with
+       `margin-top: auto` turns that hole into an INTERVAL: heading and its
+       tick at the top, supporting copy at the foot, the air deliberately
+       between them. The paragraph then lands beside the Send Message button
+       and the two ends of the composition close together, which is the
+       relationship the column was missing.
+
+       align-self, because the grid sets `align-items: start` for everything
+       else and the form must keep it — stretched, the form's fields would
+       distribute down the row instead of stacking at its top. */
+    .touch__masthead {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+    }
+    .touch__body { margin-top: auto; }
+  }
+
+  /* -------------------------------------------------------- narrow */
+
+  @media (max-width: 999px) {
+    /* Stacked, the masthead reads as an introduction to the form rather than
+       as a column beside it, so the display size comes down a step. */
+    .touch__title { font-size: clamp(2rem, 8.4vw, 3rem); }
+    .touch__body  { max-width: 42ch; }
+
+    /* THE MARKS LOSE THEIR MARGINS THE MOMENT THE COLUMNS STACK, and this
+       block is at the LAYOUT breakpoint rather than the phone one because
+       of what 820x1180 measured: the content runs full width there, so both
+       marks sat across it at their full desktop alpha — clear of nothing,
+       94px and 138px over the copy. Below 1000 they are behind the
+       composition by definition, so they go quieter and let it stay legible
+       instead of pretending to a margin that is not there. */
+    .touch__plane--kanji { right: -6%; }
+    .touch__plane--mon   { left: -8%; bottom: 6%; }
+    .touch__kanji { color: rgba(47, 27, 25, 0.032); }
+    .touch__mon   { color: rgba(47, 27, 25, 0.038); }
+  }
+
+  @media (max-width: 639px) {
+    .touch { padding: clamp(64px, 16vw, 96px) 0; }
+    .touch__inner { padding: 0 7.18%; gap: clamp(34px, 9vw, 52px); }
+    .touch__form  { gap: clamp(28px, 7.5vw, 40px); }
+    .touch__send  { width: 100%; }
+
+    /* The pair is already stacked at every width, and --tu's 8.6px floor
+       already lands the email at ~23px in 334px of content box, so neither
+       needs a phone-specific size. All this block does is let the section be
+       as tall as its contents instead of holding 48svh. */
+    .details { min-height: 0; padding: clamp(64px, 18vw, 104px) 7.18%; }
+    .details__list { gap: clamp(26px, 7vw, 38px); }
+    /* A phone has less width again, so the marks go further out and grow —
+       a mark that is mostly off-screen reads as texture, where the same mark
+       shrunk to fit reads as a small logo sitting in a corner. Alpha is
+       already handled by the 999 block above. */
+    .touch__plane--kanji { right: -22%; }
+    /* Measured at 390x844: at bottom 4% the mon's 224px stood from y502 to
+       y726 and the message field runs 538-625, so the mark sat squarely
+       behind the one control with the largest empty interior — the only
+       place on the page where a watermark has nothing to hide behind. */
+    .touch__plane--mon   { left: -24%; bottom: -8%; }
+    .touch__kanji { font-size: calc(var(--tu) * 13); }
+    .touch__mon   { width: calc(var(--tu) * 26); }
+  }
+
+  /* ============================================================= locale */
+  /* The two location bands. Spec:
+     docs/superpowers/specs/2026-08-17-contact-locations-faq-design.md
+
+     ONE component, two instances. Mombasa takes the reference composition;
+     Nairobi mirrors it. The mirror is load-bearing rather than decorative —
+     two identical compositions stacked read as one template run twice, which
+     is the specific thing the reference spends its polish avoiding.
+
+     THE SCALE UNIT HAS NO svh CLAMP, and that is the one deliberate break
+     from --tu above. --tu and the reservation column's --u exist to keep a
+     block inside one screen and they earn their clamp. This is an editorial
+     band — heading, copy, and a photograph half the width of the page — that
+     is ALLOWED to exceed one viewport, exactly as the reference does; the
+     comp is a crop and its own section runs past the bottom of the capture.
+     Clamping here would shrink the type on a short window to protect a fit
+     that was never required.
+
+     If a future change makes this section one-screen, the clamp comes back
+     and every multiple below has to be re-solved. Do not add it alone. */
+  .locale {
+    --lu: max(9px, 1vw);
+
+    /* 7.18%, NOT the comp's 8.85%. That is the site's own inset — .carte,
+       .ending__nav, .details and .touch__inner all use it, and two of those
+       sit directly above this block on this page. A location band at the
+       comp's inset would misalign against its neighbour on the same screen,
+       and that misalignment is far more visible than a 1.67% difference from
+       a comp nobody else will ever see.
+
+       Consequence: the photograph is 85.64% of the viewport wide, against the
+       comp's 83.03%. */
+    --lu-inset: 7.18%;
+
+    /* How far the photograph lags the page. Same idea as --par-travel on the
+       hero, smaller because this frame is a third of the height and the same
+       differential would read as sliding. */
+    --lu-travel: 5.2svh;
+
+    position: relative;
+    padding: calc(var(--lu) * 9) var(--lu-inset) calc(var(--lu) * 7);
+    background: var(--ground);
+    color: var(--menu-body);
+  }
+
+  /* Written per frame by locales() at the foot of this file: 0 when the
+     section's top reaches the bottom of the window, 1 when its foot leaves
+     the top. 0.5 is the rest value AND the CSS default, which is what makes
+     a blocked script and a reduced-motion visit land in the same place —
+     the same arrangement as --drift on .touch. */
+  .locale { --rise: 0.5; }
+
+  /* The masthead. Mombasa left, Nairobi right — see the modifier below.
+
+     THE perspective HERE IS NOT OPTIONAL. The eyebrow, heading and body each
+     arrive on a translateZ, and `perspective` reaches an element's DIRECT
+     CHILDREN and stops — declared on .locale alone it would reach this box
+     and go no further, and the three lines would have no camera at all.
+     Nothing errors and nothing logs; the entrance simply reads as a fade,
+     which looks like a decision rather than a bug. A line reporting apparent
+     scale 1.000 at t=0 in shoot-locale.mjs is this, and only this. */
+  .locale__head {
+    max-width: 41.46vw;          /* the comp's copy column, measured */
+    margin: 0 0 calc(var(--lu) * 5.4);
+    perspective: 1100px;
+  }
+
+  .locale__eyebrow {
+    margin: 0;
+    font-size: max(10.5px, calc(var(--lu) * 0.78));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  /* CAP HEIGHT is the invariant here, not ink width, and the opposite is
+     what looks right on paper. The comp's heading is "Along Kiambu Road" —
+     17 characters at 29.79% ink width. These are "Mombasa" and "Nairobi",
+     SEVEN characters each. Matching the comp's ink width would set a
+     seven-letter word across a third of the viewport, which is not a heading,
+     it is a banner. Character count does not decide ink width; glyph widths
+     do — the same finding the hero recorded when it held cap height and let
+     about.html's 49.5% go.
+
+     Target: cap height 2.70% of viewport width. Cormorant's cap is ~0.66em
+     against the comp serif's ~0.70, so it must be set LARGER than the comp's
+     font-size to land on the same cap: 2.70 / 0.66 = 4.09. Solved against a
+     pixel scan of the render — see the table at the foot of this file. */
+  .locale__title {
+    margin: calc(var(--lu) * 1.5) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: calc(var(--lu) * 4.1);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--menu-ink);
+  }
+
+  .locale__body {
+    margin: calc(var(--lu) * 2.2) 0 0;
+    font-size: max(13.5px, calc(var(--lu) * 1.02));
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--menu-body);
+  }
+
+  /* ------------------------------------------------------- the stage */
+
+  /* The perspective box for the PHOTOGRAPH's entrance, and for that only.
+     Declared as a PROPERTY on the parent rather than as a perspective()
+     function inside the transform, which is what lets the rest state be a
+     true `transform: none`. Every marker gets its OWN box — see .locale__mark
+     for why the opposite choice is wrong for them. */
+  .locale__stage {
+    position: relative;
+    perspective: 1400px;
+  }
+
+  .locale__frame {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    /* the comp's 21px on 2048 = 1.03% of the width */
+    border-radius: clamp(12px, 1.03vw, 22px);
+    /* Layered and warm-tinted, per the site's shadow rule. The comp has one
+       and it is what lifts the frame off the peach — without it the
+       photograph reads as a hole cut in the ground rather than as a plate
+       resting on it. */
+    box-shadow:
+      0 2px 6px    rgba(47, 27, 25, 0.10),
+      0 18px 40px -14px rgba(47, 27, 25, 0.34),
+      0 44px 84px -32px rgba(47, 27, 25, 0.26);
+  }
+
+  /* Hung --lu-travel above its frame and grown by twice that, so the drift
+     can never open a gap at either edge — the hero's arrangement, which is
+     what a parallax built by translating a flush box always gets wrong. */
+  .locale__img {
+    position: absolute;
+    left: 0;
+    top: calc(-1 * var(--lu-travel));
+    width: 100%;
+    height: calc(100% + var(--lu-travel) * 2);
+    object-fit: cover;
+    display: block;
+    transform: translate3d(0, calc((var(--rise) - 0.5) * 2 * var(--lu-travel)), 0);
+  }
+
+  /* ------------------------------------------------------ the markers */
+
+  /* EACH MARK IN ITS OWN PERSPECTIVE BOX. .touch already paid for this
+     lesson: given one shared box the decorative marks were dragged 135px
+     toward its centre and landed on top of the composition, which reads as
+     clumsy placement rather than as a bug. A plane in its own box scales
+     about its OWN centre and never moves.
+
+     The photograph's entrance is the opposite case and wants the shared box
+     — that is .locale__stage above. The choice is per element, not per page.
+
+     The --rise offset lives HERE and the entrance transform on the direct
+     child, which keeps one transform per element AND keeps the transformed
+     child directly inside the box that has the perspective. Putting both on
+     one element loses one of them; nesting a third level would put the
+     entrance on a GRANDCHILD, where translateZ has no camera at all and the
+     failure is silent — menu.html's display lines, exactly. */
+  .locale__mark {
+    position: absolute;
+    perspective: 900px;
+    /* Deliberately capped, and the cap is the whole judgement: these carry
+       TYPE, and an element that never comes to rest is resampled every
+       frame. 11px of differential against the photograph's ~50 is enough to
+       separate the planes; more starts to shimmer the card's own 12px
+       eyebrow. Transform only — no scale — for the same reason. */
+    transform: translate3d(0, calc((0.5 - var(--rise)) * 22px), 0);
+  }
+
+  /* The dots carry no type, so they are free to move further and faster.
+     This is the only place the difference is spent. */
+  .locale__mark--dot {
+    transform: translate3d(0, calc((0.5 - var(--rise)) * 54px), 0);
+  }
+
+  .locale__card {
+    width: calc(var(--lu) * 14.2);       /* the comp's 14.2% */
+    padding: calc(var(--lu) * 1.05) calc(var(--lu) * 1.15);
+    /* Written as a literal rather than as var(--cream). --cream is superseded
+       and documented as "not a colour" — it exists only as the hinge the
+       peach adaptation blocks turn. Reaching for it here would make this card
+       silently change ground the next time that hinge is turned. */
+    background: rgba(252, 248, 245, 0.94);
+    border-radius: calc(var(--lu) * 0.68);
+    box-shadow:
+      0 1px 2px rgba(47, 27, 25, 0.16),
+      0 10px 26px -10px rgba(47, 27, 25, 0.42);
+  }
+
+  .locale__card-eyebrow {
+    margin: 0;
+    font-size: max(9.5px, calc(var(--lu) * 0.64));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .locale__card-title {
+    margin: calc(var(--lu) * 0.75) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 400;
+    font-size: calc(var(--lu) * 1.62);
+    line-height: 1.12;
+    color: var(--menu-ink);
+  }
+
+  .locale__card-note {
+    margin: calc(var(--lu) * 0.5) 0 0;
+    font-size: max(10.5px, calc(var(--lu) * 0.76));
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--menu-body);
+  }
+
+  /* The one marker that names the restaurant. Indigo is the single measured
+     brand value on this site, and this is the only element on the page that
+     earns it as a fill. */
+  .locale__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--lu) * 0.62);
+    padding: calc(var(--lu) * 0.72) calc(var(--lu) * 1.15);
+    background: var(--misono-indigo);
+    border-radius: 999px;
+    box-shadow:
+      0 1px 2px rgba(47, 27, 25, 0.22),
+      0 12px 28px -10px rgba(11, 8, 6, 0.5);
+    white-space: nowrap;
+  }
+
+  .locale__pill-mark {
+    width: calc(var(--lu) * 1.05);
+    height: calc(var(--lu) * 1.05);
+    flex: none;
+    color: var(--res-hair);
+  }
+
+  .locale__pill-label {
+    font-size: max(10.5px, calc(var(--lu) * 0.78));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    /* 7.0:1 on --misono-indigo. */
+    color: #fff;
+  }
+
+  /* Non-text, so --res-gold is in exactly the role the token is scoped to.
+     The white ring is what keeps it legible over both a bright sky and a
+     dark canopy without a per-frame decision. */
+  .locale__dot {
+    display: block;
+    width: calc(var(--lu) * 0.78);
+    height: calc(var(--lu) * 0.78);
+    border-radius: 50%;
+    background: var(--res-gold);
+    box-shadow:
+      0 0 0 calc(var(--lu) * 0.15) rgba(255, 255, 255, 0.92),
+      0 0 0 calc(var(--lu) * 0.62) rgba(255, 255, 255, 0.22),
+      0 2px 6px rgba(11, 8, 6, 0.45);
+  }
+
+  /* -------------------------------------------------- marker placement */
+
+  /* Shares of the FRAME, and chosen against the baked photographs rather
+     than in the abstract: bake-contact-locations.py reports the mean
+     luminance of these three zones, because a near-white card on a daylight
+     sky at 150+ has a 1.4:1 edge and dissolves. Measured after the bake —
+     Mombasa 151 / 86, Nairobi 165 / 54.
+
+     THE PILL AND THE DOTS LIVE INSIDE <figure>, THE CARDS DO NOT, and that
+     split is the fix for a real bug rather than a tidiness preference.
+     All five markers were siblings inside .locale__stage at first, which is
+     correct at desktop because the stage is exactly as tall as the frame.
+     Below 640 the two cards drop BELOW the photograph, the stage grows to
+     contain them, and every percentage anchored to it silently re-resolves:
+     `bottom: 26%` stopped meaning "near the foot of the photo" and put a
+     gold dot on the bare peach in the gap between the picture and the cards.
+
+     So the three markers that belong ON the photograph are anchored to the
+     photograph, at every width, and only the cards are anchored to the stage
+     — which is the one thing that is *supposed* to leave the frame. */
+  .locale__mark--a    { top: 8.5%;  right: 6.5%; }
+  .locale__mark--b    { left: 5.5%; bottom: 7.5%; }
+  .locale__mark--pill { left: 42%;  top: 50%; }
+  .locale__mark--d1   { left: 30%;  top: 33%; }
+  .locale__mark--d2   { right: 27%; bottom: 26%; }
+
+  /* Nairobi mirrors it. Only the four horizontal anchors flip — the vertical
+     rhythm is kept, so the pair reads as one system seen from two sides
+     rather than as two unrelated layouts. */
+  .locale--nairobi .locale__head { margin-left: auto; text-align: right; }
+  .locale--nairobi .locale__mark--a    { right: auto; left: 6.5%; }
+  .locale--nairobi .locale__mark--b    { left: auto;  right: 5.5%; }
+  .locale--nairobi .locale__mark--pill { left: auto;  right: 42%; }
+  .locale--nairobi .locale__mark--d1   { left: auto;  right: 30%; }
+  .locale--nairobi .locale__mark--d2   { right: auto; left: 27%; }
+
+  /* ---------------------------------------------------- the entrance */
+
+  /* Same contract as .touch: .js arms it, .is-in settles it, an observer
+     adds the class once and disconnects. The frame is the thing that
+     "reveals itself" — it comes forward out of depth and settles — and the
+     markers follow it rather than accompanying it, so the photograph reads
+     as the subject and the cards as annotation laid on top afterwards. */
+  .js .locale__frame,
+  .js .locale__card,
+  .js .locale__pill,
+  .js .locale__dot,
+  .js .locale__eyebrow,
+  .js .locale__title,
+  .js .locale__body {
+    opacity: 0;
+    transition:
+      opacity   var(--in-fade, 760ms)  var(--ease-quiet)                  var(--in-delay, 0ms),
+      transform var(--in-move, 1150ms) var(--in-ease, var(--ease-settle)) var(--in-delay, 0ms);
+  }
+
+  .js .locale__eyebrow { --in-delay: 0ms;   --in-move: 1100ms; transform: translate3d(0, 6px, -70px); }
+  .js .locale__title   {
+    --in-delay: 140ms; --in-move: 1450ms; --in-fade: 820ms; --in-ease: var(--ease-pop);
+    transform: translate3d(0, 14px, -190px);                 /* 0.880 */
+  }
+  .js .locale__body    { --in-delay: 300ms; --in-move: 1150ms; transform: translate3d(0, 10px, -60px); }
+
+  /* 1.06 and -90px together, per the spec. The scale is what makes it a
+     camera move rather than a slide; --ease-push is the curve the hero
+     solved for exactly this, slow-in AND slow-out, because a camera must not
+     be front-loaded the way a UI ease is. */
+  .js .locale__frame {
+    --in-delay: 380ms; --in-move: 1700ms; --in-fade: 900ms; --in-ease: var(--ease-push);
+    transform: scale(1.06) translate3d(0, 0, -90px);
+  }
+
+  .js .locale__card { --in-delay: 900ms;  --in-move: 1200ms; transform: translate3d(0, 22px, -160px); }  /* 0.849 */
+  .js .locale__pill { --in-delay: 1040ms; --in-move: 1100ms; --in-ease: var(--ease-pop);
+                      transform: translate3d(0, 16px, -130px); }                                        /* 0.874 */
+  .js .locale__dot  { --in-delay: 1160ms; --in-move: 900ms;  transform: translate3d(0, 10px, -80px); }
+
+  /* The second card lands after the first, so the two do not arrive as one
+     plane. 120ms — enough to read as a sequence, short enough that the pair
+     still belongs together. */
+  .js .locale__mark--b .locale__card { --in-delay: 1020ms; }
+
+  /* Settled. `transform: none` is what makes this the measured composition
+     again rather than an approximation of it. */
+  .js .locale.is-in .locale__frame,
+  .js .locale.is-in .locale__card,
+  .js .locale.is-in .locale__pill,
+  .js .locale.is-in .locale__dot,
+  .js .locale.is-in .locale__eyebrow,
+  .js .locale.is-in .locale__title,
+  .js .locale.is-in .locale__body {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ------------------------------------------------- reduced motion */
+
+  /* EVERY property the script writes is put back BY NAME, not by resetting
+     --rise. The script writes --rise as an inline style, which beats a media
+     query — about.html's chapters section parked four frames 648px below
+     their row by getting exactly this wrong. */
+  @media (prefers-reduced-motion: reduce) {
+    .locale__img,
+    .locale__mark,
+    .locale__mark--dot { transform: none; }
+
+    .js .locale__frame,
+    .js .locale__card,
+    .js .locale__pill,
+    .js .locale__dot,
+    .js .locale__eyebrow,
+    .js .locale__title,
+    .js .locale__body {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* -------------------------------------------------------- narrow */
+
+  @media (max-width: 999px) {
+    .locale { padding: calc(var(--lu) * 7) var(--lu-inset) calc(var(--lu) * 5); }
+    /* The copy column stops being a column. 41.46vw is a measured share of a
+       DESKTOP width; kept here it would set three words a line. */
+    .locale__head,
+    .locale--nairobi .locale__head { max-width: none; margin-left: 0; text-align: left; }
+    .locale__title { font-size: max(34px, calc(var(--lu) * 5.6)); }
+    .locale__body  { font-size: max(14px, calc(var(--lu) * 1.6)); }
+    .locale__card  { width: calc(var(--lu) * 22); }
+  }
+
+  @media (max-width: 640px) {
+    /* The two cards come OFF the photograph and sit under it as a pair.
+       At this width a card is 40% of the frame's width and 30% of its
+       height: laid over the picture they stop being annotation and become
+       the picture. The dots stay — they are 11px and they are the thing
+       that keeps the frame reading as a place rather than as a photograph. */
+    .locale__stage { display: block; }
+    .locale__marks-flow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: calc(var(--lu) * 1.6);
+      margin-top: calc(var(--lu) * 1.6);
+    }
+    .locale__mark--a,
+    .locale__mark--b,
+    .locale--nairobi .locale__mark--a,
+    .locale--nairobi .locale__mark--b {
+      position: static;
+      inset: auto;
+    }
+    .locale__card { width: 100%; }
+    .locale__title { font-size: max(30px, calc(var(--lu) * 7.4)); }
+    .locale__mark--pill, .locale--nairobi .locale__mark--pill { left: 50%; right: auto; transform: translate3d(-50%, calc((0.5 - var(--rise)) * 22px), 0); }
+  }
+
+  /* ================================================================ faq */
+  /* Deliberately the QUIETEST section on the page, and that is a decision
+     rather than a shortfall of ideas. It follows two full-width photographs
+     with markers floating over them; answering that with a third piece of
+     spectacle would leave the page with no shape at all. The register change
+     — no photograph, no depth, no Z — is what tells a reader the page is
+     coming in to land.
+
+     So the motion here is a fade and a few pixels of rise, and nothing else.
+     No perspective box anywhere in this block, on purpose. */
+  .faq {
+    --fu: max(9px, 1vw);
+
+    position: relative;
+    padding: calc(var(--fu) * 9) 7.18% calc(var(--fu) * 10);
+    background: var(--ground);
+    color: var(--menu-body);
+  }
+
+  .faq__inner {
+    display: grid;
+    grid-template-columns: 0.78fr 1.22fr;
+    gap: calc(var(--fu) * 6);
+    align-items: start;
+  }
+
+  .faq__eyebrow {
+    margin: 0;
+    font-size: max(10.5px, calc(var(--fu) * 0.78));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  /* Smaller than a .locale heading on purpose — 3.0fu against 4.1lu. This is
+     a signpost, not a title card, and setting it at the same size would make
+     the FAQ compete with two sections it is meant to follow. */
+  .faq__title {
+    margin: calc(var(--fu) * 1.5) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: calc(var(--fu) * 3);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--menu-ink);
+  }
+
+  .faq__note {
+    margin: calc(var(--fu) * 1.8) 0 0;
+    max-width: 26ch;
+    font-size: max(13px, calc(var(--fu) * 0.95));
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--menu-body);
+  }
+
+  /* ------------------------------------------------------- the list */
+
+  .faq__list { margin: 0; }
+
+  /* THE HAIRLINE IS INK, NOT GOLD, and that is the one colour decision in
+     this block worth the sentence. --res-hair is the site's hairline and it
+     would be the obvious reach — but there are SEVEN of these stacked, and
+     seven gold rules read as an accent pattern rather than as separators.
+     A soft ink line at 0.13 disappears into the ground and lets the type do
+     the dividing, which is what "thin separators" is actually asking for.
+
+     Decorative either way: a separator carries no information the heading
+     above it does not, so no contrast minimum applies. */
+  .faq__item {
+    border-top: 1px solid rgba(47, 27, 25, 0.13);
+  }
+  .faq__item:last-child {
+    border-bottom: 1px solid rgba(47, 27, 25, 0.13);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: calc(var(--fu) * 2);
+    padding: calc(var(--fu) * 1.9) 0;
+    cursor: pointer;
+    list-style: none;
+    /* The default marker is a filled triangle that no amount of type
+       discipline survives. Removed on both engines. */
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q::marker { content: ""; }
+
+  .faq__q-text {
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 400;
+    font-size: max(17px, calc(var(--fu) * 1.62));
+    line-height: 1.3;
+    letter-spacing: 0.002em;
+    color: var(--menu-ink);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  .faq__item:hover .faq__q-text,
+  .faq__q:focus-visible .faq__q-text { color: var(--menu-accent); }
+
+  .faq__q:focus-visible {
+    outline: 2px solid var(--menu-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* A plus drawn as two rules that becomes a minus. Two 1px lines rather
+     than a glyph, so it matches the separators exactly and inherits their
+     weight at every size. */
+  .faq__sign {
+    position: relative;
+    flex: none;
+    width: calc(var(--fu) * 1.1);
+    height: calc(var(--fu) * 1.1);
+    /* nudged off the baseline the flex row aligns on, so the mark sits
+       optically level with the x-height rather than on the baseline */
+    transform: translateY(calc(var(--fu) * -0.15));
+  }
+  .faq__sign::before,
+  .faq__sign::after {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 1px;
+    background: var(--menu-accent);
+    transition: transform 340ms var(--ease-quiet), opacity 340ms var(--ease-quiet);
+  }
+  /* The vertical stroke is the one that goes away. Rotating the whole mark
+     45deg is the template answer and it draws attention to itself; this
+     reads as the answer simply opening. */
+  .faq__sign::after { transform: rotate(90deg); }
+  .faq__item[open] .faq__sign::after { transform: rotate(0deg); opacity: 0; }
+
+  /* The 0fr -> 1fr grid trick. It animates to the content's OWN height, which
+     is the thing a max-height transition cannot do without a magic number
+     that is wrong on some viewport. */
+  .faq__a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 380ms var(--ease-quiet);
+  }
+  .faq__item[open] .faq__a { grid-template-rows: 1fr; }
+
+  .faq__a-inner { overflow: hidden; }
+
+  .faq__a p {
+    margin: 0 0 calc(var(--fu) * 2.2);
+    max-width: 62ch;
+    font-size: max(13.5px, calc(var(--fu) * 1.0));
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--menu-body);
+  }
+
+  /* ---------------------------------------------------- the entrance */
+
+  .js .faq__eyebrow,
+  .js .faq__title,
+  .js .faq__note,
+  .js .faq__item {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    transition:
+      opacity   700ms var(--ease-quiet) var(--in-delay, 0ms),
+      transform 900ms var(--ease-reveal) var(--in-delay, 0ms);
+  }
+
+  .js .faq__title { --in-delay: 90ms; }
+  .js .faq__note  { --in-delay: 170ms; }
+  /* 70ms apart. The list is the content, so it arrives as a run rather than
+     as seven separate events. */
+  .js .faq__item:nth-child(1) { --in-delay: 240ms; }
+  .js .faq__item:nth-child(2) { --in-delay: 310ms; }
+  .js .faq__item:nth-child(3) { --in-delay: 380ms; }
+  .js .faq__item:nth-child(4) { --in-delay: 450ms; }
+  .js .faq__item:nth-child(5) { --in-delay: 520ms; }
+  .js .faq__item:nth-child(6) { --in-delay: 590ms; }
+  .js .faq__item:nth-child(7) { --in-delay: 660ms; }
+
+  .js .faq.is-in .faq__eyebrow,
+  .js .faq.is-in .faq__title,
+  .js .faq.is-in .faq__note,
+  .js .faq.is-in .faq__item {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .faq__eyebrow,
+    .js .faq__title,
+    .js .faq__note,
+    .js .faq__item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    /* The open/close animation goes too. The height still changes — the
+       answer still appears — it just stops being a transition, which is
+       what reduced motion asks for and not one thing more. */
+    .faq__a { transition: none; }
+    .faq__sign::before, .faq__sign::after { transition: none; }
+  }
+
+  @media (max-width: 999px) {
+    .faq { padding: calc(var(--fu) * 7) 7.18% calc(var(--fu) * 8); }
+    .faq__inner { grid-template-columns: 1fr; gap: calc(var(--fu) * 3.4); }
+    .faq__title { font-size: max(30px, calc(var(--fu) * 4.4)); }
+    .faq__note  { max-width: none; font-size: max(14px, calc(var(--fu) * 1.5)); }
+    .faq__q-text { font-size: max(17px, calc(var(--fu) * 2.1)); }
+    .faq__a p    { font-size: max(14px, calc(var(--fu) * 1.5)); }
+    .faq__sign   { width: 14px; height: 14px; }
+  }
+
+  /* ------------------------------------------------------------- reserve */
+  /* Rebuilt 2026-08-15 against `assets/img/inspooooo.png` (1536x1024, exactly
+     3:2), replacing the 2026-08-10 composition entirely. The spec at
+     docs/superpowers/specs/2026-08-15-reservation-redesign-design.md carries
+     the measured tables every number here comes from; `measure-reserve-ref.mjs`
+     reprints them and `make-reserve-path.mjs` regenerates the two curves.
+
+     Geometry is a share of the viewport or of one scale unit, never a pixel:
+     the comp is 1536 wide and is read at widths it was never drawn at.
+
+     THE GROUND. The comp's is #FEFDFA. This section stays on the site's peach.
+     Adopting the ivory would put a hard seam against the ending block that sits
+     directly below this one on all three pages, and a second ground is reserved
+     for full-viewport photographs. So contrast is re-derived against the peach
+     rather than carried across — two of the comp's four ink values fail on it:
+     its #BE754C button border measures 2.7:1 and its #B35F40 accent 3.1:1. */
+
+  .reserve {
+    /* Two golds, unchanged from the old section. The comp's hairline is far too
+       pale to carry text or to bound a control, so the paler value is confined
+       to marks that state nothing — the rule under the eyebrow, the ring around
+       the photograph. Anything a guest reads or clicks takes --menu-accent
+       (4.8:1) or --res-gold, which clears 3:1 as a non-text boundary. */
+    --res-hair: #D4AD7E;
+    --res-gold: #B8813F;
+
+    --res-eyebrow:  clamp(0.66rem, 2.85vw, 0.76rem);
+    --res-title:    clamp(2.35rem, 11.9vw, 3.6rem);
+    --res-lead:     1.075;
+    --res-body:     clamp(0.95rem, 3.9vw, 1.04rem);
+    --res-ctalbl:   clamp(0.76rem, 3.2vw, 0.86rem);
+    --res-ctasub:   clamp(0.64rem, 2.45vw, 0.7rem);
+    --res-metalbl:  clamp(0.66rem, 2.5vw, 0.7rem);
+    --res-metaval:  clamp(0.82rem, 3.3vw, 0.9rem);
+    --res-icon:     clamp(22px, 5.6vw, 27px);
+
+    position: relative;
+    background: var(--cream);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    /* Stacked, the photograph leads: it is the argument for booking, and the
+       heading reads better once the room has been seen. Side by side the order
+       reverses to the comp's. */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* The clip paths live in the section's own markup, not the page's sprite
+     sheet, so this block stays self-contained when it is copied to the other
+     two pages. `width: 0` rather than `display: none` — a display-none SVG
+     still defines its clip paths in Chrome, but not in every engine. */
+  .reserve__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* ---------------------------------------------------- the photograph */
+
+  .reserve__fig {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    /* Stacked, the frame is an arch: full width, curved along the bottom, so
+       the shape still reads as cut paper rather than as a rectangle. */
+    aspect-ratio: 1 / 1;
+  }
+
+  /* The comp's tan curve is not an offset of the photograph's edge — measured,
+     it runs 1.2% of the width outside it down the upper lobe, converges and
+     CROSSES at y≈60%, is invisible from there to y≈87%, and reappears widening
+     to 2.1% at the foot. Sitting the ring *under* an opaque photograph
+     reproduces all three for free: it is drawn once, in full, and the occlusion
+     is real rather than drawn. */
+  .reserve__ring {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    /* The mobile ring hangs below its box by design. */
+    overflow: visible;
+    color: var(--res-hair);
+  }
+
+  .reserve__ringpath {
+    fill: none;
+    stroke: currentColor;
+    /* preserveAspectRatio="none" stretches the ring with the section, which is
+       what keeps it registered against a clip path in the same units — but it
+       would stretch the stroke with it too, leaving the line thick on one flank
+       and thin on the other. This is the one property that fixes that. It has
+       nothing to do with dash length; see the experience section's note. */
+    vector-effect: non-scaling-stroke;
+    stroke-width: 1.4;
+  }
+
+  .reserve__ringpath--wide { display: none; }
+
+  .reserve__frame {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    clip-path: url(#reserve-arch);
+  }
+
+  .reserve__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+    /* Graded here rather than re-baked, because the file is shared with nothing
+       and the old contained blob wanted it as it is. Full-bleed, it covers half
+       the screen, and the file measures 62 of 255 — the floor of the chapters
+       band, which is where a lit macro belongs, not a wide interior. Lifted to
+       ~78, the band this room's subject actually sits in.
+
+       contrast() BEFORE brightness(), and below 1: contrast pulls toward 128,
+       which opens the shadows and pulls the pendants back from the ceiling
+       before the lift multiplies them. Brightness alone at the 1.26 the same
+       mean needs would clip both lamps to flat white discs.
+
+       No scrim: the room is the reason to book, and veiling it would be
+       self-defeating. */
+    filter: saturate(1.08) contrast(0.94) brightness(1.18);
+    animation: reserve-drift 32s var(--ease-quiet) infinite alternate;
+  }
+
+  /* The mask holds still and the room moves inside it. Animating the frame
+     instead would drag the curve across the ground, which is the one edge on
+     the page a reader is actually watching. */
+  @keyframes reserve-drift {
+    from { transform: scale(1)     translate3d(0, 0, 0);      }
+    to   { transform: scale(1.035) translate3d(-0.8%, -1%, 0); }
+  }
+
+  /* ---------------------------------------------------------- the copy */
+
+  .reserve__copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(38px, 9vw, 64px) 7.5% clamp(52px, 12vw, 84px);
+  }
+
+  /* Takes the slot the comp fills with a blossom seal and a long rule. The mon
+     is deliberately not here: the seal's job is to open the column, and an
+     eyebrow does that with a word instead of a mark. */
+  .reserve__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 18px);
+    margin: 0;
+    font-weight: 400;
+    font-size: var(--res-eyebrow);
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .reserve__eyebrow::after {
+    content: "";
+    width: clamp(2.4rem, 7vw, 3.6rem);
+    height: max(1px, 0.07vw);
+    background: var(--res-hair);
+  }
+
+  /* All caps, against the 2026-08-10 spec's explicit sentence-case decision.
+     That decision held the convention `.dish__title` and `.menu` establish and
+     was right at the time; the client has since supplied a comp in caps and
+     asked for it. A deliberate reversal on instruction, recorded so nobody
+     quietly restores it. */
+  .reserve__title {
+    margin: clamp(20px, 5vw, 30px) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: var(--res-title);
+    line-height: var(--res-lead);
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  .reserve__rule {
+    width: clamp(2.2rem, 4.5vw, 3.2rem);
+    height: max(1.5px, 0.099vw);
+    margin: clamp(18px, 4vw, 26px) 0 0;
+    border: 0;
+    background: var(--res-hair);
+  }
+
+  .reserve__body {
+    max-width: 34ch;
+    margin: clamp(20px, 4.4vw, 30px) 0 0;
+    font-weight: 300;
+    font-size: var(--res-body);
+    line-height: 1.9;
+    color: var(--menu-body);
+  }
+
+  /* ------------------------------------------------------------ the CTA */
+  /* The mechanism is unchanged: this still opens WhatsApp with the message
+     already written. Only the control's appearance follows the comp — an
+     outlined rectangle with a label and an arrow, where the old one carried a
+     drawn WhatsApp glyph and a second line inside the box. */
+
+  .reserve__cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 6vw, 34px);
+    width: min(100%, 19rem);
+    margin-top: clamp(26px, 6vw, 38px);
+    padding: clamp(15px, 3.6vw, 20px) clamp(20px, 4.4vw, 28px);
+    /* Square, where the menu's CTA is a pill: against a curved photograph and
+       a hairline rule, the one straight-edged shape is what gives the column
+       its spine. It is also what the comp draws. */
+    border: max(1.5px, 0.12vw) solid var(--res-gold);
+    text-decoration: none;
+    color: var(--menu-accent);
+    /* Matched to the fill's 520ms rather than the 420ms `.menu__cta` uses.
+       Finishing early is what causes the dip: the lettering reaches cream while
+       the ink is still short of the right edge. */
+    transition: color 520ms var(--ease-quiet),
+                border-color 520ms var(--ease-quiet);
+  }
+
+  .reserve__cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--menu-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  /* Tracking leaves a space after the final letter, which sits the lettering
+     half of it left of centre. Half the tracking back squares it up — the same
+     correction `.menu__cta` makes. */
+  .reserve__ctalbl {
+    font-size: var(--res-ctalbl);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .reserve__arrow {
+    flex: none;
+    width: clamp(22px, 5.4vw, 28px);
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  .reserve__cta:hover,
+  .reserve__cta:focus-visible { color: var(--cream); border-color: var(--menu-ink); }
+
+  .reserve__cta:hover::before,
+  .reserve__cta:focus-visible::before { transform: scaleX(1); }
+
+  .reserve__cta:hover .reserve__arrow,
+  .reserve__cta:focus-visible .reserve__arrow { transform: translateX(22%); }
+
+  .reserve__cta:active { transform: translateY(1px); }
+
+  .reserve__cta:focus-visible {
+    outline: 1.5px solid var(--menu-ink);
+    outline-offset: 5px;
+  }
+
+  /* Beneath the box, not inside it. Inside, the control becomes two lines and
+     the comp's clean single line is lost; beneath, the button is exactly the
+     comp's and the guest still learns where the tap goes before making it.
+     --menu-accent rather than --res-gold: this is text, so it needs 4.5:1. */
+  .reserve__ctasub {
+    margin: clamp(11px, 2.6vw, 15px) 0 0;
+    font-weight: 300;
+    font-size: var(--res-ctasub);
+    line-height: 1.5;
+    letter-spacing: 0.13em;
+    text-indent: 0.065em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  /* ----------------------------------------------------- the two items */
+
+  .reserve__meta {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    width: 100%;
+    margin: clamp(34px, 8vw, 52px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reserve__metaitem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: clamp(20px, 5vw, 32px);
+  }
+
+  .reserve__metaitem + .reserve__metaitem {
+    padding-right: 0;
+    padding-left: clamp(20px, 5vw, 32px);
+  }
+
+  /* The comp's divider fades out toward the bottom rather than ruling the full
+     height — it reads as a seam between two columns, not as a table. */
+  .reserve__metaitem + .reserve__metaitem::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: max(1px, 0.08vw);
+    background: linear-gradient(to bottom,
+      var(--res-hair) 6%,
+      rgba(212, 173, 126, 0) 92%);
+  }
+
+  .reserve__icon {
+    display: block;
+    width: var(--res-icon);
+    height: var(--res-icon);
+    fill: none;
+    stroke: var(--menu-accent);
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reserve__metalbl {
+    margin-top: clamp(13px, 3vw, 18px);
+    font-size: var(--res-metalbl);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  .reserve__metaval {
+    margin-top: clamp(9px, 2.2vw, 13px);
+    font-weight: 300;
+    font-size: var(--res-metaval);
+    line-height: 1.65;
+    color: var(--menu-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reserve__img        { animation: none; }
+    .reserve__cta,
+    .reserve__cta::before,
+    .reserve__arrow      { transition: none; }
+    .reserve__cta:active { transform: none; }
+  }
+
+  /* ---- side by side, on the comp's measured proportions ---------------- */
+  /* Every length below is a multiple of one unit, --u, so the left column is a
+     single aspect-locked block: change --u and the whole thing scales with the
+     comp's measured ratios intact. 1u is 1% of the comp's width.
+
+     Measured, the column stands 48.1u of ink tall — 72.2% of the comp's height
+     at 0.6667u per percent. Capping --u at 1.62svh is therefore what holds it
+     inside 78% of the viewport, leaving 11% of air above and below. It clears
+     the screen by re-scaling and re-centring the whole block with every ratio
+     intact, never by compressing the vertical rhythm, which is the one move
+     that would actually read as cramped.
+
+     Below roughly 640px of viewport height the 8.6px floor takes over and the
+     section is allowed to run past one screen rather than shrink the body copy
+     out of legibility.
+
+     The photograph needs none of this arithmetic: it is full-bleed and its clip
+     is expressed in fractions of its own box. */
+  @media (min-width: 1000px) {
+    .reserve {
+      --u: max(8.6px, min(1vw, 1.62svh));
+
+      flex-direction: row;
+      align-items: center;
+      min-height: 100svh;
+    }
+
+    /* 38% is chosen, not measured: the curve's leftmost point is 43.88% of the
+       section, so a box starting here gives the clip 5.9% of clearance and lets
+       object-fit work on something near the visible shape's own proportions
+       instead of on the whole section. `make-reserve-path.mjs` bakes this number
+       into both paths — change it there, not here. */
+    .reserve__fig {
+      position: absolute;
+      inset: 0 0 0 38%;
+      width: auto;
+      aspect-ratio: auto;
+    }
+
+    .reserve__frame { clip-path: url(#reserve-curve); }
+    .reserve__img   { object-position: 62% 47%; }
+
+    .reserve__ringpath--tall { display: none; }
+    .reserve__ringpath--wide { display: block; }
+
+    /* Vertically centred on the section's own axis rather than pinned to the
+       comp's y-positions. The comp leaves its bottom 22.7% to a vertical
+       Japanese lockup and a contour texture, neither of which is being built;
+       holding its offsets without them would leave a fifth of the section empty
+       at the foot and read as an unfinished page.
+
+       Centred by `align-items` on the section, not by `top: 50%` and a
+       translate. A transform moves the paint but not the layout box, so the
+       translated version leaves the section's scrollHeight 240px past its
+       clientHeight — which is exactly the reading used to prove nothing is
+       being silently clipped by `overflow: hidden`. Centring in flow keeps that
+       check honest. */
+    .reserve__copy {
+      position: relative;
+      margin-left: 6.5%;                 /* the comp's own left margin */
+      width: calc(31 * var(--u));
+      padding: 0;
+    }
+
+    .reserve__eyebrow { font-size: calc(0.78 * var(--u));
+                        gap: calc(1.35 * var(--u)); }
+    .reserve__eyebrow::after { width: calc(6.4 * var(--u));
+                               height: max(1px, calc(0.07 * var(--u))); }
+
+    /* Sized by ink WIDTH, not by the comp's font-size: Cormorant Garamond runs
+       about a fifth narrower than the didone the comp is set in, so matching
+       its size lands "YOUR TABLE" short by that much. Solved against the comp's
+       measured 29.56u and verified in the browser, not estimated. */
+    .reserve__title  { margin-top: calc(4.12 * var(--u));
+                       font-size: calc(5.06 * var(--u));
+                       line-height: calc(5.47 * var(--u)); }
+    .reserve__rule   { margin-top: calc(1.48 * var(--u));
+                       width: calc(2.54 * var(--u));
+                       height: max(1.5px, calc(0.1 * var(--u))); }
+    /* Leading is set as a length in --u, not a multiple of font-size, so the
+       comp's measured line pitch holds even where a px floor has overridden the
+       font-size — which is what keeps the block's height exactly proportional
+       to --u, and the one-screen arithmetic reliable rather than approximate. */
+    .reserve__body   { margin-top: calc(2.18 * var(--u));
+                       font-size: max(12px, calc(1.04 * var(--u)));
+                       line-height: calc(2.0 * var(--u));
+                       /* Measured off the font, not the block, so the paragraph
+                          holds the same characters-per-line when the 12px floor
+                          takes over and stays three lines either way instead of
+                          spilling to a fourth. */
+                       max-width: calc(22.6 * var(--res-body)); }
+
+    .reserve__cta    { margin-top: calc(3.4 * var(--u));
+                       width: calc(20.44 * var(--u));
+                       gap: calc(2.2 * var(--u));
+                       padding: calc(1.42 * var(--u)) calc(1.9 * var(--u)); }
+    .reserve__ctalbl { font-size: max(11px, calc(0.92 * var(--u))); }
+    .reserve__arrow  { width: calc(1.85 * var(--u)); }
+    .reserve__ctasub { margin-top: calc(1.15 * var(--u));
+                       font-size: max(9.5px, calc(0.68 * var(--u)));
+                       line-height: calc(1.1 * var(--u)); }
+
+    .reserve__meta      { margin-top: calc(2.39 * var(--u));
+                          grid-template-columns: calc(16.96 * var(--u)) auto; }
+    .reserve__metaitem  { padding-right: calc(2.4 * var(--u)); }
+    .reserve__metaitem + .reserve__metaitem { padding-left: calc(2.4 * var(--u));
+                                              padding-right: 0; }
+    /* Sized on the DRAWN mark, not the box: both glyphs sit inside about 69%
+       of their 24-unit viewBox, so matching the comp on box size lands the
+       ink a third small. 2.5u of box puts 1.72u of stroke on the page
+       against the comp's measured 1.76u. */
+    .reserve__icon      { width: calc(2.5 * var(--u));
+                          height: calc(2.5 * var(--u)); }
+    .reserve__metalbl   { margin-top: calc(0.8 * var(--u));
+                          font-size: max(9.5px, calc(0.72 * var(--u))); }
+    .reserve__metaval   { margin-top: calc(0.72 * var(--u));
+                          font-size: max(11px, calc(0.95 * var(--u)));
+                          line-height: calc(1.62 * var(--u)); }
+  }
+
+  /* Tablet. The phone's clamps all reach their ceiling well before 820px, so
+     left-aligned type that fills a 390px screen fills less than half of this
+     one and strands 400px of bare ground down the right flank. The block is
+     scaled up rather than centred: centring would break the left-aligned
+     editorial column the comp is built on, and the column is what the section
+     is. Every ceiling below is raised in proportion, so the rhythm is the same
+     block read larger — never one element grown to plug a gap. */
+  @media (min-width: 640px) and (max-width: 999px) {
+    .reserve {
+      --res-eyebrow:  clamp(0.76rem, 1.15vw, 0.9rem);
+      --res-title:    clamp(3.4rem, 8.4vw, 4.9rem);
+      --res-body:     clamp(1.04rem, 1.5vw, 1.18rem);
+      --res-ctalbl:   clamp(0.86rem, 1.2vw, 0.98rem);
+      --res-ctasub:   clamp(0.7rem, 0.95vw, 0.78rem);
+      --res-metalbl:  clamp(0.7rem, 0.95vw, 0.8rem);
+      --res-metaval:  clamp(0.9rem, 1.25vw, 1.02rem);
+      --res-icon:     clamp(27px, 3.6vw, 34px);
+    }
+
+    .reserve__fig  { aspect-ratio: 3 / 2; }
+    .reserve__copy { padding-inline: 9%; }
+    .reserve__body { max-width: 42ch; }
+    .reserve__cta  { width: min(100%, 26rem); }
+    .reserve__meta { max-width: 34rem; }
+    .reserve__metaitem { padding-right: clamp(28px, 6vw, 46px); }
+    .reserve__metaitem + .reserve__metaitem {
+      padding-left: clamp(28px, 6vw, 46px);
+      padding-right: 0;
+    }
+  }
+  /* ================================================================ ending
+
+     The closing frame. Measured from the reference crop (1320x619), which
+     is a dark frame; the ground here is cream instead, so every value that
+     described "light ink on dark" is inverted to the same perceptual
+     weight rather than copied as a number.
+
+       ground luminance          7.7
+       wordmark ink width        880 / 1320 = 66.67% of viewport width
+       wordmark peak luminance   16.7  → delta +9 over the ground
+       nav gaps                  34px and 35px = 2.58% of width, even
+       nav cap height            ~10px → ~11px type = 0.83% of width
+       nav luminance             ~110 resting, 254 hovered
+       wordmark → nav            16px = 1.21% of width
+       nav → copyright           20px = 1.52% of width
+
+     The +9 delta is the whole brief: the wordmark has to be present and
+     almost not there. On a dark ground that is 3.6% white; on cream it is
+     roughly 4.5% ink, because the same delta costs a different alpha when
+     the ground is at the other end of the range. The value below was set
+     by measuring the render, not by choosing a number that sounded right.
+     ==================================================================== */
+
+  .ending {
+    /* The mark no longer matches the reference's width, and that is the
+       point. The reference's wordmark is a script: ascenders and descenders
+       make its ink 24.5% as tall as it is wide. Letterspaced caps have only
+       cap height, so at the reference's matched 66.9% width they came out
+       14% as tall — correct on the measurement and visibly short of its
+       vertical presence. Reaching that ratio honestly would need caps
+       1595px wide on a 1440px screen, so width is spent instead: the mark
+       runs to ~92% of the viewport, which is as large as it can be and
+       still read as MISONO rather than as a cropped M and O. */
+    --end-mark:   clamp(4.4rem, 19.9vw, 20rem);
+    /* The last 15% of height comes from the block, not the size — see
+       .ending__mark. */
+    --end-stretch: 1.15;
+    /* The reference's three links span 195 of 1320 = 14.77% of the
+       viewport, with 2.58% between them. Size and tracking were fitted
+       together to that span, and it closed at 0.16em — the hero wordmark's
+       own tracking, which is where it should have started. The reference's
+       per-word widths are not usable: its nav is dim, small and JPEG-
+       compressed, and the measured widths move with the threshold, so only
+       the total span and the even gaps are trustworthy. */
+    --end-link:   max(10.5px, 0.76vw);
+    --end-note:   max(9.5px, 0.72vw);
+    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the three links  */
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Substantial, not endless, and no taller than the mark can fill. The
+       mark scales with width; the block would otherwise scale with height,
+       and on a portrait tablet that split put a 123px mark inside a 704px
+       block — 17.5% against the desktop's 33%, which is the vertical
+       presence draining out exactly where there is most room for it. The
+       52vw term ties the block back to the axis the mark is sized on. It
+       binds only where the viewport is tall relative to its width: at
+       1440x900 and 1280x720 the svh term still wins, and 44rem still caps
+       a large desktop. */
+    min-height: min(72svh, 44rem, 52vw);
+    /* No inline padding on the section. At this size the mark is wider than
+       a 7.18%-inset content box, and an overflowing nowrap line does not
+       centre — text-align puts its start at the content edge and lets the
+       whole overflow run off the end side, which walked the mark 54px
+       right. The nav carries its own inset instead; nothing else here comes
+       near an edge. */
+    padding: clamp(72px, 12vw, 160px) 0 clamp(28px, 2.05vw, 44px);
+    /* No rule, no border: the reservation section is the same cream and the
+       two are meant to meet without a seam. What separates them is a two-
+       step deepening across the height of this block — far too small to
+       read as a band, just enough that the page settles rather than ending
+       on the same flat value it has held for three sections. */
+    background: linear-gradient(180deg, var(--cream) 0%, #FAF5F1 100%);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* The wordmark is not redrawn. Same family, weight and tracking as
+     .hero__name, including the negative right margin that cancels the
+     trailing letter-space — without it the block centres on its box and
+     lands 0.08em left of true. */
+  .ending__mark {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: var(--end-mark);
+    /* Cormorant's caps measure 0.653em, so the line box is set to exactly
+       that. The box then *is* the ink, and every gap below is a real
+       ink-to-ink measurement instead of one padded by half-leading — at
+       this size the default leading was putting 22px of invisible air
+       under the mark and walking the nav out of position. */
+    line-height: 0.653;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+    color: rgba(47, 27, 25, 0.045);
+    user-select: none;
+    /* Once the mark is as wide as the screen allows, height is the only
+       axis left. A 1.15 vertical scale thickens Cormorant's horizontal
+       hairlines by 15% against unchanged stems — at 4.5% alpha that is
+       below the threshold of anything you can see, and it buys 28px of
+       cap height that the size could not.
+
+       Anchored at the baseline, so the mark grows upward into the empty
+       cream and the 16px gap down to the nav holds without recalculation.
+       The transform is also outside layout, which is what keeps the block's
+       own height honest: the flex column still measures the unscaled box.
+
+       The 0.08em nudge is the other half of the centring: letter-spacing
+       adds a trailing space after the final O that the line box counts as
+       width, so centred text sits half a letter-space left of true. The
+       hero solves this with margin-right: -0.16em, which cannot work here —
+       the width is what overflows. Same correction, moved into the
+       transform where it costs no layout. */
+    transform: translateX(0.08em) scaleY(var(--end-stretch));
+    transform-origin: 50% 100%;
+  }
+
+  .ending__nav {
+    /* The reference's ink-to-ink gap is 16px = 1.21% of width. The link's
+       own tap padding and half-leading contribute ~7.6px of that, so the
+       margin carries the remainder. */
+    margin-top: clamp(8px, 0.68vw, 14px);
+    display: flex;
+    justify-content: center;
+    gap: var(--end-gap);
+    padding-inline: 7.18%;   /* the inset the section gave up, kept here */
+  }
+
+  .ending__link {
+    position: relative;
+    padding: 0.5em 0.15em;
+    font-size: var(--end-link);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    margin-right: -0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    /* The reference runs its links dim and takes them to full brightness on
+       hover. That relationship is kept; the resting value is not — lum 110
+       on its ground is about 3:1, and these are the page's last three
+       links. 6.5:1 resting, full ink on hover. */
+    color: var(--menu-body);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  /* The ink is ~11px tall, which is a 21px target with the padding. This
+     takes the hit area to 44px without entering layout — the ink gaps above
+     and below were measured off the reference and a taller box would walk
+     them apart. */
+  .ending__link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  /* Hairline underline, wiping out from the centre. Scale only, so it costs
+     no layout and nothing but a transform animates. */
+  .ending__link::after {
+    content: "";
+    position: absolute;
+    left: 0.15em;
+    right: calc(0.15em + 0.16em);
+    bottom: 0.35em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform 260ms var(--ease-quiet);
+  }
+
+  .ending__link:hover,
+  .ending__link:focus-visible     { color: var(--menu-ink); }
+  .ending__link:hover::after,
+  .ending__link:focus-visible::after { transform: scaleX(1); }
+
+  .ending__link:focus-visible {
+    outline: 1px solid var(--misono-indigo);
+    outline-offset: 4px;
+    border-radius: 1px;
+  }
+
+  .ending__link:active { transform: translateY(1px); }
+
+  .ending__note {
+    /* 1.52% of width. The reference sets this at roughly 2:1 against its
+       ground, which is understated to the point of unreadable; it is real
+       text, so it holds the body colour. */
+    margin: clamp(10px, 0.9vw, 18px) -0.22em 0 0;
+    font-size: var(--end-note);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--menu-body);
+  }
+
+  /* The three targets are ids the sections above already own — the brief
+     forbids touching them, and only .beyond and .reserve carry an id of
+     their own, so MENU aims at the menu heading. The offset keeps the
+     landing off the top edge of the viewport. */
+  #menu-heading, #beyond, #reserve { scroll-margin-top: clamp(24px, 5vh, 64px); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ending__link,
+    .ending__link::after { transition-duration: 1ms; }
+  }
+
+  /* Phones. The desktop ratio already runs the mark to ~92% of the
+     viewport, so there is almost nothing left to give here — 20vw is the
+     same 92%, and anything past it starts cropping the M. The phone gets
+     its height from the stretch instead, pushed a little harder because a
+     390px screen has proportionally more empty cream to fill. The 72svh
+     minimum goes: on a phone the closing frame is as tall as its contents
+     and no taller. */
+  @media (max-width: 639px) {
+    .ending {
+      --end-mark: 20vw;
+      --end-stretch: 1.22;
+      min-height: 0;
+      padding-top: clamp(64px, 22vw, 108px);
+      padding-bottom: clamp(36px, 11vw, 56px);
+    }
+    .ending__nav { --end-gap: clamp(20px, 6.4vw, 34px); }
+  }
+
+  /* =====================================================================
+     MEASURED — what this file was verified against, and with what.
+
+     Reproduce all of it with `node shoot-contact.mjs [w] [h] [p,p,...]`.
+     Every luminance below is PAINTED — filters, blend modes, wash and bed
+     composited, read back through a canvas — and taken with .hero__type
+     hidden, so it is the bed being measured and not the letters. Rec.601,
+     matching PIL's `L` and therefore the bake scripts.
+
+                     whole   band    top  bottom  pendant   eyebrow
+       1440x900       32.9   36.8   20.8    8.1     43.6     5.56:1
+       1280x800       32.9   36.8   21.3    8.2     43.6     5.61:1
+       1512x820       34.0   37.2   22.0    8.8     47.1     5.75:1
+        820x1180      28.1   41.2   16.0    9.6     33.0     6.23:1
+        390x844       36.6   45.0   25.3   11.4     43.6     7.17:1
+
+       about.html's opening, for comparison   34     43     12     15
+
+     Reading it: `band` sits 6 points under that file's 43 and `bottom` at
+     roughly half its 15. The first is deliberate — see .hero__bed, where the
+     eyebrow and not the heading is what sets the floor. The second is the
+     photograph, not the wash; the note on .hero__wash has the measurement
+     that settled it.
+
+     THE EYEBROW IS THE BINDING CONSTRAINT ON THIS PAGE and it clears at every
+     viewport, worst case 5.56:1 against the 4.5:1 that 12.4px type is held
+     to. --res-hair is documented decorative-only, so this is a new role for
+     the token and the reason the reading is recorded per viewport rather
+     than once. The heading has 16:1 where it needs 3:1 and never binds.
+
+     Type, from a pixel scan of the render rather than a font metric:
+
+       cap height   1.875% of viewport width at 1440 and 1280, 1.918% at 1512
+                    (about.html's reference: 1.877%)
+       ink width    43.3%  (that reference: 49.5% — see .hero__title for why
+                    this is correct rather than short)
+
+     Motion, all verified rather than asserted:
+
+       · every rest state is a true identity transform, and there are ZERO
+         running animations once the entrance is over. Nothing on this page
+         loops forever, unlike `drift` on index/about and `reserve-drift` in
+         the reservation block — so an unscoped getAnimations().finish()
+         sweep cannot be taken down by this section the way CLAUDE.md records
+         it being taken down by that one.
+       · parallax: --par runs 0 -> 1 linearly and .hero__media translates
+         0 -> 108px at 1440x900, which is exactly the 12svh of --par-travel.
+         It has to be driven by a temporary spacer to be seen at all, because
+         the page is one viewport tall and therefore does not scroll; the
+         self-test at the foot of shoot-contact.mjs does that and removes it.
+       · reduced motion: the loop never starts, no inline --par is ever
+         written, .hero__media reports top 0 / height 100% / transform none,
+         and getAnimations() is empty.
+
+     ---------------------------------------------------------------------
+     THE PARALLAX IS NO LONGER DORMANT. Everything above was measured when
+     this page was one viewport tall and therefore never scrolled — --par
+     sat at 0 forever and had to be driven by a temporary spacer to be seen
+     at all. Since .touch and .details were added on 2026-08-17 the document
+     scrolls and the loop runs for real. Driven by actual scrolling at
+     1440x900:
+
+       scrollY     0    225    450    675    900
+       --par    0.0000 0.2500 0.5000 0.7500 1.0000
+       media y     0     27     54     81    108 px
+
+     108px is exactly the 12svh of --par-travel, and the media box covers
+     .hero's own box at every one of them. NOTE THE TEST: the media must
+     cover THE HERO'S rect, not the viewport's. Checked against the viewport
+     it reports a gap at every position past the first — which is not a gap,
+     it is .touch coming into view, i.e. the page working. That false
+     positive cost a round of chasing.
+     ---------------------------------------------------------------------
+
+     .touch and .details, 2026-08-17. Reproduce the motion with
+     `node shoot-touch.mjs [w] [h] [ms,...]` and the rest with
+     `node verify-touch.mjs`.
+
+     ENTRANCE, at 1440x900. `projects` is p/(p-z), what the depth should
+     produce; `t=0` is what it measured:
+
+                      z      projects    t=0     t=2400
+       eyebrow       -80      0.932     0.932    1.000
+       GET IN       -210      0.840     0.842    1.000
+       TOUCH        -240      0.821     0.823    1.000
+       body          -60      0.948     0.948    1.000
+       name         -150      0.889     0.889    1.000
+       email        -170      0.876     0.876    1.000
+       phone        -190      0.863     0.863    1.000
+       message      -210      0.851     0.851    1.000
+       send         -120      0.909     0.909    1.000
+
+     Every arrival lands on its own projection, which is the proof the
+     perspective is on the right parents — a line reading 1.000 at t=0 is
+     the grandchild bug, not a subtle animation. At t=2400 all ten report
+     scale 1.000 and offset 0.0, 0.0: a true identity transform.
+
+     The two display lines peak at scale 1.012 around t=1100 — that is
+     --ease-pop's overshoot, and it is the only place on this page where
+     anything goes past its mark and comes back.
+
+     CONTRAST, computed against each element's own ground:
+
+       field rule    3.26:1   (UI boundary, WCAG 1.4.11, needs 3)
+       field label   4.78:1
+       typed value  13.60:1
+       body          6.32:1
+       send border   3.26:1   (UI boundary)
+       details value 13.25:1  against #F5E5DB, the gradient's foot
+       details label  4.66:1  against #F5E5DB
+
+     All four field rules paint rgb(172, 118, 52) at lum 124.7 — sampled
+     from the render, because at four different y they read as two
+     different colours to the eye and that turned out to be subpixel
+     coverage rather than anything real.
+
+     FIT. `inner` is the copy block, tested as a rect against the section's
+     rather than by scrollHeight > clientHeight, which lies here for the
+     same reason it lies on the reserve section. `deco` is the painted
+     clearance of the kanji from the form and of the mon from the masthead.
+
+     RE-MEASURED 2026-08-18, after the composition was rebuilt. `pair` is
+     .touch's top to .details' bottom — what a reader sees having scrolled the
+     form to the top of the window — and it is asserted in verify-touch.mjs
+     rather than re-checked by eye.
+
+     The history is worth keeping because each step was a different kind of
+     fix. It began at a flat 1.49 screens with .touch pinned to 100svh; that
+     pin went and it became 1.10; 88px was then squeezed out of five places to
+     reach 0.92. The rebuild below did NOT squeeze anything — merging the two
+     blocks onto one grid removed the ~150px their meeting paddings were
+     spending on nothing, which paid for a heading at 4.8tu instead of 3.9 and
+     a form gap back at 3.2tu instead of 2.6, and STILL fits with more room
+     than the squeezed version had.
+
+                    section  inner  details      pair        deco
+       1440x900       597     525    222       819/900  +81   87 / 14
+       1280x800       538     474    198       735/800  +65   78 / 12
+       1512x820       552     485    205       757/820  +63  172 / 104
+       1366x768       ---     ---    ---       720/768  +48    -
+       1280x720       ---     ---    ---       687/720  +33    -   <- tightest
+       2560x1440      969     853    360      1329/1440 +111  255 / 136
+       1000x700       459     409    157       616/700  +84   61 /  9
+        820x1180      816     679    215      1031/1180 +149  -23 / -64
+        390x844       771     643    328      1099/844        -13 / -117
+
+     The last two are stacked and are not meant to fit one screen: below
+     1000px the columns stack and a phone cannot show a four-field form and
+     the contact details at once. The assertion is scoped to desktop for that
+     reason — a check that fires where the design is correct is the kind that
+     hides a real regression, which this file has now proved three times over.
+
+     THE GRID, above 1000px. The invariant is that the contact details start
+     on the SAME grid lines as the row above: PHONE on the masthead's line,
+     EMAIL on the form's. Measured dx at every viewport: -0.0 / -0.0.
+
+     That is the third invariant verify-touch.mjs has asserted here, and the
+     first two are instructive. "Every item's centre sits on the page axis"
+     was true of a stack. "The two ink centres balance about the axis" was
+     true of two centred cells. Both encoded an ARRANGEMENT rather than a
+     RULE, and both fired at nearly every viewport the day the arrangement
+     changed. Grid agreement is a property of the composition itself, so it
+     survives re-proportioning the columns and fails only if the two rows
+     genuinely stop agreeing.
+
+     CONTRAST, re-derived after the closing gradient was removed. #F5E5DB
+     was this page's binding ground and it is now --ground #F7E8DF, which is
+     lighter, so everything measured against it gained:
+
+       field rule    3.26:1   (UI boundary, WCAG 1.4.11, needs 3)
+       field label   4.78:1
+       details value 13.60:1  (was 13.25 against #F5E5DB)
+       details label  4.80:1  (was 4.66)
+
+     REDUCED MOTION: nothing is left transformed or faded, no inline --drift
+     or --par is ever written, .hero__media reports transform none, and
+     getAnimations() is empty.
+     ===================================================================== */
+
+  /* =====================================================================
+     THE PEACH, for the two transplanted blocks.
+
+     Third copy of this block — menu.html and about.html carry the same one,
+     and the three must be kept in step. Added here 2026-08-17 when the
+     reserve and ending blocks were transplanted onto this page, which
+     REVERSED the earlier decision that contact.html would have no reserve
+     block and no footer. That decision is what made this page a deliberate
+     dead end; it is not one any more.
+
+     Nothing above is edited to achieve this. Every change lives HERE, after
+     the copies, so the copies stay byte-identical to index.html and can be
+     re-copied from it wholesale. Put any future ground adaptation in this
+     block, never in the copies.
+
+     Both sections take their ground from var(--cream), so re-pointing that
+     one property at --ground moves them without touching a declaration.
+     Two things do not follow from it and are handled individually below.
+     ===================================================================== */
+
+  .reserve,
+  .ending {
+    --cream: var(--ground);
+  }
+
+  /* 1. The gold that bounds the WhatsApp button. index.html picked #B8813F
+        precisely because it clears 3:1 as a non-text boundary — on cream it
+        makes it by 0.18, at 3.18:1. The peach is darker, and that margin was
+        not there to spend: it falls to 2.81:1 and fails. Darkened until it
+        clears again with room, 3.26:1.
+
+        THIS OVERRIDE IS REQUIRED EVEN THOUGH :root ALREADY CARRIES #AC7634,
+        which is the trap worth spelling out: the copied .reserve rule
+        declares --res-gold: #B8813F on ITSELF, and a declaration on the
+        element beats one on :root. Deleting this block because the token
+        "is already correct globally" silently puts the cream value back. */
+  .reserve {
+    --res-gold: #AC7634;
+  }
+
+  /* 2. The closing gradient's tail is a literal, so --cream cannot reach it.
+        The homepage deepens its foot by exactly (-2, -3, -4) across the
+        block — "far too small to read as a band, just enough that the page
+        settles". Same step applied to the peach rather than a new value
+        chosen by eye. Leaves the footer links at 6.2:1 at their dimmest. */
+  .ending {
+    background: linear-gradient(180deg, var(--ground) 0%, #F5E5DB 100%);
+  }
+
+  /* 3. The wordmark needed NO change, which is worth recording because it
+        looks like it should have. Its alpha is 0.045 and the homepage's
+        comment calls the resulting +9 luminance delta "the whole brief" —
+        but that delta is (ground - ink) x alpha, and ground-ink is within a
+        few points of the same on both grounds. Measured: 9,10,10 on cream
+        and 9,9,9 on the peach. Re-deriving it would have made it wrong.
+
+     NOT NEEDED HERE, unlike on menu.html and about.html: --menu-body and
+     --menu-accent are already at their peach values in this file's :root,
+     because this whole page was built on the peach from the first line. The
+     other two copies correct them in their own blocks. Do not "restore" them
+     here for symmetry — they would be re-declaring what is already true. */
+</style>
+</head>
+<body>
+
+<!-- ---------------------------------------------------------------- hero -->
+<section class="hero" aria-labelledby="contact-title">
+  <!--
+    assets/img/contact-hero.jpg — Pexels 19300593 by Feyza Yildirim, baked by
+    bake-contact-hero.py (2000x1333, mean 60/255, no baked vignette; the
+    reproduce command is in that file's docstring).
+
+    PLACEHOLDER, and flagged as such: Pexels supplies no model release, and an
+    identifiable person on a restaurant's contact page reads as that
+    restaurant's staff. Swap for a client-supplied or licensed frame before
+    launch. The composition depends on one property of whatever replaces it —
+    a lit subject OFF centre, leaving the middle calm — not on this photograph.
+
+    alt is empty on purpose: the h1 below carries the meaning, and the frame is
+    atmosphere. Same call as index.html's hero and about.html's opening.
+  -->
+  <div class="hero__media">
+    <picture>
+      <source type="image/avif" sizes="105.7vw"
+              srcset="assets/img/r/contact-hero-1040.avif 1040w, assets/img/r/contact-hero-1270.avif 1270w, assets/img/r/contact-hero-1520.avif 1520w, assets/img/r/contact-hero-2000.avif 2000w">
+      <source type="image/webp" sizes="105.7vw"
+              srcset="assets/img/r/contact-hero-1040.webp 1040w, assets/img/r/contact-hero-2000.webp 2000w">
+      <img class="hero__img" src="assets/img/contact-hero.jpg" alt=""
+         fetchpriority="high" decoding="sync" width="2000" height="1333" loading="eager">
+    </picture>
+  </div>
+
+  <div class="hero__warm"></div>
+  <div class="hero__wash"></div>
+  <div class="hero__bed"></div>
+  <div class="hero__grain"></div>
+  <div class="hero__lift"></div>
+
+  <header class="topbar">
+    <a class="topbar__brand" href="index.html">Misono</a>
+
+    <nav class="topbar__nav" aria-label="Primary">
+      <a class="topbar__link" href="menu.html">Menu</a>
+      <a class="topbar__link" href="about.html">About</a>
+      <a class="topbar__link" href="contact.html" aria-current="page">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero__type">
+    <p class="hero__eyebrow">Contact Us</p>
+    <span class="hero__rule" aria-hidden="true"></span>
+    <h1 class="hero__title" id="contact-title">We are at Your Service</h1>
+  </div>
+</section>
+
+<!-- =================================================== get in touch ====
+     Spec: docs/superpowers/specs/2026-08-17-contact-getintouch-design.md
+
+     PLACEHOLDER — THE FORM DOES NOT SUBMIT, and that was chosen rather than
+     overlooked. There is no backend on this site; `mailto:`, WhatsApp and a
+     third-party form endpoint were all offered and design-only was picked.
+     The submit handler at the foot of this file cancels the event so a
+     guest's typing is not thrown away by a page reload.
+
+     THERE IS DELIBERATELY NO SUCCESS STATE. Telling someone their message
+     was sent when nothing was sent is worse than a button that visibly does
+     nothing. To wire this up: give the <form> an action and remove that
+     handler. Nothing else here needs to change.
+
+     The written copy below is written, not supplied. It carries no
+     checkable claim on purpose — no response time (the site dropped its
+     "reply within the hour" on 2026-08-15) and no mention of the counter,
+     which is still unverified on about.html.
+     ==================================================================== -->
+<section class="touch" aria-labelledby="touch-title">
+
+  <!-- Two planes, and each in its OWN perspective box — see .touch__plane.
+       One shared box projects both marks toward its centre and drops them on
+       top of the composition. -->
+  <div class="touch__deco" aria-hidden="true">
+    <div class="touch__plane touch__plane--kanji">
+      <p class="touch__kanji" lang="ja">お問い合わせ</p>
+    </div>
+
+    <div class="touch__plane touch__plane--mon">
+    <!-- brand_assets/misono-mark-mono.svg, inlined WITH its own defs. It is
+         a reconstruction traced from a photograph of the printed logo —
+         check it against real artwork before launch.
+
+         The defs travel with it on purpose: about.html used #mm-petal and
+         #mm-core without ever defining them and drew nothing at all. -->
+    <svg class="touch__mon" viewBox="0 0 100 100" focusable="false">
+      <defs>
+        <path id="mm-petal" d="M50 50 C55 44 68 25 50 11 C32 25 45 44 50 50 Z"/>
+        <path id="mm-core"  d="M50 50 C54.3 46 54.3 42 50 37.5 C45.7 42 45.7 46 50 50 Z"/>
+      </defs>
+      <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+        <use href="#mm-petal"/>
+        <use href="#mm-petal" transform="rotate(90 50 50)"/>
+        <use href="#mm-petal" transform="rotate(180 50 50)"/>
+        <use href="#mm-petal" transform="rotate(270 50 50)"/>
+      </g>
+      <g fill="currentColor">
+        <use href="#mm-core"/>
+        <use href="#mm-core" transform="rotate(90 50 50)"/>
+        <use href="#mm-core" transform="rotate(180 50 50)"/>
+        <use href="#mm-core" transform="rotate(270 50 50)"/>
+      </g>
+    </svg>
+    </div>
+  </div>
+
+  <div class="touch__inner">
+
+    <div class="touch__masthead">
+      <p class="touch__eyebrow">Enquiries</p>
+
+      <!-- Authored lines, not a wrap: each is its own depth plane. -->
+      <h2 class="touch__title" id="touch-title"><span>Get in</span><span>Touch</span></h2>
+
+      <hr class="touch__rule" aria-hidden="true">
+
+      <p class="touch__body">A table, a private dinner, or a question about the
+        evening. Tell us what you have in mind, and we will take it from
+        there.</p>
+    </div>
+
+    <form class="touch__form" novalidate>
+      <div class="field">
+        <label class="field__label" for="tc-name">Name</label>
+        <input class="field__input" id="tc-name" name="name" type="text"
+               autocomplete="name">
+        <span class="field__rule" aria-hidden="true"></span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="tc-email">Email</label>
+        <input class="field__input" id="tc-email" name="email" type="email"
+               autocomplete="email" inputmode="email" spellcheck="false">
+        <span class="field__rule" aria-hidden="true"></span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="tc-phone">Phone</label>
+        <input class="field__input" id="tc-phone" name="phone" type="tel"
+               autocomplete="tel" inputmode="tel">
+        <span class="field__rule" aria-hidden="true"></span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="tc-message">Message</label>
+        <textarea class="field__input field__input--area" id="tc-message"
+                  name="message" rows="3"></textarea>
+        <span class="field__rule" aria-hidden="true"></span>
+      </div>
+
+      <button class="touch__send" type="submit">
+        <span class="touch__sendlbl">Send message</span>
+        <!-- The reservation CTA's arrow, to the coordinate. -->
+        <svg class="touch__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
+          <path d="M0.8 7h22.4M17.4 1.4 23.2 7l-5.8 5.6"/>
+        </svg>
+      </button>
+    </form>
+
+  </div>
+</section>
+
+<!-- ================================================ contact details ====
+     The page's ending — the closing wordmark and footer nav were declined,
+     so this block closes the page on its own gradient instead.
+
+     UNVERIFIED. Both facts come from public listings, supplied in
+     conversation on 2026-08-17: the phone from the Nairobi listing, the
+     email from the Mombasa one. Confirm both before launch, alongside the
+     invented wa.me number and the opening hours in the reservation block on
+     the other three pages.
+
+     ONE CLAIM TO CHECK IN PARTICULAR: that block says "Nairobi & Mombasa".
+     This page presents ONE number and ONE address as reaching both, which
+     is a claim the site has not made anywhere before.
+     ==================================================================== -->
+<section class="details" aria-label="Contact details">
+  <hr class="details__rule" aria-hidden="true">
+
+  <ul class="details__list">
+    <li class="details__item">
+      <span class="details__label">Phone</span>
+      <a class="details__value" href="tel:+254722511229">+254 722 511229</a>
+    </li>
+    <li class="details__item">
+      <span class="details__label">Email</span>
+      <a class="details__value" href="mailto:restaurantmisono@gmail.com">restaurantmisono@gmail.com</a>
+    </li>
+  </ul>
+</section>
+
+<!-- ===================================================== the locations ====
+     Spec: docs/superpowers/specs/2026-08-17-contact-locations-faq-design.md
+
+     BOTH PHOTOGRAPHS ARE PLACEHOLDERS, and on this section that matters more
+     than it does elsewhere: a location band implies the picture IS the place.
+     Neither is. locale-mombasa.jpg is the Mombasa waterfront rather than
+     Links Road; locale-nairobi.jpg is Uhuru Park and the CBD, roughly 5km
+     from Adams Arcade. Replace both with real frames before launch.
+
+     THE CARDS CARRY NO DISTANCES OR DRIVE TIMES. The reference's read
+     "12 min drive · 8 km"; not one such figure is verifiable for either
+     branch, and this is the page whose entire job is telling people where the
+     restaurant is. Every card below states a relation that traces to a public
+     listing instead. If real figures arrive, they drop into the same third
+     line without any other change.
+
+     CONFIRMED with the client 2026-08-20: Mombasa is NYALI, not Shanzu. The
+     original brief said Shanzu; every listing found said Links Road, Nyali —
+     a different suburb roughly 6km south — and Nyali is correct. The heading,
+     the copy and both marker cards below are built on it, as is the FAQ's
+     first answer. Settled; do not re-open it on the strength of the brief.
+
+     STILL UNVERIFIED, and needing confirmation with the client:
+       · the founding dates, 1995 Nairobi and 2006 Mombasa;
+       · whether the Nairobi restaurant has occupied The Green House
+         throughout. Foursquare places an earlier Misono in Woodley Estate,
+         which is why the copy below says "The first Misono opened in 1995.
+         Today it sits at…" rather than joining the two into one sentence.
+         The fluent version asserts a continuity nothing supports.
+     ==================================================================== -->
+<section class="locale locale--mombasa" aria-labelledby="locale-mombasa-title">
+  <div class="locale__head">
+    <p class="locale__eyebrow">The Location</p>
+    <h2 class="locale__title" id="locale-mombasa-title">Mombasa</h2>
+    <p class="locale__body">Misono came to the coast in 2006. The room sits on Links Road in
+      Nyali, opposite the Java House and a short walk from Nyali City Mall — a gong at the
+      door, kabuki screens on the walls, and teppanyaki tables where the cooking happens an
+      arm’s length away.</p>
+  </div>
+
+  <div class="locale__stage">
+    <figure class="locale__frame">
+      <!-- PLACEHOLDER — the Mombasa waterfront, not Links Road. See above. -->
+      <picture>
+        <source type="image/avif" sizes="85.3vw"
+                srcset="assets/img/r/locale-mombasa-840.avif 840w, assets/img/r/locale-mombasa-1020.avif 1020w, assets/img/r/locale-mombasa-1220.avif 1220w, assets/img/r/locale-mombasa-1570.avif 1570w, assets/img/r/locale-mombasa-2000.avif 2000w">
+        <source type="image/webp" sizes="85.3vw"
+                srcset="assets/img/r/locale-mombasa-840.webp 840w, assets/img/r/locale-mombasa-2000.webp 2000w">
+        <img class="locale__img" src="assets/img/locale-mombasa.jpg" width="2000" height="1125"
+           alt="The Mombasa waterfront: white apartment buildings and palms on a green bluff above the water." loading="lazy" decoding="async" fetchpriority="low" data-warm=".locale--mombasa">
+      </picture>
+        <div class="locale__mark locale__mark--pill">
+          <div class="locale__pill">
+            <!-- Drawn inline with no <defs> and no <use>, deliberately. The mon
+                 sprite lives in .touch further up this page and would resolve
+                 today, but a section that reaches outside itself for artwork is
+                 exactly what left about.html's reserve mon drawing nothing at
+                 all for two days. This section reaches outside itself for
+                 nothing. -->
+            <svg class="locale__pill-mark" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M12 22s7-7.1 7-12A7 7 0 1 0 5 10c0 4.9 7 12 7 12Z"
+                    fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
+            </svg>
+            <span class="locale__pill-label">Misono Mombasa</span>
+          </div>
+        </div>
+
+        <div class="locale__mark locale__mark--dot locale__mark--d1" aria-hidden="true"><span class="locale__dot"></span></div>
+        <div class="locale__mark locale__mark--dot locale__mark--d2" aria-hidden="true"><span class="locale__dot"></span></div>
+    </figure>
+
+    <!-- Below 640 these two come off the photograph and sit under it as a
+         pair; the wrapper is what lets them do that without moving in the
+         markup. It is unstyled above that width, so the marks inside it
+         still position against .locale__stage. -->
+    <div class="locale__marks-flow">
+      <div class="locale__mark locale__mark--a">
+        <div class="locale__card">
+          <p class="locale__card-eyebrow">Opposite</p>
+          <p class="locale__card-title">Nairobi Java House</p>
+          <p class="locale__card-note">across Links Road</p>
+        </div>
+      </div>
+
+      <div class="locale__mark locale__mark--b">
+        <div class="locale__card">
+          <p class="locale__card-eyebrow">Landmark</p>
+          <p class="locale__card-title">Nyali City Mall</p>
+          <p class="locale__card-note">a short walk, on Links Road</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="locale locale--nairobi" aria-labelledby="locale-nairobi-title">
+  <div class="locale__head">
+    <p class="locale__eyebrow">The Location</p>
+    <h2 class="locale__title" id="locale-nairobi-title">Nairobi</h2>
+    <p class="locale__body">The first Misono opened in 1995. Today it sits at The Green House
+      on Ngong Road, by Adams Arcade: three teppanyaki tables on the lower floor, à la carte
+      upstairs, and a private room where the seating is low and the shoes come off.</p>
+  </div>
+
+  <div class="locale__stage">
+    <figure class="locale__frame">
+      <!-- PLACEHOLDER — Uhuru Park and the CBD, not Adams Arcade. See above. -->
+      <picture>
+        <source type="image/avif" sizes="85.3vw"
+                srcset="assets/img/r/locale-nairobi-840.avif 840w, assets/img/r/locale-nairobi-1020.avif 1020w, assets/img/r/locale-nairobi-1220.avif 1220w, assets/img/r/locale-nairobi-1570.avif 1570w, assets/img/r/locale-nairobi-2000.avif 2000w">
+        <source type="image/webp" sizes="85.3vw"
+                srcset="assets/img/r/locale-nairobi-840.webp 840w, assets/img/r/locale-nairobi-2000.webp 2000w">
+        <img class="locale__img" src="assets/img/locale-nairobi.jpg" width="2000" height="1125"
+           alt="Nairobi seen over the trees and lake of Uhuru Park, with the city’s towers behind." loading="lazy" decoding="async" fetchpriority="low" data-warm=".locale--nairobi">
+      </picture>
+        <div class="locale__mark locale__mark--pill">
+          <div class="locale__pill">
+            <svg class="locale__pill-mark" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M12 22s7-7.1 7-12A7 7 0 1 0 5 10c0 4.9 7 12 7 12Z"
+                    fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
+            </svg>
+            <span class="locale__pill-label">Misono Nairobi</span>
+          </div>
+        </div>
+
+        <div class="locale__mark locale__mark--dot locale__mark--d1" aria-hidden="true"><span class="locale__dot"></span></div>
+        <div class="locale__mark locale__mark--dot locale__mark--d2" aria-hidden="true"><span class="locale__dot"></span></div>
+    </figure>
+
+    <div class="locale__marks-flow">
+      <div class="locale__mark locale__mark--a">
+        <div class="locale__card">
+          <p class="locale__card-eyebrow">The Building</p>
+          <p class="locale__card-title">The Green House</p>
+          <p class="locale__card-note">Ngong Road</p>
+        </div>
+      </div>
+
+      <div class="locale__mark locale__mark--b">
+        <div class="locale__card">
+          <p class="locale__card-eyebrow">Nearby</p>
+          <p class="locale__card-title">Adams Arcade</p>
+          <p class="locale__card-note">at the Ngong Road junction</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================== faq ====
+     Spec: docs/superpowers/specs/2026-08-17-contact-locations-faq-design.md
+
+     <details>/<summary> rather than buttons and aria-expanded, for two
+     reasons: it gives real keyboard and screen-reader behaviour with no ARIA
+     to get wrong, and IT STILL OPENS WITH JAVASCRIPT OFF. The smooth open is
+     an enhancement layered on top by the handler at the foot of this file;
+     without it the answers still toggle, instantly.
+
+     EVERY ANSWER TRACES TO A PUBLIC LISTING. Where nothing is verifiable the
+     answer says so and sends the reader to a phone call, rather than
+     inventing a policy — a made-up dietary or private-dining promise on a
+     restaurant's own FAQ is the kind of thing a guest arrives holding you to.
+
+     Two answers are load-bearing and must not be "improved" into confidence:
+
+       · DIETARY (Q6). Vegetarian selections are confirmed, including on the
+         sushi and sashimi boats. Halal, vegan and gluten-free are NOT, for
+         either branch. Sending allergies to a phone call is the honest
+         position here, not a hedge.
+       · PRIVATE DINING (Q5) names NAIROBI AND ONLY NAIROBI. The private room
+         is confirmed there. Mombasa's private dining is unverified, so this
+         answer does not mention it.
+
+     The hours in Q7 are the listed ones and they CONTRADICT what the client
+     said in conversation on 2026-08-15 ("lunch to 11pm"). That was raised and
+     the listed hours were chosen; confirm directly before launch. They must
+     stay in step with the reservation block below.
+     ==================================================================== -->
+<section class="faq" aria-labelledby="faq-title">
+  <div class="faq__inner">
+
+    <div class="faq__head">
+      <p class="faq__eyebrow">Questions</p>
+      <h2 class="faq__title" id="faq-title">Before you visit</h2>
+      <p class="faq__note">If something here is not answered, the kitchen would
+        rather you called than guessed.</p>
+    </div>
+
+    <div class="faq__list">
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">Where is Misono located?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>There are two. Nairobi is at The Green House on Ngong Road, by Adams
+            Arcade. Mombasa is on Links Road in Nyali, opposite the Java House and
+            a short walk from Nyali City Mall.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">Do I need a reservation?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>Both restaurants take reservations, and they are worth making. The
+            teppanyaki tables and the private room are limited in number, and they
+            are the seats most people are coming for. Call the branch you would
+            like to visit.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">What type of Japanese cuisine do you serve?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>Sushi and sashimi, teppanyaki cooked at the table, and ramen. Misono
+            has been cooking Japanese food in Kenya since 1995, which is longer
+            than anywhere else in the country.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">Do you offer teppanyaki?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>Yes, at both. Nairobi has three teppanyaki tables on the lower floor,
+            each with its own chef cooking in front of you; Mombasa cooks at the
+            table too. Ask for a teppanyaki table when you book — the à la carte
+            room is a different experience.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">Do you accommodate private dining?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>Nairobi has a private room laid out in the traditional way: low
+            seating, a well beneath the table, shoes left at the door. It is a
+            single room, so ask for it when you book rather than on the night.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">Can you accommodate special dietary requests?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>There are vegetarian selections on the menu, including on the sushi
+            and sashimi boats. For an allergy or anything more specific, please
+            call ahead — the kitchen would rather tell you plainly what it can and
+            cannot do than have you find out at the table.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">What are your opening hours?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <!-- MUST MATCH THE RESERVATION BLOCK further down this page. It is
+               the same claim made twice on one page, and the two got out of
+               step once already. Confirmed by the client 2026-08-20: one
+               schedule for both branches. -->
+          <p>Both restaurants are open every day, from 12:00 to 23:00. We serve
+            straight through the afternoon, so a late lunch is as welcome as
+            dinner.</p>
+        </div></div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+  <section class="reserve" id="reserve" aria-labelledby="reserve-title">
+
+    <!-- Both curves are generated by `make-reserve-path.mjs` from the tables
+         `measure-reserve-ref.mjs` prints. They live here rather than in the
+         page's sprite sheet so this block stays self-contained when it is
+         copied to menu.html and about.html. -->
+    <svg class="reserve__defs" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="reserve-curve" clipPathUnits="objectBoundingBox">
+          <path d="M0.6189 0C0.5905 0.0104 0.5569 0.0209 0.5337 0.0313C0.5106 0.0417 0.4959 0.0521 0.4802 0.0625C0.4644 0.0729 0.4506 0.0834 0.4392 0.0938C0.4278 0.1042 0.4186 0.1146 0.4119 0.125C0.4018 0.1406 0.3935 0.1563 0.3889 0.1719C0.3827 0.1927 0.3796 0.2136 0.3794 0.2344C0.3792 0.2552 0.3833 0.2761 0.3877 0.2969C0.3921 0.3177 0.4001 0.3386 0.4056 0.3594C0.4085 0.3705 0.415 0.3815 0.4131 0.3926C0.4115 0.4017 0.4203 0.4108 0.3952 0.4199C0.3916 0.4212 0.3365 0.4225 0.3269 0.4238C0.298 0.4277 0.2916 0.4316 0.2797 0.4355C0.2618 0.4414 0.2484 0.4472 0.2376 0.4531C0.2183 0.4635 0.202 0.474 0.1894 0.4844C0.1705 0.5 0.1546 0.5157 0.1432 0.5313C0.128 0.5521 0.1171 0.573 0.1095 0.5938C0.0999 0.6198 0.0921 0.6459 0.0916 0.6719C0.0911 0.6979 0.0953 0.724 0.1065 0.75C0.1177 0.776 0.1333 0.8021 0.1589 0.8281C0.1794 0.8489 0.2078 0.8698 0.245 0.8906C0.2729 0.9062 0.308 0.9219 0.3542 0.9375C0.385 0.9479 0.3924 0.9584 0.476 0.9688C0.5594 0.9792 0.7288 0.9896 0.8552 1L1 1L1 0Z"/>
+        </clipPath>
+        <!-- Stacked, the same silhouette becomes an arch: full width, curved
+             along the bottom, with the two lobes flattened into one bowl. -->
+        <clipPath id="reserve-arch" clipPathUnits="objectBoundingBox">
+          <path d="M0 0L1 0L1 0.8C0.86 0.905 0.7 0.968 0.53 0.962C0.36 0.956 0.17 0.9 0 0.885Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <figure class="reserve__fig">
+      <svg class="reserve__ring" viewBox="0 0 1 1" preserveAspectRatio="none"
+           aria-hidden="true" focusable="false">
+        <path class="reserve__ringpath reserve__ringpath--wide"
+              d="M0.6048 0C0.5758 0.0104 0.541 0.0209 0.5177 0.0313C0.4945 0.0417 0.4815 0.0521 0.4655 0.0625C0.4494 0.0729 0.4336 0.0834 0.4215 0.0938C0.4095 0.1042 0.4 0.1146 0.3931 0.125C0.3828 0.1406 0.3747 0.1563 0.37 0.1719C0.3638 0.1927 0.3605 0.2136 0.3605 0.2344C0.3605 0.2552 0.3656 0.2761 0.37 0.2969C0.3744 0.3177 0.3829 0.3386 0.3868 0.3594C0.3888 0.3705 0.3906 0.3815 0.3877 0.3926C0.3853 0.4017 0.3958 0.4108 0.371 0.4199C0.3675 0.4212 0.3126 0.4225 0.3027 0.4238C0.273 0.4277 0.2647 0.4316 0.2523 0.4355C0.2336 0.4414 0.2197 0.4472 0.2094 0.4531C0.1911 0.4635 0.1771 0.474 0.1663 0.4844C0.1501 0.5 0.1371 0.5157 0.1284 0.5313C0.1168 0.5521 0.1091 0.573 0.1053 0.5938C0.1006 0.6198 0.1008 0.6459 0.1029 0.6719C0.105 0.6979 0.1065 0.724 0.1177 0.75C0.1289 0.776 0.1496 0.8021 0.1702 0.8281C0.1867 0.8489 0.2002 0.8698 0.2292 0.8906C0.251 0.9062 0.2797 0.9219 0.3227 0.9375C0.3514 0.9479 0.3814 0.9584 0.4445 0.9688C0.476 0.974 0.5525 0.9792 0.6065 0.9844"/>
+        <path class="reserve__ringpath reserve__ringpath--tall"
+              d="M1 0.833C0.86 0.938 0.7 1.001 0.53 0.995C0.36 0.989 0.17 0.933 0 0.918"/>
+      </svg>
+      <div class="reserve__frame">
+        <picture>
+          <source type="image/avif" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
+                  srcset="assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
+          <source type="image/webp" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
+                  srcset="assets/img/r/reserve-interior-1150.webp 1150w, assets/img/r/reserve-interior-1400.webp 1400w">
+          <img class="reserve__img" src="assets/img/reserve-interior.jpg"
+             width="1400" height="1576"
+             alt="A dim Japanese dining room: dark wood tables set with ceramic
+                  dishes and vermilion lacquer cups, two small glass pendants
+                  lit warm above a counter, shoji screens behind." loading="lazy" decoding="async" fetchpriority="low">
+        </picture>
+      </div>
+    </figure>
+
+    <div class="reserve__copy">
+      <p class="reserve__eyebrow">Reserve</p>
+
+      <h2 class="reserve__title" id="reserve-title">Reserve<br>your table</h2>
+
+      <hr class="reserve__rule" aria-hidden="true">
+
+      <p class="reserve__body">A counter, a season, and a chef who decides the
+        order. Tell us when you would like to sit and how many are coming &mdash;
+        the evening is arranged from there.</p>
+
+      <a class="reserve__cta"
+         href="https://wa.me/254700000000?text=Hello%20Misono%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
+         target="_blank" rel="noopener">
+        <span class="reserve__ctalbl">Reserve now</span>
+        <svg class="reserve__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
+          <path d="M0.8 7h22.4M17.4 1.4 23.2 7l-5.8 5.6"/>
+        </svg>
+      </a>
+
+      <p class="reserve__ctasub">Opens WhatsApp &middot; message already written</p>
+
+      <ul class="reserve__meta">
+        <li class="reserve__metaitem">
+          <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="8.2"/>
+            <path d="M12 7.1V12l3.4 2"/>
+          </svg>
+          <span class="reserve__metalbl">Opening hours</span>
+          <!-- CONFIRMED BY THE CLIENT 2026-08-20, and this reverses the
+               2026-08-17 change. Between 17 and 20 August the site carried
+               "Nairobi 12:00-21:30 / Mombasa 12:00-21:00", taken from public
+               listings (misono.co.ke, EatOut, Foursquare) because those were
+               judged more likely to be current than a phrase remembered from
+               conversation. That judgement was wrong: asked directly, the
+               client confirmed the hours they gave on 2026-08-15 — one
+               schedule for both branches, noon to 11pm, every day.
+
+               The listings are therefore stale, not the brief. Worth
+               remembering the next time a public source disagrees with the
+               person who owns the restaurant.
+
+               Two lines, not three. The copy column is an aspect-locked block
+               of 48.1u of measured ink, verified to fit one screen from
+               1000x700 to 2560x1440; a third line changes that height and the
+               fit has to be re-solved. Both lines here are shorter than the
+               branch lines they replace, so the fit can only improve. -->
+          <span class="reserve__metaval">Monday &ndash; Sunday<br>12:00 &ndash; 23:00</span>
+        </li>
+        <li class="reserve__metaitem">
+          <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 21.2s6.3-5.9 6.3-10.5a6.3 6.3 0 1 0-12.6 0c0 4.6 6.3 10.5 6.3 10.5Z"/>
+            <circle cx="12" cy="10.6" r="2.4"/>
+          </svg>
+          <span class="reserve__metalbl">Location</span>
+          <span class="reserve__metaval">Nairobi &amp; Mombasa<br>Kenya</span>
+        </li>
+      </ul>
+    </div>
+
+  </section>
+
+<!-- ========================================================= ending ==== -->
+<footer class="ending">
+  <!-- Decorative repeat of the hero's h1. Hidden from assistive tech so the
+       brand name is not announced twice on the way out. -->
+  <p class="ending__mark" aria-hidden="true">MISONO</p>
+
+  <!-- All three now point at real pages, which is what the placeholder note
+       that used to sit above this block was waiting for. Contact went to
+       #reserve until 2026-08-17 — that was the site's only link INTO the
+       reservation block, so the booking CTA is now reached by scrolling
+       rather than by navigating. Noted in CLAUDE.md; it is a consequence of
+       the link change, not an oversight. -->
+  <nav class="ending__nav" aria-label="Footer">
+    <a class="ending__link" href="menu.html">Menu</a>
+    <a class="ending__link" href="about.html">About</a>
+    <a class="ending__link" href="contact.html" aria-current="page">Contact</a>
+  </nav>
+
+  <p class="ending__note">&copy; 2026 Misono</p>
+</footer>
+
+<script>
+  /* The parallax. One rAF loop writing ONE number — --par, 0 at the top of the
+     section and 1 when it has fully left — and .hero__media derives its
+     transform from it in CSS. Same one-number-per-section contract as the
+     statement, chapters and experience sections on about.html; there is no
+     GSAP on this site and this would not be the thing to add one for.
+
+     Two things it encodes:
+
+       · the position comes from getBoundingClientRect, never offsetTop.
+         .hero is position: relative, so its offsetTop is not a document
+         coordinate — the reserve tooling records the same trap, where it
+         produced a screenshot of the wrong section that looked correct.
+
+       · under reduced motion the loop never starts, so --par is never
+         written and the rest state in the media query stands. The CSS resets
+         those properties by name as well; see the note there for why that
+         half is the load-bearing one. */
+  /* ONE loop drives both sections — `drift()` beside `track()`, which is the
+     arrangement about.html uses for its statement, plate and chapters. Two
+     rAF-throttled scroll listeners would each cost a listener and a frame to
+     write two numbers that are read on the same frame anyway.
+
+     NOTE FOR ANYONE READING THE OLD COMMENT: `--par` used to be permanently
+     0 here, because the page was one viewport tall and never scrolled. Since
+     2026-08-17 the page has two sections below the hero, so THIS LOOP IS NOW
+     LIVE and the parallax is a thing you can actually see. */
+  (function () {
+    var hero    = document.querySelector('.hero');
+    var touch   = document.querySelector('.touch');
+    var locales = [].slice.call(document.querySelectorAll('.locale'));
+    if (!hero && !touch && !locales.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var ticking = false;
+
+    function track() {
+      if (!hero) return;
+      var r = hero.getBoundingClientRect();
+      /* Guard the divide: a zero-height section would otherwise write NaN,
+         which invalidates the declaration and silently parks the media at
+         its CSS default rather than erroring. */
+      var p = r.height > 0 ? -r.top / r.height : 0;
+      hero.style.setProperty('--par', Math.min(1, Math.max(0, p)).toFixed(4));
+    }
+
+    /* 0 when .touch's top reaches the bottom of the window, 1 when its foot
+       leaves the top — so the whole traversal is used rather than only the
+       part where the section happens to be centred. 0.5 is the rest value
+       and is also the CSS default, which is what makes a blocked script and
+       a reduced-motion visit land in the same place. */
+    function drift() {
+      if (!touch) return;
+      var r = touch.getBoundingClientRect();
+      var span = innerHeight + r.height;
+      var d = span > 0 ? (innerHeight - r.top) / span : 0.5;
+      touch.style.setProperty('--drift', Math.min(1, Math.max(0, d)).toFixed(4));
+    }
+
+    /* --rise, per location section, on the same 0-when-entering /
+       1-when-gone span as drift() above. Each section writes its OWN number
+       — the two are far enough apart that one shared value would have the
+       second frame drifting on the first frame's position. Same guard: 0.5
+       is the rest value and the CSS default. */
+    function rise() {
+      for (var i = 0; i < locales.length; i++) {
+        var el = locales[i];
+        var r = el.getBoundingClientRect();
+        var span = innerHeight + r.height;
+        var v = span > 0 ? (innerHeight - r.top) / span : 0.5;
+        el.style.setProperty('--rise', Math.min(1, Math.max(0, v)).toFixed(4));
+      }
+    }
+
+    function frame() { track(); drift(); rise(); ticking = false; }
+
+    function request() {
+      if (!ticking) { ticking = true; requestAnimationFrame(frame); }
+    }
+
+    addEventListener('scroll', request, { passive: true });
+    addEventListener('resize', request, { passive: true });
+    frame();
+  })();
+
+  /* The entrance. `.js` arms it in <head>, this settles it. An ARRIVAL, not
+     a scroll effect — the observer disconnects, so coming back up the page
+     does not replay it.
+
+     threshold 0.3 rather than 0: at zero the section is already intersecting
+     on the first frame no matter where a reader is restored to, and the
+     choreography would be over before it was on screen. */
+  (function () {
+    /* .touch and both .locale sections run the identical contract, so they
+       share one observer. Each element is unobserved as it lands rather than
+       the whole observer being disconnected on the first hit — disconnecting
+       would leave whichever section had not yet been reached armed, that is
+       blank, forever. */
+    var armed = [].slice.call(document.querySelectorAll('.touch, .locale, .faq'));
+    if (!armed.length) return;
+
+    /* No observer, no choreography — hand them the finished state at once
+       rather than leaving the form parked 210px behind the page forever. */
+    if (!('IntersectionObserver' in window)) {
+      armed.forEach(function (el) { el.classList.add('is-in'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.3 });
+
+    armed.forEach(function (el) { io.observe(el); });
+  })();
+
+  /* THE FORM DOES NOT SUBMIT — see the markup comment above it. This cancels
+     the event for one reason only: a form with no action reloads the page on
+     submit, which would silently throw away everything a guest had typed.
+
+     It deliberately shows NOTHING in return. A "message sent" confirmation
+     here would be a lie. Delete this block and give the <form> an action to
+     wire it up; nothing else needs to change. */
+  (function () {
+    var form = document.querySelector('.touch__form');
+    if (!form) return;
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+  })();
+
+  /* The FAQ's smooth open. PURELY AN ENHANCEMENT — <details> already opens
+     and closes on its own, by mouse and by keyboard, with this file's script
+     blocked entirely. All this adds is the transition.
+
+     Why it needs a handler at all: a browser does not render a <details>
+     element's non-summary children while it is closed, so there is nothing
+     for CSS to transition FROM on the way open, and the element is gone
+     before anything can transition on the way closed. So opening is done by
+     hand — set `open`, then let the 0fr -> 1fr grid transition run — and
+     closing runs the transition first and drops `open` when it ends.
+
+     ::details-content plus interpolate-size would do this in pure CSS and is
+     the right answer in a year or two; today it is Chromium-only, and this
+     is a restaurant's contact page. */
+  (function () {
+    var items = [].slice.call(document.querySelectorAll('.faq__item'));
+    if (!items.length) return;
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    items.forEach(function (item) {
+      var summary = item.querySelector('.faq__q');
+      var panel   = item.querySelector('.faq__a');
+      if (!summary || !panel) return;
+
+      summary.addEventListener('click', function (e) {
+        /* Reduced motion keeps the NATIVE behaviour rather than a
+           zero-duration version of this one — fewer moving parts in the
+           state that exists precisely to have fewer moving parts. */
+        if (reduce.matches) return;
+
+        e.preventDefault();
+
+        if (item.open) {
+          panel.style.gridTemplateRows = '1fr';
+          requestAnimationFrame(function () {
+            panel.style.gridTemplateRows = '0fr';
+          });
+          panel.addEventListener('transitionend', function done(ev) {
+            if (ev.propertyName !== 'grid-template-rows') return;
+            panel.removeEventListener('transitionend', done);
+            item.open = false;
+            panel.style.gridTemplateRows = '';
+          });
+        } else {
+          item.open = true;
+          panel.style.gridTemplateRows = '0fr';
+          requestAnimationFrame(function () {
+            panel.style.gridTemplateRows = '1fr';
+          });
+          panel.addEventListener('transitionend', function done(ev) {
+            if (ev.propertyName !== 'grid-template-rows') return;
+            panel.removeEventListener('transitionend', done);
+            /* Handed back to the CSS, so a resize re-measures the answer
+               instead of holding the height it happened to open at. */
+            panel.style.gridTemplateRows = '';
+          });
+        }
+      });
+    });
+  })();
+</script>
+
+<script>
+/* Deferred photography: wake a section's frames 1.5 viewports before it
+   arrives, so nothing is decoding at the moment it has to be on screen.
+   See apply-perf-shell.mjs. Degrades to plain native lazy with JS off. */
+(function () {
+  var imgs = document.querySelectorAll('img[data-warm]');
+  if (!imgs.length) return;
+  var wake = function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var im = list[i];
+      im.loading = 'eager';
+      im.fetchPriority = 'auto';
+      if (im.decode) im.decode().catch(function () {});
+    }
+  };
+  if (!('IntersectionObserver' in window)) return wake(imgs);
+  var groups = {};
+  for (var i = 0; i < imgs.length; i++) {
+    var k = imgs[i].getAttribute('data-warm');
+    (groups[k] = groups[k] || []).push(imgs[i]);
+  }
+  Object.keys(groups).forEach(function (sel) {
+    var host = document.querySelector(sel);
+    if (!host) return wake(groups[sel]);
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      wake(groups[sel]);
+    }, { rootMargin: '150% 0px 150% 0px' });
+    io.observe(host);
+  });
+}());
+</script>
+<script>
+/* prefetch-on-intent — Page transitions. Every internal link on this site goes to one of three
+   other documents, each ~25-50KB over the wire once brotli has had it, so
+   the whole cost of a navigation is one request that could just as easily
+   have happened while the reader was still deciding to click.
+
+   Intent, not idle. Prefetching all three on load would move ~120KB for a
+   reader who may only ever look at one page; prefetching on hover or on
+   touchstart buys most of the same latency back — the gap between "pointer
+   settles on a link" and "pointer-up" is 200-300ms typically, which is
+   more than enough here — and costs nothing for a reader who never aims at
+   one. Each href is fetched at most once.
+
+   Skipped entirely on Save-Data or a 2g connection: speculative bytes are
+   the first thing that should go when someone is paying for them. */
+(function () {
+  var c = navigator.connection;
+  if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
+  var done = {};
+  function warm(href) {
+    if (!href || done[href]) return;
+    var u;
+    try { u = new URL(href, location.href); } catch (e) { return; }
+    if (u.origin !== location.origin || u.pathname === location.pathname) return;
+    done[href] = 1;
+    var l = document.createElement('link');
+    l.rel = 'prefetch';
+    l.as = 'document';
+    l.href = u.href;
+    document.head.appendChild(l);
+  }
+  function onIntent(e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (a) warm(a.getAttribute('href'));
+  }
+  document.addEventListener('pointerover', onIntent, { passive: true, capture: true });
+  document.addEventListener('touchstart', onIntent, { passive: true, capture: true });
+  document.addEventListener('focusin', onIntent, { passive: true });
+}());
+</script>
+</body>
+</html>

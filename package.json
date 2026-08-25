@@ -1,0 +1,24 @@
+{
+  "name": "misono",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Misono \u2014 Japanese omakase restaurant website",
+  "scripts": {
+    "dev": "node serve.mjs",
+    "build": "node build.mjs",
+    "preview": "node build.mjs --serve",
+    "shot": "node screenshot.mjs",
+    "measure": "node measure-img-sizes.mjs --json",
+    "bake": "node bake-responsive.mjs",
+    "markup": "node apply-responsive-markup.mjs",
+    "perf": "node perf.mjs",
+    "perf:scroll": "node perf-scroll.mjs",
+    "verify:dist": "node verify-dist.mjs",
+    "verify:layout": "node compare-layout.mjs",
+    "verify:photos": "node compare-photos.mjs"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.4.0"
+  }
+}

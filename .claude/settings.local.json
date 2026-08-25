@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"/Users/hashim/Library/Group Containers/group.com.apple.coreservices.useractivityd/shared-pasteboard/items/85E7F962-DABB-46AC-B226-B70605BC415E/\" 2>&1 | head -20)",
+      "Bash(find \"/Users/hashim/Library/Group Containers/group.com.apple.coreservices.useractivityd/shared-pasteboard\" -iname \"*.docx\" 2>/dev/null | head -20; echo \"---desktop/downloads---\"; find /Users/hashim/Desktop /Users/hashim/Downloads /Users/hashim/Documents -iname \"*CAT*\" -maxdepth 3 2>/dev/null | head -20)",
+      "Bash(python3 -)"
+    ]
+  }
+}

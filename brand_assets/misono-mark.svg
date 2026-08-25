@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Misono">
+  <!--
+    Misono mon — traced from `misono logo.jpeg`, which is a photograph of the
+    printed logo (831x702, angled, soft). This is a reconstruction, not the
+    original artwork: check it against a real logo file before it ships.
+    Navy sampled at #3A5280 after white-balancing the photo's paper to #FEFEFE.
+  -->
+  <defs>
+    <!-- One petal, tip at 12 o'clock, base at the centre. -->
+    <path id="m-petal" d="M50 50 C55 44 68 25 50 11 C32 25 45 44 50 50 Z"/>
+    <path id="m-core"  d="M50 50 C54.3 46 54.3 42 50 37.5 C45.7 42 45.7 46 50 50 Z"/>
+  </defs>
+
+  <rect width="100" height="100" fill="#3A5280"/>
+
+  <!-- Four stroked petals. They meet at the centre, so the junction reads
+       as a cross of outlines rather than a single silhouette. -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round">
+    <use href="#m-petal"/>
+    <use href="#m-petal" transform="rotate(90 50 50)"/>
+    <use href="#m-petal" transform="rotate(180 50 50)"/>
+    <use href="#m-petal" transform="rotate(270 50 50)"/>
+  </g>
+
+  <!-- Solid core flower. -->
+  <g fill="#FFFFFF">
+    <use href="#m-core"/>
+    <use href="#m-core" transform="rotate(90 50 50)"/>
+    <use href="#m-core" transform="rotate(180 50 50)"/>
+    <use href="#m-core" transform="rotate(270 50 50)"/>
+  </g>
+</svg>

@@ -1,0 +1,273 @@
+# CLAUDE.md — Frontend Website Rules
+
+## Project: Misono
+High-end Japanese omakase restaurant in Kenya (Nairobi assumed — unconfirmed).
+Register is **quiet luxury**: dark, cinematic, intimate, editorial. Not a sushi website.
+
+- Pages: `index.html` — hero + "A unique experience". Shared JS: `assets/site.js`.
+- Concept: **one continuous film.** The hero is a single full-screen scene at a time —
+  slicing → garnishing → serving → repeat. Never show two clips at once; an earlier
+  side-by-side triptych version was rejected for exactly that. The change of scene dips
+  *through darkness* rather than dissolving flatly: the outgoing scene blurs and drifts
+  back while a `.dip` layer deepens over it, then lifts on the incoming one. That dip is
+  what stops it reading as a slideshow.
+- **The lockup and the nav are siblings of the stage, never children of a scene.** MISONO
+  must stay fixed and fully opaque while the film changes behind it — verified at
+  opacity 1 throughout. Both sit above `.dip`. Do not move either inside `.stage`.
+- **Type is chrome-scale, not headline-scale.** The footage is the hero; the wordmark
+  sits quietly inside it ringed by negative space. Measured targets: wordmark **66px at
+  1440 / 69px at 1920** (never above ~70), tagline **9px uppercase** at `.42em` tracking,
+  nav links **10.4px uppercase** at `.26em`. Do not let the wordmark grow into a
+  heading — an earlier version at 9.5vw was rejected for exactly that.
+- Nav: the mon on the left (28px), `HOME / ABOUT / MENU / CONTACT` on the right, thin and
+  wide-tracked. It was deliberately stepped up from 9px/22px to be easier to notice while
+  still reading as chrome — keep it below the wordmark in weight. The mon lives **only**
+  in the nav; the centre is wordmark + tagline alone, matching the reference. On phones
+  the links drop back to 9px so four items never crowd the mark.
+- Brand — **indigo (ai / aizome), derived from the logo's navy.** The supplied logo is a
+  photo of print, so the navy was read by white-balancing the paper to `#FEFEFE` and
+  sampling: `#3A5280`. **Still provisional** — replace with real brand values when a
+  style guide or clean file arrives.
+  `#080D17` ai (base, near-black indigo), `#101827` kon (elevated surface), `#3A5280`
+  gunjō (the logo navy), `#EDE7DC` washi (primary type — never `#FFF`),
+  `#A9A093` shirogane (type over footage), `#8A8177` hai (micro-labels).
+  **No gold, no pure black, no bright white.**
+- The veil colour is a bare triplet, `--veil:8 13 23`, consumed as
+  `rgb(var(--veil) / .58)`. Every scrim stop reads from it — retune the palette there,
+  not in individual rules.
+- **Grade at encode time, not at runtime.** Each clip is darkened with ffmpeg `eq` +
+  `curves` before it ships, so the CSS `.veil` only has to shape the frame. Full-screen
+  CSS `filter` on video is expensive, and stacking a heavy veil on top of an already-dark
+  clip turns the food to mud — which the brief explicitly forbids. If a scene reads wrong,
+  fix its bake, not the veil.
+- The stage is cool and the footage is graded warm. That warm-food-on-cool-indigo tension
+  is deliberate; don't neutralise one side of it.
+- Type: Marcellus (wordmark only; inscriptional roman, flared serifs echo brush terminals)
+  + Jost 300 (tagline, nav, all micro-labels), Google Fonts. Deliberately not Cormorant or
+  Playfair — those are the default AI-luxury serifs.
+- Assets: `brand_assets/misono logo.jpeg` is a **photo of the printed logo** — angled,
+  soft, opaque paper background, so it cannot be placed in the hero as-is. The mon was
+  traced from it into `misono-mark.svg` (on navy, used as the favicon) and
+  `misono-mark-mono.svg` (transparent, drawn in the hero via CSS `mask` so its colour
+  comes from the tokens — an `<img>` would break `currentColor`). **Both are
+  reconstructions: verify against real artwork before shipping.** The wordmark is still
+  typographic Marcellus, with a documented swap point in `index.html`.
+  `assets/video/hero-{1-slice,2-plate,3-serve}[-tall].mp4` are **Pexels stock standins**,
+  cropped and graded to fit — replace with real Misono footage, keeping the filenames.
+  `assets/img/hero-1-slice[-tall].jpg` is scene 1's still, the only image visible before
+  video paints. URL-encode any spaces in filenames.
+- **H.264 MP4 only, no WebM.** VP9 was measured *larger* than H.264 on every one of these
+  clips (dark footage with heavy film grain), so a second codec cost bytes and bought no
+  reach. Don't reintroduce WebM without re-measuring.
+- Motion: CSS only, easing `cubic-bezier(.16,1,.3,1)`. Entrance floats the wordmark up
+  while opening its tracking (1400ms), tagline lagging 340ms. Scene timing lives in
+  `--hold` / `--trans` on `:root` and `site.js` reads it back off the DOM, so the CSS
+  transition and the sequencer can never disagree. Under `navigator.webdriver` or reduced
+  motion, `site.js` sets `.no-anim`, never starts the sequence, and loads **no video at
+  all** — scene 1's still is the static hero. `?anim=1` overrides this, and is the only
+  way to see the sequence in a capture.
+- Breakpoints: **≥768px** gets the 16:9 clips, below gets the 9:16 `-tall` crops. The
+  `matchMedia` in `site.js` must stay in step with the CSS breakpoint or a viewport
+  downloads the wrong crop.
+- `assets/video/Design hero vid inspo.mp4` and `assets/img/design inspirtation 2page.jpeg`
+  are the user's reference material, not site assets. Both sit in served directories —
+  move them out before deploying, along with the ungraded `assets/img/food*.jpeg`
+  originals, which only `bake-gallery.sh` needs.
+- Placeholders pending real content: logo + wordmark, real Misono footage and stills,
+  street address, phone, email, social links, menu, service hours, reservation link,
+  and confirmation that the city is Nairobi.
+
+## Section 2 — "A unique experience" (`.beyond`, `id="beyond"`)
+Built from a supplied reference (`assets/img/design inspirtation 2page.jpeg`): centred
+heading + small paragraph, then two rows of dishes shearing past each other, top row
+right→left, bottom row left→right, with EXPLORE MENU sitting in the seam. It is the
+hero's film continued as a strip — the edges dissolve into the indigo so it reads as one
+gallery, not a row of cards. **No rounded corners, no shadows, no borders on the tiles.**
+- **The whole composition must be readable in one screen.** The section is
+  `min-height:100svh`, a centred flex column, and **every vertical measure is in `vh`,
+  not `vw`** — that is what makes it fit at 720, 900 and 1080 alike instead of only at
+  the width it was tuned on. Verified fitting exactly 100vh from 600px to 1300px tall.
+  Keep it `min-height`: with `height` a viewport too short for the content would clip
+  the heading off the top instead of letting the section grow.
+- **Type stays under the hero.** Heading is Marcellus caps at **44px / 1440** (`.22em`) —
+  deliberately below the wordmark's 66px, because MISONO must stay the largest thing on
+  the page. Paragraph 13px Jost 300, `max-width:32.5rem` so it breaks on its own full
+  stop. CTA 11px at `.28em` — a step above the 10.4px nav, well below the heading.
+- **The CTA is clear at rest and fills ivory on hover** — a hairline frame with the film
+  running through it, so the one piece of chrome crossing the strip does not break its
+  continuity. That flip is the entire hover; it had an expanding ring too, which was cut
+  as a second gesture doing the first one's job. Because there is no fill at rest, the
+  label's legibility rests **entirely on `.gal-pool`** — measured 7.32:1 against the
+  brightest pixel that passes behind it at any phase of the loop (mean 14:1). Weaken the
+  pool and you silently break the button; re-measure if you retune it. `:active` repeats
+  the fill because touch never reliably fires `:hover`.
+- **The loop is pure CSS and must stay seamless.** Each track holds the nine dishes
+  **three** times and travels `calc(-100% / 3)`, i.e. exactly one copy. Two traps, both
+  paid for already:
+  - Tiles use `margin-right`, **not** a flex `gap`. With `gap` the trailing edge of each
+    copy is half a gap short and the wrap visibly jumps.
+  - Three copies, not two. Tile height caps at 280px, so one copy is ~2385px — narrower
+    than a 2560px monitor. Three copies carry it to 4764px. Verified by measurement.
+- **Tile height carries a width term for a reason.** `clamp(max(7rem,6.3vw),28vh,21rem)`.
+  A copy of the sequence is ~8.2× the tile height and two copies must span the viewport
+  or the loop opens a visible gap. On a wide, short window `28vh` alone shrinks the tiles
+  past that point, so the `6.3vw` floor holds them up. The trade is that a ~5:1 squashed
+  window (3440×700) makes the section ~10px taller than the viewport — a 10px scroll is
+  the right price for never showing a hole in the strip. Don't drop the `max()`.
+- **Speed is set by relative motion, not seconds.** A copy's width scales exactly with
+  tile height, so an unchanged duration already gives identical relative speed at every
+  size. Mobile is nudged 40s/50s (vs 56s/70s) only so the drift does not read as
+  stalled — an earlier 26s/32s made phones drift 2.2× faster than desktop.
+- **Mobile is tuned on its own terms, not scaled down.** A phone spends far more of its
+  height on the heading (two lines) and paragraph (three), so tiles take `24vh` rather
+  than the desktop's `28vh`; otherwise the type and the strip fight for the same space.
+- **Never put `decoding="async"` on the tiles.** It lets the browser present frames
+  without them, so the strip renders with holes on first scroll (and blank in captures).
+- Rows carry one `role="img"` + `aria-label` with `alt=""` on all 54 tiles — announcing
+  three copies of nine dishes is noise. The CTA sits **outside** that element, or
+  `role="img"` would make it presentational.
+- `bake-gallery.sh` regenerates `assets/img/gallery/` from the originals in
+  `assets/img/food*.jpeg`. Same rule as the hero: **grade at encode time.** It is a two
+  pass grade — the nine sources are phone snapshots under different light (food3
+  tungsten, food6 window-cool, food9 amber), so each is measured and white-balanced
+  toward grey at 55% strength before one shared look goes on top. Judge changes with the
+  numbers it prints (`YAVG` spread, `U`/`V` near 128), not by eye. One more trap: inside
+  a single `curves`, `all` alongside `r`/`b` starves green and turns neutrals magenta —
+  chain a second `curves` instead.
+- Replacing these with real photography: keep the filenames, drop them in `assets/img/`,
+  re-run `bake-gallery.sh`, and update the `width`/`height` attributes in `index.html`
+  (they hold the track's layout before the images load).
+- **Its grade no longer matches the page.** Sections 3–5 were built to a much deeper
+  register and the strip is now the only bright thing on the site — white plates and
+  vivid garnish against four dark sections. Fixing it means re-running `bake-gallery.sh`
+  nearer the scenes' numbers (they land at `YAVG` 12–16); it is a grade change only, no
+  layout. Left alone because section 2 was explicitly out of scope. **Ask before doing it.**
+
+## Sections 3–5 and the footer (`.omakase`, `.craft`, `.reserve`, `.foot`)
+Built from `assets/video/design pages vid.mp4`, studied frame by frame at 5fps. The film
+continued as still frames: each section is one lit form in a dark room.
+- **The head pattern is section 2's, shared by adding selectors to its rules** —
+  `.beyond-title, .sec-title { … }` — never by copying the declarations. `.beyond`
+  renders unchanged and the two can never drift. `.gal-cta` was split so the hairline box
+  is shared but its absolute centring is not.
+- **Measure the reference as a share of viewport width, not in pixels.** The recording is
+  1024×576 of an ~1890px viewport (scale ×1.875; the form column is 410f = 768 real).
+  Its headings look larger only because the viewport is larger and its wordmark is a big
+  script. Against its own wordmark, Misono's 44px section title is already proportionally
+  *bigger* — so the title size was measured, then deliberately left alone. Do not chase
+  its absolute px.
+- What measuring *did* change: the copy in these sections is 12px/1.62 at `27.5rem`,
+  against section 2's 13px/1.95 at `32.5rem`. The reference sets a compact block under
+  the heading (29.3% of viewport wide, 1.29% line pitch); this page was setting 35.4% at
+  1.76%. Section 2's own values are pinned and stay.
+- **Reveal: 8px rise, and the tracking opens `.20em → .22em`.** Both measured — its
+  headings rise ~5.6px while brightening from a third to full, and the line widens 2.4%.
+  The gesture is mostly a fade. An 18px slide read as a different, busier animation.
+  The tracking open is the hero's `rise-word` move at chrome scale, which is what ties
+  the halves of the page together; it is the one place a layout property is animated.
+- **`.no-anim` renders these finished**, unlike the hero, whose static state is scene 1's
+  still. These sections have no meaningful "before", and captures must show the real
+  composition. The hidden state is guarded by `@media (scripting: enabled)`, not a class
+  from `site.js` — the script is deferred, so a class arrives after first paint and the
+  content flashes in before hiding.
+- **`data-parallax` is a fraction of `--bleed`, not a pixel distance**, and `site.js`
+  reads `--bleed` off the DOM — same reason the sequencer reads `--hold`. Hard-coding
+  both let a later `--bleed` change leave them disagreeing, and the disagreement shows as
+  the photograph's own edge sliding into the section. At `1` the frame travels exactly to
+  its bleed. Verified at every breakpoint.
+- **Bake the shape of the hole.** A scene's aspect must match the box it lands in — the
+  section plus twice `--bleed` — because `object-fit:cover` discards the rest. `.craft`'s
+  box is portrait even on a desktop; baked landscape, cover cropped it to the middle two
+  thirds and dropped half the subject off the sides.
+- **Feather top and bottom only, never the sides.** The reference's frames run clean off
+  all four edges; a 12–15% side feather put a dark oval around every section and read as
+  a filter. `--fade-top`/`--fade-bot` default to 4.5%. `.craft` needs far more (17%/20%)
+  because it begins mid-section and the slate's ground is a warmer dark than the page's
+  indigo — at 4.5% the join showed as a band across the section.
+- **No `loading="lazy"` on the scene images.** Same trap as `decoding="async"` on the
+  gallery tiles: the browser presents the page without them and the sections render empty
+  in captures. Measured cost of eager: ~200KB.
+- Section 4's frame is **not** repeated at the top of section 5. The reference bleeds its
+  photograph over that join, but a second copy faded in from the top of `.reserve` put a
+  hard horizontal edge across it — the two crops do not line up. `.craft`'s long foot
+  fade carries the join instead. Judge that join by measuring row-mean luminance, not by
+  eye: JPEG artefacts in a downscaled crop look exactly like a seam.
+- **Both photographs are one shoot** — the same salmon loin, slate and light
+  (`scene-omakase-src.jpeg`, `scene-craft-src.jpeg`, Pexels 3296276 / 3296280). That is
+  the point: two unrelated stock frames read as two stock frames. The crops are
+  deliberately unalike — a still form, then two hands and a blade — so the shared source
+  buys cohesion without repeating a picture. They share one grade (`$LOOK`) and land
+  within `YAVG` 12–16, `YMAX` ~175. `bake-scenes.sh` regenerates all four files.
+- Form fields are square, filled `color-mix(in srgb, var(--kon) 52%, var(--ai))` — full
+  `--kon` read as a row of blue-grey boxes. Focus moves the border to `--gunjo`. The
+  select chevron is drawn in CSS and the date field is `type="text"`: a native picker
+  arrives in another operating system's design language.
+- The footer wordmark is **the hero lockup enlarged** — same uppercase, same `--track` —
+  at 6% and clipped by the footer box. Set in mixed case it read as a second wordmark and
+  the tittle on its "i" landed beside the nav looking like a stray dot.
+- Placeholder pending real content: the reservation endpoint (`<form>` has no `action`).
+- `assets/img/scene-*-src.jpeg` are ungraded originals that only `bake-scenes.sh` needs —
+  move them out before deploying, with `assets/img/food*.jpeg` and the two reference files.
+
+## Always Do First
+- **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
+
+## Reference Images
+- If a reference image is provided: match layout, spacing, typography, and color exactly. Swap in placeholder content (images via `https://placehold.co/`, generic copy). Do not improve or add to the design.
+- If no reference image: design from scratch with high craft (see guardrails below).
+- Screenshot your output, compare against reference, fix mismatches, re-screenshot. Do at least 2 comparison rounds. Stop only when no visible differences remain or user says so.
+
+## Brand Assets
+- Always check the `brand_assets/` folder before designing. It may contain logos, color guides, style guides, or images.
+- If assets exist there, use them. Do not use placeholders where real assets are available.
+- If a logo is present, use it. If a color palette is defined, use those exact values — do not invent brand colors.
+
+## Local Server
+- **Always serve on localhost** — never screenshot a `file:///` URL.
+- Start the dev server: `node serve.mjs` (serves the project root at `http://localhost:3000`).
+- `serve.mjs` lives in the project root. Start it in the background before taking any screenshots.
+- If the server is already running, do not start a second instance.
+- `serve.mjs` refuses to bind an occupied port and says so. Other projects on this machine also use 3000 — if it is taken, run `PORT=3001 node serve.mjs` and screenshot `http://localhost:3001`. Check the served `<title>` matches this project before trusting a screenshot.
+
+## Screenshot Workflow
+- Puppeteer is installed locally in the project (`node_modules/`). Chrome cache is at `~/.cache/puppeteer/`.
+- **Always screenshot from localhost:** `node screenshot.mjs http://localhost:3000`
+- Screenshots save automatically to `./temporary screenshots/screenshot-N.png` (auto-incremented, never overwritten).
+- Optional label suffix: `node screenshot.mjs http://localhost:3000 label` → saves as `screenshot-N-label.png`.
+- Optional viewport (third arg): `node screenshot.mjs http://localhost:3000 label mobile` → `desktop` (default, 1440x900), `tablet` (820x1180), `mobile` (390x844), or `WIDTHxHEIGHT`.
+- `screenshot.mjs` lives in the project root. Use it as-is.
+- After screenshotting, read the PNG from `temporary screenshots/` with the Read tool — Claude can see and analyze the image directly.
+- When comparing, be specific: "heading is 32px but reference shows ~24px", "card gap is 16px but should be 24px".
+- Check: spacing/padding, font size/weight/line-height, colors (exact hex), alignment, border-radius, shadows, image sizing.
+- **Clean up when done:** at the end of every assignment, delete the contents of `temporary screenshots/` (`rm -f "temporary screenshots/"*.png`). The PNGs are large and re-reading stale ones wastes tokens — regenerate fresh next time.
+
+## Output Defaults
+- Single `index.html` file, all styles inline, unless user says otherwise. (JS is the documented exception: motion lives in `assets/site.js`.)
+- Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
+  - **The hero deliberately does not use it.** The Play CDN ships ~400KB of JS that
+    compiles styles at runtime, and the hero brief made load speed the primary
+    requirement. The hero is also almost entirely mask gradients, per-panel filters and
+    keyframes — things utilities cannot express — so Tailwind would have added the weight
+    and bought nothing. Total hero transfer is 644KB desktop / 283KB mobile. Reinstate
+    Tailwind for ordinary content sections below the hero if you want it; do not add it
+    to the hero without re-measuring.
+- Placeholder images: `https://placehold.co/WIDTHxHEIGHT`
+- Mobile-first responsive.
+
+## Anti-Generic Guardrails
+- **Colors:** Never use default Tailwind palette (indigo-500, blue-600, etc.). Pick a custom brand color and derive from it.
+- **Shadows:** Never use flat `shadow-md`. Use layered, color-tinted shadows with low opacity.
+- **Typography:** Never use the same font for headings and body. Pair a display/serif with a clean sans. Tight tracking (`-0.03em`) on large headings, generous line-height (`1.7`) on body.
+- **Gradients:** Layer multiple radial gradients. Add grain/texture via SVG noise filter for depth.
+- **Animations:** Only animate `transform` and `opacity`. Never `transition-all`. Use spring-style easing.
+- **Interactive states:** Every clickable element needs hover, focus-visible, and active states. No exceptions.
+- **Images:** Add a gradient overlay (`bg-gradient-to-t from-black/60`) and a color treatment layer with `mix-blend-multiply`.
+- **Spacing:** Use intentional, consistent spacing tokens — not random Tailwind steps.
+- **Depth:** Surfaces should have a layering system (base → elevated → floating), not all sit at the same z-plane.
+
+## Hard Rules
+- Do not add sections, features, or content not in the reference.
+- Do not "improve" a reference design — match it.
+- Do not stop after one screenshot pass.
+- Do not use `transition-all`.
+- Do not use default Tailwind blue/indigo as the primary color.

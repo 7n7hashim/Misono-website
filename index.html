@@ -1,0 +1,2867 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Misono — The Art of Japanese Dining</title>
+<link rel="preload" as="image" type="image/avif"
+      imagesrcset="assets/img/r/hero-omakase-1717-280.avif 280w, assets/img/r/hero-omakase-1717-350.avif 350w, assets/img/r/hero-omakase-1717-1010.avif 1010w, assets/img/r/hero-omakase-1717-1270.avif 1270w, assets/img/r/hero-omakase-1717-1717.avif 1717w"
+      imagesizes="103.2vw" fetchpriority="high">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Misono. Japanese dining in Nairobi.">
+
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-normal-300-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jost-normal-300-400.woff2">
+
+<style>
+  /* =====================================================================
+     PERFORMANCE — self-hosted type and the <picture> box tree.
+     Added by the 2026-08-24 load-time pass; see apply-perf-shell.mjs for the
+     reasoning behind every number in here. Nothing below changes a typeface,
+     a weight, a size or a colour.
+     ===================================================================== */
+
+  @font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 300 400;
+    font-display: swap;
+    src: url(assets/fonts/cormorant-garamond-normal-300-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  @font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url(assets/fonts/cormorant-garamond-italic-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  @font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 300 400;
+    font-display: swap;
+    src: url(assets/fonts/jost-normal-300-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  /* Georgia, bent onto Cormorant's metrics, so the ~150ms before the webfont
+     arrives is not a differently-shaped page. 86.8% is the measured width
+     ratio of the two over a mixed sample; the vertical overrides are
+     Cormorant's own ascent and descent expressed against that adjusted em. */
+  @font-face {
+    font-family: 'Cormorant Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Times');
+    size-adjust: 86.8%;
+    ascent-override: 106%;
+    descent-override: 33.4%;
+    line-gap-override: 0%;
+  }
+
+  /* <picture> generates NO box. Several of these photographs are flex or
+     grid items of their own parent — .beyond__track img is `flex: none` in
+     a max-content row whose width the marquee's translate is a percentage
+     of — and a wrapper would take that slot instead of the <img>. With
+     display:contents the <img> is the flex item again and every measured
+     layout is byte-for-byte what it was. Selector matching is untouched:
+     every rule on this site reaches these images by class or as a
+     descendant, never as a direct child. */
+  picture { display: contents; }
+
+  /* ---------------------------------------------------------------------
+     Ratio pinned to the FILE's dimensions, not the decoded bitmap's.
+
+     These tiles are the only images on the site sized `width: auto` against
+     a fixed height, so their width comes from whatever aspect ratio the
+     bitmap that actually loaded happens to have — the width/height
+     attributes only supply a ratio until then. A srcset rung whose height
+     was rounded to an even number is a fraction of a percent off, and in a
+     `width: max-content` row of 27 tiles those fractions summed to 4.6px:
+     measured, .beyond__track went 6299 -> 6303.6 at 1440. Nothing looked
+     wrong, which is exactly why it needs a rule rather than an eye.
+
+     Pinning here also means the layout no longer depends on WHICH rung the
+     browser picked, so a future re-bake with a different ladder cannot move
+     the marquee.
+     --------------------------------------------------------------------- */
+  .beyond__track img[src$="food2.jpg"] { aspect-ratio: 856 / 560; }
+  .beyond__track img[src$="food3.jpg"] { aspect-ratio: 671 / 560; }
+  .beyond__track img[src$="food4.jpg"] { aspect-ratio: 510 / 560; }
+  .beyond__track img[src$="food5.jpg"] { aspect-ratio: 445 / 560; }
+  .beyond__track img[src$="food6.jpg"] { aspect-ratio: 563 / 560; }
+  .beyond__track img[src$="food7.jpg"] { aspect-ratio: 564 / 560; }
+  .beyond__track img[src$="food8.jpg"] { aspect-ratio: 637 / 560; }
+  .beyond__track img[src$="food9.jpg"] { aspect-ratio: 450 / 560; }
+  .beyond__track img[src$="foodinspo1.jpg"] { aspect-ratio: 306 / 560; }
+
+  /* ---------------------------------------------------------------------
+     Misono — hero
+     Geometry is measured from the Cultura reference, expressed as a share
+     of the viewport rather than in pixels: the mon sits at 4.3% from the
+     left, the brand block is indented further to 9.9%, and the block is
+     optically centred at ~50.6% of the height.
+     --------------------------------------------------------------------- */
+
+  :root {
+    /* The one measured brand value that exists: the printed navy, white-
+       balanced off the logo photograph. Used only as a shadow/focus tint. */
+    --misono-indigo: #3A5280;
+    --ink:           #0B0806;
+    --ember:         #C47026;
+
+    --gutter:      clamp(28px, 4.3vw, 72px);   /* mon, from the left edge  */
+    --brand-inset: clamp(44px, 9.9vw, 168px);  /* wordmark, from the left  */
+    --mark-size:   clamp(72px, 7.4vw, 124px);
+
+    --ease-quiet: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: #fff;
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* ---------------------------------------------------------------- hero */
+
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 34rem;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Base plane — the photograph. */
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 46% 52%;
+    /* The frame arrives graded. Anything more than a whisper here reads as a
+       filter, which is the opposite of expensive. */
+    filter: contrast(1.03) saturate(1.02);
+    transform: scale(1.03);
+    animation: drift 42s var(--ease-quiet) infinite alternate;
+  }
+
+  /* Elevated plane — grade. A warm multiply pass keeps the tungsten
+     glow and stops the twilight window going electric-blue. */
+  .hero__warm {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(128% 110% at 70% 54%,
+        rgba(226, 150, 70, 0.08) 0%,
+        rgba(40, 22, 10, 0.26) 76%);
+    mix-blend-mode: multiply;
+  }
+
+  /* The wash that buys legibility: heavy at the left where the branding
+     sits, gone by the two-thirds mark so the counter keeps its light. */
+  .hero__wash {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg,
+        rgba(8, 5, 3, 0.60) 0%,
+        rgba(8, 5, 3, 0.40) 30%,
+        rgba(8, 5, 3, 0.10) 62%,
+        rgba(8, 5, 3, 0.00) 100%),
+      linear-gradient(180deg,
+        rgba(8, 5, 3, 0.34) 0%,
+        rgba(8, 5, 3, 0.00) 24%,
+        rgba(8, 5, 3, 0.00) 64%,
+        rgba(8, 5, 3, 0.38) 100%);
+  }
+
+  /* Grain, at the threshold of visibility — it exists to break up the
+     gradient banding across the dark left third, not to be seen. */
+  .hero__grain {
+    position: absolute;
+    inset: -100%;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.13;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Floating plane — everything the reader actually reads. */
+  .hero__mark,
+  .hero__brand {
+    position: absolute;
+    z-index: 4;
+  }
+
+  .hero__mark {
+    left: var(--gutter);
+    top: clamp(24px, 5vh, 52px);
+    width: var(--mark-size);
+    height: var(--mark-size);
+    color: #fff;
+    opacity: 0.96;
+    /* The mon is a hairline at this size, so it gets a tight shadow for edge
+       separation plus a wide one to sit it into the ceiling shadow. */
+    filter:
+      drop-shadow(0 1px 3px rgba(8, 5, 3, 0.60))
+      drop-shadow(0 2px 26px rgba(8, 5, 3, 0.70));
+  }
+
+  .hero__brand {
+    left: var(--brand-inset);
+    top: 50.6%;
+    transform: translateY(-50%);
+    max-width: min(46ch, calc(100% - var(--brand-inset) - var(--gutter)));
+  }
+
+  /* A soft bed that travels with the type instead of a scrim over the whole
+     frame — the lit stone behind the wordmark on narrow viewports drops to
+     2.4:1 without it, and darkening the entire image to fix that would cost
+     the room its light. Wide and low-peak, so it reads as shadow, not haze. */
+  .hero__brand::before {
+    content: "";
+    position: absolute;
+    left: -30%;
+    right: -46%;
+    top: -85%;
+    bottom: -85%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(52% 50% at 34% 50%,
+      rgba(8, 5, 3, 0.62) 0%,
+      rgba(8, 5, 3, 0.34) 46%,
+      rgba(8, 5, 3, 0.00) 75%);
+  }
+
+  .hero__name {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 4.7vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0.16em;
+    /* Indent-correct: tracking adds a trailing space after the final O. */
+    margin-right: -0.16em;
+    /* Three layers: a tight edge to separate the hairline serif from the
+       stone, a mid halo, and a wide warm one so the type sits inside the
+       room's light rather than on top of it. */
+    text-shadow:
+      0 1px 2px  rgba(8, 5, 3, 0.40),
+      0 4px 28px rgba(8, 5, 3, 0.50),
+      0 2px 70px rgba(46, 24, 8, 0.45);
+  }
+
+  .hero__tagline {
+    margin: clamp(14px, 1.5vw, 22px) 0 0;
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 300;
+    font-size: clamp(0.62rem, 0.92vw, 0.82rem);
+    line-height: 1.4;
+    letter-spacing: 0.34em;
+    margin-right: -0.34em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.80);
+    text-shadow: 0 1px 16px rgba(11, 8, 6, 0.6);
+  }
+
+  .hero__social {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 1.95vw, 30px);
+    margin-top: clamp(26px, 2.6vw, 40px);
+  }
+
+  .hero__social a {
+    display: grid;
+    place-items: center;
+    width: clamp(20px, 1.45vw, 22px);
+    height: clamp(20px, 1.45vw, 22px);
+    color: rgba(255, 255, 255, 0.90);
+    border-radius: 3px;
+    transition:
+      color 260ms var(--ease-quiet),
+      transform 260ms var(--ease-quiet);
+  }
+
+  .hero__social svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    filter: drop-shadow(0 1px 12px rgba(11, 8, 6, 0.55));
+  }
+
+  .hero__social a:hover  { color: #fff; transform: translateY(-2px); }
+  .hero__social a:active { color: #fff; transform: translateY(0); }
+
+  .hero__social a:focus-visible {
+    outline: 1.5px solid rgba(255, 255, 255, 0.92);
+    outline-offset: 7px;
+    box-shadow: 0 0 0 9px rgba(58, 82, 128, 0.30);
+  }
+
+  /* --------------------------------------------------------- entrance */
+
+  .hero__mark,
+  .hero__brand > * {
+    animation: rise 900ms var(--ease-quiet) both;
+  }
+  .hero__mark            { animation-delay: 120ms; }
+  .hero__name            { animation-delay: 220ms; }
+  .hero__tagline         { animation-delay: 340ms; }
+  .hero__social          { animation-delay: 440ms; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* The brand block is centred by a transform, so its children animate
+     instead — this keeps the two transforms from fighting. */
+
+  /* Deliberately shallow: the supplied frame is 1717px wide, so a deep
+     push would visibly soften it. */
+  @keyframes drift {
+    from { transform: scale(1.03); }
+    to   { transform: scale(1.065); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__img { animation: none; transform: scale(1.02); }
+    .hero__mark,
+    .hero__brand > * { animation: none; opacity: 1; transform: none; }
+    .hero__social a { transition: none; }
+  }
+
+  /* ---------------------------------------------------------- portrait
+
+     Keyed on ASPECT RATIO, not on width, because the aspect is what does the
+     cropping. `object-fit: cover` scales this 1.874:1 frame to whichever axis
+     is short, and on anything portrait that is the WIDTH that overflows:
+
+       390x844   scale 0.921   visible slice 23.9% of the source width
+       360x800   scale 0.873   visible slice 23.9%
+       390x745   scale 0.813   visible slice 27.1%   (address bar showing)
+       768x1024  scale 1.118   visible slice 38.8%
+
+     Two consequences, both measured with `node shoot-hero-mobile.mjs`:
+
+     · THE VERTICAL HALF OF object-position DOES NOTHING HERE. The height is
+       what cover matched, so the frame shows 97.1% of its own height at every
+       portrait size — the missing 2.9% is the drift's scale(1.03), not the
+       position. The old rule said `44% 56%` and the 56 had never had any
+       effect; the y is written 50% now so it stops reading as a decision.
+     · A PERCENTAGE ANCHOR IS ASPECT-STABLE, which is what makes one value
+       serve a 0.43 foldable and a 0.75 tablet. The window's CENTRE under
+       `54.5%` moves only 53.4% -> 53.6% as the slice narrows from 38.8% to
+       20%, so a taller phone tightens around the same composition rather
+       than sliding off it.
+
+     WHICH slice, at 54.5%: 41.5% -> 65.3% of the frame at 390x844. That is
+     the ikebana vase against the spotlit stone on the left, the counter's
+     live edge running the diagonal, and the chef and the neta case on the
+     right. It is chosen against the two neighbours it beats:
+
+       44%  (the old value)  33.5% -> 57.4%   stone and empty chairs; the
+                                              counter's warm sweep is cut off
+                                              and no one is working in it
+       62%                   47.1% -> 71.0%   chef centred, but the stone wall
+                                              is gone and the tagline crosses
+                                              the lit case at 3.29:1
+
+     The vase and the chef together span 41% -> 70% of the frame and the slice
+     is 24%, so one of them HAS to be cut. The chef is the one that survives
+     it: cut at the back he reads as leaning into the counter, where the vase
+     cut at the left edge loses the branches, which are the whole of it. */
+
+  @media (max-aspect-ratio: 4/5) {
+    .hero__img { object-position: 54.5% 50%; }
+  }
+
+  /* Phone-shaped AND portrait. The crop above is the same composition at any
+     portrait size; what changes below is where the type sits in it, and that
+     is a phone decision — a 768px tablet has room to hold the block on the
+     optical centre exactly as the desktop does. */
+
+  @media (max-width: 640px) and (max-aspect-ratio: 4/5) {
+    /* Centred, the wordmark lands across the counter's lit edge — the one
+       band in this slice that is both bright and busy. At 68% it sits on the
+       counter's own shadow just under the chef, with the icons on the chair
+       backs: subject upper right, name lower left, the counter's diagonal
+       carrying the eye between them.
+
+       JUDGE THIS ON THE WORST 12px TILE UNDER THE TYPE, NEVER ON THE MEAN.
+       The mean is what says a wordmark lying across a row of lit cups is
+       comfortable at 10:1. Measured worst tiles here, 390x844: name 5.9:1
+       (needs 3:1 at 40px), tagline 9.0:1 (needs 4.5:1), icons 12.3:1 (needs
+       3:1). Floors across every portrait size from 320x568 to 430x932:
+       4.6 / 6.8 / 8.5.
+
+       AND ACROSS THE DRIFT, which is the easy one to miss: the photograph
+       zooms 1.03 -> 1.065 over 42s, so the crop is still moving while a
+       reader is looking at it, and a position solved at 1.03 alone is solved
+       for half the animation. At 1.065 the floors are 6.5 / 8.0 / 9.3, and
+       under reduced motion (1.02) 5.6 / 9.5 / 11.2.
+
+       This sat at 76% for one revision, down in the chairs, which is where
+       the type goes if the ONLY thing being solved is the bed under it.
+       Between 56% and 66% the tagline crosses the lit place settings and the
+       worst tile runs 2.7-3.6:1, so the whole band looks unavailable — and
+       most of that was the measurement, not the picture: the tool was hiding
+       `.hero__brand` to sample the bed, which takes this ::before with it
+       and reports every position as though there were no bed at all. Fixed,
+       the passing band is 66-70% and 68% sits in the middle of it. When a
+       measurement rules out most of the design space, check the instrument
+       before accepting the answer. */
+    .hero__brand { top: 68%; }
+
+    /* 0.44 where this used to be 0.86, and RE-CENTRED on the block — which
+       is what actually bought the margin. The old bed peaked at 42% of its
+       box, and every hot tile in this composition is at the type's RIGHT
+       end, where the lit cups are; moving the peak to 48% lifted the name's
+       floor 3.7 -> 4.6:1 for 0.10 of extra alpha. Reach for the geometry
+       before reaching for the depth: at the old 0.86 this reads as a smudge
+       laid over the photograph, which is the one thing a bed here must never
+       do. Kept wide and low-peak so it stays the counter's own shadow. */
+    .hero__brand::before {
+      left: -58%;
+      right: -58%;
+      background: radial-gradient(64% 58% at 48% 50%,
+        rgba(8, 5, 3, 0.44) 0%,
+        rgba(8, 5, 3, 0.24) 48%,
+        rgba(8, 5, 3, 0.00) 80%);
+    }
+
+    /* Far less wash than the desktop needs: this slice is already dark, and
+       stacking a heavy scrim on it turns the room to mud. Re-pointed for the
+       type's new place — the weight is in the bottom quarter now, under the
+       brand block, and the top is lighter than it was because the hood above
+       the counter is already near black and 0.40 flattened it to a dead
+       band. The 28-54% window is left almost clear: that is the lit
+       stone, the vase and the chef, and it is the whole reason for the
+       crop. */
+    .hero__wash {
+      background:
+        linear-gradient(180deg,
+          rgba(8, 5, 3, 0.26) 0%,
+          rgba(8, 5, 3, 0.05) 28%,
+          rgba(8, 5, 3, 0.06) 54%,
+          rgba(8, 5, 3, 0.24) 76%,
+          rgba(8, 5, 3, 0.44) 100%);
+    }
+  }
+
+  /* ---------------------------------------------------------------- menu
+
+     Geometry is measured off the supplied reference at 2048px wide and
+     carried across as a share of the viewport, not as pixels:
+
+       ground          #FCF8F5
+       text column     starts 7.18%, page ends 8.11% from the right
+       photograph      35.01% -> 91.89%, 2.718:1, ends fully rounded
+       display pitch   4.69% of viewport width (96px at 2048)
+       rule            5.62% long, 0.15% thick, set on the optical centre
+       caption         centred on the photograph, never wider than it
+
+     Two findings from measuring rather than eyeballing it. The photograph's
+     ends are a true stadium — the edge inset tracks a circle of r = h/2 at
+     every sample down the side, so the radius is half the height, not a
+     large fixed corner. And it casts no shadow: the ground is back to
+     #FCF8F5 two pixels off the edge, so there is none here either.
+     ------------------------------------------------------------------- */
+
+  :root {
+    --cream:       #FCF8F5;
+    --menu-ink:    #2F1B19;  /* measured #321D1E, warmed a shade toward sumi */
+    --menu-body:   #6B5750;  /* 6.5:1 on the cream                           */
+    --menu-accent: #9A5C26;  /* measured #A46D32, darkened to clear 4.5:1    */
+  }
+
+  /* Stacked is the base state; the reference's two-column composition starts
+     at 1120px. That is the type, not the caption: the featured line runs
+     8.06em including its rule, the text column is 27.83% of the viewport,
+     and below roughly 1120px the display type meets its lower clamp and
+     stops shrinking while the column carries on — so the italic runs into
+     the photograph. At 1120px exactly there is 20px in hand.
+
+     This number depends on the longest category name. Rename them and
+     re-measure; the featured line is what sets it. It was measured against
+     "Sushi & Sashimi"; the current "Wagyu A5" is narrower, so 1120px now
+     has roughly 100px in hand rather than 20. Anything longer than the
+     original needs the breakpoint measured again. */
+
+  .menu {
+    background: var(--cream);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    padding: clamp(64px, 8.5vw, 200px) 7.18% clamp(70px, 9.2vw, 216px);
+  }
+
+  .menu__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "head"
+      "figure"
+      "cta";
+  }
+
+  .menu__head   { grid-area: head; }
+
+  .menu__figure {
+    grid-area: figure;
+    margin-top: clamp(28px, 6vw, 56px);
+  }
+
+  .menu__eyebrow {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(0.7rem, 1.153vw, 1.45rem);
+    line-height: 1;
+    letter-spacing: 0.28em;
+    /* Tracking adds a trailing space after the last letter; pull it back so
+       the label starts and ends on the column edge. */
+    margin-right: -0.28em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .menu__list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* vw, not %: a percentage margin resolves against the grid column, which
+       is a third of the viewport, and would land this gap at a third of the
+       measured 2.0%. */
+    margin: clamp(14px, 2.0vw, 40px) 0 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 400;
+    /* Stacked, the type is sized to the phone rather than to the reference;
+       the floor is the largest that keeps the featured line inside a 320px
+       screen. The reference's own size is restored with the two-column
+       layout further down. */
+    font-size: clamp(1.85rem, 8.8vw, 3.4rem);
+    line-height: 1.4545;
+    letter-spacing: -0.004em;
+  }
+
+  /* The featured course, called out of the list the way the reference calls
+     out its own — italic, behind a short rule. */
+  .menu__item--featured {
+    display: flex;
+    align-items: center;
+    font-style: italic;
+  }
+
+  .menu__item--featured::before {
+    content: "";
+    flex: none;
+    width: 1.74em;                    /* 115px at the reference's 66px type */
+    height: max(1px, 0.146vw);
+    margin-right: 0.44em;
+    background: currentColor;
+  }
+
+  .menu__cta {
+    grid-area: cta;
+    justify-self: start;
+    margin-top: clamp(30px, 7vw, 64px);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-block;
+    /* Set uppercase and tracked, unlike the reference's sentence case: it is
+       the label the brief asked for, and it matches the hero's tagline. That
+       costs width, so the padding is pulled in to hold the reference's
+       overall button proportion. */
+    padding: 0.62em 2.5em;
+    border: max(1px, 0.098vw) solid var(--menu-ink);
+    border-radius: 999px;
+    font-size: clamp(0.8rem, 1.087vw, 1.4rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    /* The tracking puts a trailing space after the final N, inside the pill,
+       which leaves the lettering half of it left of centre — measured at
+       1.5px. Half the tracking back the other way squares it up. */
+    text-indent: 0.09em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--menu-ink);
+    transition: color 420ms var(--ease-quiet);
+  }
+
+  /* The one piece of movement on the page: the fill is wiped across on
+     hover the way nikiri is brushed over a piece, left to right, once. */
+  .menu__cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--menu-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  .menu__cta:hover,
+  .menu__cta:focus-visible { color: var(--cream); }
+
+  .menu__cta:hover::before,
+  .menu__cta:focus-visible::before { transform: scaleX(1); }
+
+  .menu__cta:active { transform: translateY(1px); }
+
+  .menu__cta:focus-visible {
+    outline: 1.5px solid var(--menu-ink);
+    outline-offset: 5px;
+  }
+
+  .menu__fig { margin: 0; }
+
+  .menu__frame {
+    overflow: hidden;
+    border-radius: 999px;   /* clamps to half the height — the stadium */
+    /* Matches the file's own 2.162:1 so object-fit has nothing to crop and
+       the whole boat shows on a phone too. */
+    aspect-ratio: 2.162;
+    background: #E7DFD8;
+  }
+
+  .menu__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* The frame arrives graded — white balance measured off its own
+       highlights, hue-selective saturation, a highlight ceiling and a black
+       point, all baked into the file by the same pass that bakes the gallery
+       tiles below. Nothing is corrected twice here. */
+  }
+
+  .menu__caption {
+    margin: clamp(20px, 4.05vw, 84px) 0 0;   /* vw, per the display block */
+    font-weight: 300;
+    font-size: clamp(1rem, 1.221vw, 1.6rem);
+    line-height: 1.46;
+    text-align: center;
+    color: var(--menu-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu__cta,
+    .menu__cta::before { transition: none; }
+    .menu__cta:active  { transform: none; }
+  }
+
+  /* --------------------------------------------- the reference composition
+
+     Everything above is the phone. From 1120px the section becomes the
+     two-column layout that was measured off the reference, and every value
+     here is one of those measurements.
+     ------------------------------------------------------------------- */
+
+  @media (min-width: 1120px) {
+    .menu { padding-right: 8.11%; }
+
+    /* The photograph is the tallest thing in the row, so the second row takes
+       the slack and the button sits on its end — which is how the reference
+       lands the button and the last line of the caption on one baseline. */
+    .menu__inner {
+      grid-template-columns: 27.83fr 56.93fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "head figure"
+        "cta  figure";
+    }
+
+    .menu__figure { margin-top: 0; }
+    .menu__list   { font-size: clamp(2.2rem, 3.22vw, 4.15rem); }
+    .menu__frame  { aspect-ratio: 2.162; }   /* the image's own ratio — nothing cropped */
+
+    .menu__cta {
+      align-self: end;
+      margin-top: 0;
+    }
+  }
+
+  /* --------------------------------------------------- a unique experience
+
+     Two strips of dishes shearing past each other, top row travelling left,
+     bottom row right, with the CTA alone in a band of cream between them.
+     Rebuilt from the previous site's version of this section, moved onto the
+     cream ground.
+
+     Five things carried over because each was paid for once already:
+
+       1. The whole composition has to be readable in one screen, so the
+          section is min-height:100svh and every vertical measure is in vh,
+          not vw. That is what makes it fit at 720, 900 and 1080 alike.
+       2. Tiles use margin-right, never a flex gap. With gap the trailing
+          edge of each copy is half a gap short and the wrap visibly jumps.
+          --row-gap is a real flex gap, but it runs down the column between
+          the two rows, so it never touches the horizontal wrap maths.
+       3. Three copies of the nine dishes, not two, travelling exactly
+          -100%/3. Tile height caps at 19rem, so one copy is ~2800px —
+          wider than a 2560px monitor. Three carry it past 8000px.
+       4. Tile height keeps a width term, max(7rem, 6.0vw). On a wide, short
+          window the vh term alone shrinks the tiles until two copies no
+          longer span the viewport and the loop opens a hole. Measured on
+          this set: a copy runs 9.1–9.4x the tile height, so two copies span
+          the viewport while tile height stays above vw/18.2, i.e. 5.49vw.
+          6.0vw keeps about 9% in hand. Don't drop the max().
+       5. Both rows are exactly --tile-h. The CTA is centred on .beyond__gal,
+          whose 50% line is therefore the midline of --row-gap. Give the rows
+          different heights and the button drifts off the centre of the band.
+
+     The one place it does not fit in a single screen is a roughly 5:1 window
+     (3440x700), where it measures 771 against 700. Tile height is pinned to
+     the 6.0vw floor there by point 4, so the 71px is what point 4 costs at
+     that shape — and a short scroll is cheaper than a hole in the strip.
+
+     What changed for the light ground: the strip dissolves into cream rather
+     than indigo. The soft pool that used to sit behind the CTA is gone — it
+     hazed the middle of the strip, which is the one thing this section is
+     for. The button carries its own ground instead.
+     ------------------------------------------------------------------- */
+
+  .beyond {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(2.5rem, 7vh, 5.5rem) 0;
+    background: var(--cream);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+
+    /* Tiles give up a little height to fund --row-gap; the section still has
+       to land inside one screen. See note 5. */
+    --tile-h:   clamp(max(7rem, 6.0vw), 25vh, 19rem);
+    --tile-gap: clamp(0.35rem, 0.7vw, 0.625rem);   /* between tiles, horizontal */
+    --row-gap:  clamp(3rem, 9.5vh, 6.5rem);        /* between the two rows      */
+    --marq-a:   56s;
+    --marq-b:   70s;
+  }
+
+  .beyond__head {
+    text-align: center;
+    padding: 0 clamp(1.6rem, 5vw, 3rem);
+  }
+
+  /* Held under the hero wordmark on purpose — this is a section title, and
+     MISONO stays the largest thing on the page. */
+  .beyond__title {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(1.45rem, 3.05vw, 2.75rem);
+    line-height: 1.24;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    /* Cancels the trailing letter-space so the line stays optically centred. */
+    text-indent: 0.22em;
+    color: var(--menu-ink);
+  }
+
+  .beyond__rule {
+    width: 1.75rem;
+    height: 1px;
+    margin: clamp(0.85rem, 2.2vh, 1.6rem) auto;
+    border: 0;
+    background: var(--menu-accent);
+  }
+
+  .beyond__copy {
+    /* Sized so the sentence breaks on its own full stop, not mid-clause. */
+    max-width: 32.5rem;
+    margin: 0 auto;
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.95;
+    letter-spacing: 0.055em;
+    color: var(--menu-body);
+  }
+
+  .beyond__gal {
+    position: relative;
+    margin-top: clamp(1.35rem, 4.5vh, 3rem);
+  }
+
+  /* The band of cream the button sits in. Both rows are exactly --tile-h, so
+     the midline of this gap is also the 50% line of .beyond__gal — which is
+     what the CTA is positioned against. Keep the rows equal or the button
+     stops being centred in the gap. */
+  .beyond__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--row-gap);
+  }
+
+  /* The strip dissolves into the cream at both ends rather than being cut off
+     by the viewport — film running through a gate, not a carousel. */
+  .beyond__row {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg,
+      transparent 0, #000 7%, #000 93%, transparent 100%);
+            mask-image: linear-gradient(90deg,
+      transparent 0, #000 7%, #000 93%, transparent 100%);
+  }
+
+  .beyond__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .beyond__track img {
+    flex: none;
+    display: block;
+    height: var(--tile-h);
+    width: auto;
+    margin-right: var(--tile-gap);   /* not gap — see note 2 above */
+  }
+
+  .beyond__row--a .beyond__track {
+    will-change: transform;
+    animation: beyond-a var(--marq-a) linear infinite;
+  }
+
+  .beyond__row--b .beyond__track {
+    will-change: transform;
+    animation: beyond-b var(--marq-b) linear infinite;
+  }
+
+  @keyframes beyond-a {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(calc(-100% / 3), 0, 0); }
+  }
+
+  @keyframes beyond-b {
+    from { transform: translate3d(calc(-100% / 3), 0, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+
+  /* The label used to sit on a wide cream pool that washed the middle of the
+     strip. The photographs are the point of this section, so the legibility
+     job now lives inside the button itself: a solid cream fill the width of
+     the pill, and nothing beyond its own edge. */
+  .beyond__cta {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: inline-block;
+    padding: 0.62em 2.5em;
+    border: max(1px, 0.098vw) solid var(--menu-ink);
+    border-radius: 999px;
+    font-size: clamp(0.68rem, 0.9vw, 1.05rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;      /* half the tracking, as on the menu button */
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--menu-ink);
+    background: var(--cream);
+    /* Three tints of the ink, not black — a neutral shadow greys the cream
+       and reads as dirt on a warm ground. Contact, lift, then ambient. */
+    box-shadow:
+      0 1px 2px   rgba(47, 27, 25, 0.10),
+      0 6px 16px  rgba(47, 27, 25, 0.13),
+      0 16px 36px rgba(47, 27, 25, 0.10);
+    transition:
+      color 420ms var(--ease-quiet),
+      background-color 420ms var(--ease-quiet);
+  }
+
+  /* No wipe here. The menu button can afford one because it sits still on a
+     flat ground; over moving footage a second travelling thing reads as a
+     glitch, so this one just fills. */
+  .beyond__cta:hover,
+  .beyond__cta:focus-visible,
+  .beyond__cta:active {
+    color: var(--cream);
+    background: var(--menu-ink);
+  }
+
+  .beyond__cta:focus-visible {
+    outline: 1.5px solid var(--menu-ink);
+    outline-offset: 5px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beyond__track { animation: none !important; will-change: auto; }
+    .beyond__cta   { transition: none; }
+  }
+
+  @media (max-width: 900px) {
+    /* A phone spends far more of its height on the heading and paragraph, so
+       the tiles take less of it. Scaling the desktop figure down instead
+       makes the type and the strip fight for the same space. */
+    .beyond { --tile-h: clamp(max(6rem, 6.0vw), 21.5vh, 19rem); }
+
+    /* The button is smaller here, so the band around it can be too — an 80px
+       gap against a 200px tile reads as a hole rather than a rest. */
+    .beyond { --row-gap: clamp(2.5rem, 7.5vh, 4.5rem); }
+
+    /* Nudged faster only so the drift does not read as stalled at this width;
+       relative speed is otherwise identical, since a copy's width scales with
+       tile height. */
+    .beyond { --marq-a: 40s; --marq-b: 50s; }
+
+    .beyond__title { font-size: clamp(1.25rem, 6.4vw, 1.6rem); letter-spacing: 0.17em; text-indent: 0.17em; }
+    .beyond__copy  { font-size: 0.75rem; line-height: 1.9; }
+    .beyond__rule  { margin: clamp(0.7rem, 1.8vh, 1.3rem) auto; }
+  }
+
+  /* ------------------------------------------------------- the dish, turning
+
+     Measured off `next page.png` at 2048px wide and carried across as a share
+     of the viewport, not as pixels:
+
+       ground        #FCF8F5 — the reference's own ground, sampled, and the
+                     same cream the two sections above already stand on
+       eyebrow       #A46D32 sampled -> --menu-accent (darkened to clear 4.5:1)
+       display ink   #321D1E sampled -> --menu-ink
+       body ink      #6E595A sampled -> --menu-body
+       page          starts 7.18% from the left, ends 8.15% from the right
+       columns       20.07% | 2.10% | 40.38% | 2.10% | 20.07%
+       plate         827px across = 40.38% of the viewport
+       rule          97px long = 4.74%, one hairline, mid-warm-grey
+       display       88px = 4.30%; body 22px = 1.07% on a 30px line
+
+     The finding that sets the whole composition: both hairlines sit at
+     y=715.5, and the plate's centre is y=715.5. The rules are on the plate's
+     centreline, and each column of text is symmetric about them — 237px of
+     text above the line, 242px below. So the side columns are not positioned;
+     they are centred on the dish, and the geometry falls out.
+
+     The plate carries no shadow in the reference — the ground is back to
+     #FCF8F5 within a pixel of the rim — so there is none here either.
+     ------------------------------------------------------------------- */
+
+  .dish {
+    background: var(--cream);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    padding: clamp(64px, 7.4vw, 176px) 8.15% clamp(70px, 8.0vw, 190px) 7.18%;
+    overflow: hidden;   /* the plate is wider than its column at the floor */
+  }
+
+  .dish__head { text-align: center; }
+
+  .dish__eyebrow {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(0.7rem, 1.14vw, 1.5rem);
+    line-height: 1;
+    letter-spacing: 0.28em;
+    /* Tracking adds a trailing space after the last letter, which pulls a
+       centred line left by half of it. Half the tracking back squares it up. */
+    text-indent: 0.28em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .dish__title {
+    margin: clamp(10px, 0.98vw, 22px) 0 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 400;
+    /* Sized so the ascender height matches the reference's own 64px at 2048,
+       and ceilinged where it gets there — this heading has no reason to keep
+       growing past the width it was drawn at. Cap height lands within a pixel
+       of the hero wordmark's, so MISONO still reads as the larger of the two
+       on the strength of its tracking. */
+    font-size: clamp(2rem, 4.19vw, 5.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.005em;
+    color: var(--menu-ink);
+  }
+
+  /* Stacked is the base state — dish first, then the four notes beneath it.
+     The reference's three-column composition starts at 1100px. */
+  /* The gap under the heading lives on the grid, not on the figure. Put it on
+     the figure and it joins the figure's grid area, so `align-items: center`
+     centres the side columns on the area rather than on the plate — which
+     lifted them 34px off the centreline the whole composition is built on. */
+  .dish__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "figure"
+      "cola"
+      "colb";
+    column-gap: 2.10vw;
+    align-items: center;
+    margin-top: clamp(24px, 3.79vw, 84px);
+  }
+
+  .dish__fig {
+    grid-area: figure;
+    margin: 0 auto;
+    width: min(100%, 40.38vw);
+  }
+
+  /* A square box the size of the plate. The image inside is a cutout — the
+     photograph's cream ground was flood-filled out to alpha and the frame
+     re-centred on a least-squares fit of the rim, so the file's centre and the
+     plate's centre are the same point. That is what lets it turn without
+     orbiting, and why there are no corners to sweep past the type. */
+  .dish__plate {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    /* Eighty seconds for one turn — 4.5 degrees a second, about 23px a second
+       at the rim on a laptop. Fast enough to register as movement while you
+       read, slow enough that nothing about it asks to be watched. Linear,
+       0 -> 360, so the loop has no seam to find. */
+    animation: dish-turn 80s linear infinite;
+    will-change: transform;
+    /* The frame arrives graded; the cutout pass changed alpha only. */
+  }
+
+  @keyframes dish-turn {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .dish__col {
+    display: flex;
+    flex-direction: column;
+    /* The gap either side of the hairline. Measured at 109px on a 2048 frame,
+       and equal above and below — see the note about the centreline. */
+    gap: clamp(2.2rem, 5.32vw, 6.9rem);
+    margin-top: clamp(2.4rem, 5vw, 5rem);
+  }
+
+  .dish__col--a { grid-area: cola; }
+  .dish__col--b { grid-area: colb; }
+
+  .dish__label {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 400;
+    /* The reference sets these in a semibold sans. A serif at the same optical
+       weight is what makes the section Misono's rather than any restaurant's:
+       it is the pairing the hero and the menu already run — Cormorant for
+       anything named, Jost for anything explained. */
+    font-size: clamp(0.95rem, 1.343vw, 1.85rem);
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    color: var(--menu-ink);
+  }
+
+  .dish__note {
+    margin: 0.52em 0 0;
+    font-weight: 300;
+    font-size: clamp(0.8rem, 1.074vw, 1.4rem);
+    /* 1.38 puts the lines on the reference's 30px pitch at 2048 and still
+       reads a shade airier than the 1.364 it was actually set at. */
+    line-height: 1.38;
+    letter-spacing: 0.005em;
+    color: var(--menu-body);
+  }
+
+  /* One hairline per column, on the plate's centreline. Warm grey, not black:
+     measured #A19593 against the cream, which is --menu-body at 62%. */
+  .dish__rule {
+    width: clamp(2.4rem, 4.74vw, 6.1rem);
+    height: max(1px, 0.073vw);
+    margin: 0;
+    border: 0;
+    background: rgba(107, 87, 80, 0.62);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dish__plate { animation: none; will-change: auto; }
+  }
+
+  /* ------------------------------------------- the reference composition
+
+     From 1100px the notes move out to flank the plate: column A to its left
+     reading left, column B to its right reading right, both centred on it.
+     --------------------------------------------------------------------- */
+
+  @media (min-width: 1100px) {
+    .dish__inner {
+      grid-template-columns: 20.07fr 40.38fr 20.07fr;
+      grid-template-areas: "cola figure colb";
+    }
+
+    /* Wider than its own column on purpose. The plate's silhouette runs to
+       96.98% of the file — the last 3% is the feathered alpha edge — so a box
+       the width of the column renders a plate 25px short of the reference's
+       827, and hands that 25px to the gaps either side. Scaling the box by
+       1/0.9698 puts the ink back on the measurement; what overflows the column
+       is transparent, and `min-width: 0` keeps the overflow from pushing the
+       fr columns around. */
+    .dish__fig  { width: 41.64vw; min-width: 0; justify-self: center; }
+    .dish__col  { margin-top: 0; }
+
+    .dish__col--a { align-items: flex-start; text-align: left; }
+    .dish__col--b { align-items: flex-end;   text-align: right; }
+  }
+
+  /* Between the stack and the reference layout the four notes read better in
+     two columns than in one long run. */
+  @media (min-width: 600px) and (max-width: 1099px) {
+    .dish__inner {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "figure figure"
+        "cola   colb";
+    }
+    .dish__fig { width: min(100%, 30rem); }
+  }
+
+  @media (max-width: 599px) {
+    .dish__fig { width: min(100%, 21rem); }
+    /* On one column the hairline is doing the work of a divider between four
+       notes in a row, so it sits in less air than it does beside the plate. */
+    .dish__col { gap: clamp(1.6rem, 8vw, 2.6rem); }
+    .dish__title { font-size: clamp(1.9rem, 9.6vw, 3rem); }
+
+    /* Stacked, the four notes read as one run, and a divider between three of
+       the four pairs reads as one that was forgotten. This is the seam between
+       the columns. It is a flex item of column B, so the column's own gap sets
+       the space around it and all three dividers sit in identical air —
+       provided B's top margin matches that gap, which is what the rule below
+       does. */
+    .dish__col--b {
+      margin-top: clamp(1.6rem, 8vw, 2.6rem);
+    }
+
+    .dish__col--b::before {
+      content: "";
+      width: clamp(2.4rem, 4.74vw, 6.1rem);
+      height: max(1px, 0.073vw);
+      background: rgba(107, 87, 80, 0.62);
+    }
+  }
+
+  /* ------------------------------------------------------------- reserve */
+  /* Rebuilt 2026-08-15 against `assets/img/inspooooo.png` (1536x1024, exactly
+     3:2), replacing the 2026-08-10 composition entirely. The spec at
+     docs/superpowers/specs/2026-08-15-reservation-redesign-design.md carries
+     the measured tables every number here comes from; `measure-reserve-ref.mjs`
+     reprints them and `make-reserve-path.mjs` regenerates the two curves.
+
+     Geometry is a share of the viewport or of one scale unit, never a pixel:
+     the comp is 1536 wide and is read at widths it was never drawn at.
+
+     THE GROUND. The comp's is #FEFDFA. This section stays on the site's peach.
+     Adopting the ivory would put a hard seam against the ending block that sits
+     directly below this one on all three pages, and a second ground is reserved
+     for full-viewport photographs. So contrast is re-derived against the peach
+     rather than carried across — two of the comp's four ink values fail on it:
+     its #BE754C button border measures 2.7:1 and its #B35F40 accent 3.1:1. */
+
+  .reserve {
+    /* Two golds, unchanged from the old section. The comp's hairline is far too
+       pale to carry text or to bound a control, so the paler value is confined
+       to marks that state nothing — the rule under the eyebrow, the ring around
+       the photograph. Anything a guest reads or clicks takes --menu-accent
+       (4.8:1) or --res-gold, which clears 3:1 as a non-text boundary. */
+    --res-hair: #D4AD7E;
+    --res-gold: #B8813F;
+
+    --res-eyebrow:  clamp(0.66rem, 2.85vw, 0.76rem);
+    --res-title:    clamp(2.35rem, 11.9vw, 3.6rem);
+    --res-lead:     1.075;
+    --res-body:     clamp(0.95rem, 3.9vw, 1.04rem);
+    --res-ctalbl:   clamp(0.76rem, 3.2vw, 0.86rem);
+    --res-ctasub:   clamp(0.64rem, 2.45vw, 0.7rem);
+    --res-metalbl:  clamp(0.66rem, 2.5vw, 0.7rem);
+    --res-metaval:  clamp(0.82rem, 3.3vw, 0.9rem);
+    --res-icon:     clamp(22px, 5.6vw, 27px);
+
+    position: relative;
+    background: var(--cream);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    /* Stacked, the photograph leads: it is the argument for booking, and the
+       heading reads better once the room has been seen. Side by side the order
+       reverses to the comp's. */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* The clip paths live in the section's own markup, not the page's sprite
+     sheet, so this block stays self-contained when it is copied to the other
+     two pages. `width: 0` rather than `display: none` — a display-none SVG
+     still defines its clip paths in Chrome, but not in every engine. */
+  .reserve__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* ---------------------------------------------------- the photograph */
+
+  .reserve__fig {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    /* Stacked, the frame is an arch: full width, curved along the bottom, so
+       the shape still reads as cut paper rather than as a rectangle. */
+    aspect-ratio: 1 / 1;
+  }
+
+  /* The comp's tan curve is not an offset of the photograph's edge — measured,
+     it runs 1.2% of the width outside it down the upper lobe, converges and
+     CROSSES at y≈60%, is invisible from there to y≈87%, and reappears widening
+     to 2.1% at the foot. Sitting the ring *under* an opaque photograph
+     reproduces all three for free: it is drawn once, in full, and the occlusion
+     is real rather than drawn. */
+  .reserve__ring {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    /* The mobile ring hangs below its box by design. */
+    overflow: visible;
+    color: var(--res-hair);
+  }
+
+  .reserve__ringpath {
+    fill: none;
+    stroke: currentColor;
+    /* preserveAspectRatio="none" stretches the ring with the section, which is
+       what keeps it registered against a clip path in the same units — but it
+       would stretch the stroke with it too, leaving the line thick on one flank
+       and thin on the other. This is the one property that fixes that. It has
+       nothing to do with dash length; see the experience section's note. */
+    vector-effect: non-scaling-stroke;
+    stroke-width: 1.4;
+  }
+
+  .reserve__ringpath--wide { display: none; }
+
+  .reserve__frame {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    clip-path: url(#reserve-arch);
+  }
+
+  .reserve__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+    /* Graded here rather than re-baked, because the file is shared with nothing
+       and the old contained blob wanted it as it is. Full-bleed, it covers half
+       the screen, and the file measures 62 of 255 — the floor of the chapters
+       band, which is where a lit macro belongs, not a wide interior. Lifted to
+       ~78, the band this room's subject actually sits in.
+
+       contrast() BEFORE brightness(), and below 1: contrast pulls toward 128,
+       which opens the shadows and pulls the pendants back from the ceiling
+       before the lift multiplies them. Brightness alone at the 1.26 the same
+       mean needs would clip both lamps to flat white discs.
+
+       No scrim: the room is the reason to book, and veiling it would be
+       self-defeating. */
+    filter: saturate(1.08) contrast(0.94) brightness(1.18);
+    animation: reserve-drift 32s var(--ease-quiet) infinite alternate;
+  }
+
+  /* The mask holds still and the room moves inside it. Animating the frame
+     instead would drag the curve across the ground, which is the one edge on
+     the page a reader is actually watching. */
+  @keyframes reserve-drift {
+    from { transform: scale(1)     translate3d(0, 0, 0);      }
+    to   { transform: scale(1.035) translate3d(-0.8%, -1%, 0); }
+  }
+
+  /* ---------------------------------------------------------- the copy */
+
+  .reserve__copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(38px, 9vw, 64px) 7.5% clamp(52px, 12vw, 84px);
+  }
+
+  /* Takes the slot the comp fills with a blossom seal and a long rule. The mon
+     is deliberately not here: the seal's job is to open the column, and an
+     eyebrow does that with a word instead of a mark. */
+  .reserve__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 18px);
+    margin: 0;
+    font-weight: 400;
+    font-size: var(--res-eyebrow);
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .reserve__eyebrow::after {
+    content: "";
+    width: clamp(2.4rem, 7vw, 3.6rem);
+    height: max(1px, 0.07vw);
+    background: var(--res-hair);
+  }
+
+  /* All caps, against the 2026-08-10 spec's explicit sentence-case decision.
+     That decision held the convention `.dish__title` and `.menu` establish and
+     was right at the time; the client has since supplied a comp in caps and
+     asked for it. A deliberate reversal on instruction, recorded so nobody
+     quietly restores it. */
+  .reserve__title {
+    margin: clamp(20px, 5vw, 30px) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: var(--res-title);
+    line-height: var(--res-lead);
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  .reserve__rule {
+    width: clamp(2.2rem, 4.5vw, 3.2rem);
+    height: max(1.5px, 0.099vw);
+    margin: clamp(18px, 4vw, 26px) 0 0;
+    border: 0;
+    background: var(--res-hair);
+  }
+
+  .reserve__body {
+    max-width: 34ch;
+    margin: clamp(20px, 4.4vw, 30px) 0 0;
+    font-weight: 300;
+    font-size: var(--res-body);
+    line-height: 1.9;
+    color: var(--menu-body);
+  }
+
+  /* ------------------------------------------------------------ the CTA */
+  /* The mechanism is unchanged: this still opens WhatsApp with the message
+     already written. Only the control's appearance follows the comp — an
+     outlined rectangle with a label and an arrow, where the old one carried a
+     drawn WhatsApp glyph and a second line inside the box. */
+
+  .reserve__cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 6vw, 34px);
+    width: min(100%, 19rem);
+    margin-top: clamp(26px, 6vw, 38px);
+    padding: clamp(15px, 3.6vw, 20px) clamp(20px, 4.4vw, 28px);
+    /* Square, where the menu's CTA is a pill: against a curved photograph and
+       a hairline rule, the one straight-edged shape is what gives the column
+       its spine. It is also what the comp draws. */
+    border: max(1.5px, 0.12vw) solid var(--res-gold);
+    text-decoration: none;
+    color: var(--menu-accent);
+    /* Matched to the fill's 520ms rather than the 420ms `.menu__cta` uses.
+       Finishing early is what causes the dip: the lettering reaches cream while
+       the ink is still short of the right edge. */
+    transition: color 520ms var(--ease-quiet),
+                border-color 520ms var(--ease-quiet);
+  }
+
+  .reserve__cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--menu-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  /* Tracking leaves a space after the final letter, which sits the lettering
+     half of it left of centre. Half the tracking back squares it up — the same
+     correction `.menu__cta` makes. */
+  .reserve__ctalbl {
+    font-size: var(--res-ctalbl);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .reserve__arrow {
+    flex: none;
+    width: clamp(22px, 5.4vw, 28px);
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  .reserve__cta:hover,
+  .reserve__cta:focus-visible { color: var(--cream); border-color: var(--menu-ink); }
+
+  .reserve__cta:hover::before,
+  .reserve__cta:focus-visible::before { transform: scaleX(1); }
+
+  .reserve__cta:hover .reserve__arrow,
+  .reserve__cta:focus-visible .reserve__arrow { transform: translateX(22%); }
+
+  .reserve__cta:active { transform: translateY(1px); }
+
+  .reserve__cta:focus-visible {
+    outline: 1.5px solid var(--menu-ink);
+    outline-offset: 5px;
+  }
+
+  /* Beneath the box, not inside it. Inside, the control becomes two lines and
+     the comp's clean single line is lost; beneath, the button is exactly the
+     comp's and the guest still learns where the tap goes before making it.
+     --menu-accent rather than --res-gold: this is text, so it needs 4.5:1. */
+  .reserve__ctasub {
+    margin: clamp(11px, 2.6vw, 15px) 0 0;
+    font-weight: 300;
+    font-size: var(--res-ctasub);
+    line-height: 1.5;
+    letter-spacing: 0.13em;
+    text-indent: 0.065em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  /* ----------------------------------------------------- the two items */
+
+  .reserve__meta {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    width: 100%;
+    margin: clamp(34px, 8vw, 52px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reserve__metaitem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: clamp(20px, 5vw, 32px);
+  }
+
+  .reserve__metaitem + .reserve__metaitem {
+    padding-right: 0;
+    padding-left: clamp(20px, 5vw, 32px);
+  }
+
+  /* The comp's divider fades out toward the bottom rather than ruling the full
+     height — it reads as a seam between two columns, not as a table. */
+  .reserve__metaitem + .reserve__metaitem::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: max(1px, 0.08vw);
+    background: linear-gradient(to bottom,
+      var(--res-hair) 6%,
+      rgba(212, 173, 126, 0) 92%);
+  }
+
+  .reserve__icon {
+    display: block;
+    width: var(--res-icon);
+    height: var(--res-icon);
+    fill: none;
+    stroke: var(--menu-accent);
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reserve__metalbl {
+    margin-top: clamp(13px, 3vw, 18px);
+    font-size: var(--res-metalbl);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  .reserve__metaval {
+    margin-top: clamp(9px, 2.2vw, 13px);
+    font-weight: 300;
+    font-size: var(--res-metaval);
+    line-height: 1.65;
+    color: var(--menu-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reserve__img        { animation: none; }
+    .reserve__cta,
+    .reserve__cta::before,
+    .reserve__arrow      { transition: none; }
+    .reserve__cta:active { transform: none; }
+  }
+
+  /* ---- side by side, on the comp's measured proportions ---------------- */
+  /* Every length below is a multiple of one unit, --u, so the left column is a
+     single aspect-locked block: change --u and the whole thing scales with the
+     comp's measured ratios intact. 1u is 1% of the comp's width.
+
+     Measured, the column stands 48.1u of ink tall — 72.2% of the comp's height
+     at 0.6667u per percent. Capping --u at 1.62svh is therefore what holds it
+     inside 78% of the viewport, leaving 11% of air above and below. It clears
+     the screen by re-scaling and re-centring the whole block with every ratio
+     intact, never by compressing the vertical rhythm, which is the one move
+     that would actually read as cramped.
+
+     Below roughly 640px of viewport height the 8.6px floor takes over and the
+     section is allowed to run past one screen rather than shrink the body copy
+     out of legibility.
+
+     The photograph needs none of this arithmetic: it is full-bleed and its clip
+     is expressed in fractions of its own box. */
+  @media (min-width: 1000px) {
+    .reserve {
+      --u: max(8.6px, min(1vw, 1.62svh));
+
+      flex-direction: row;
+      align-items: center;
+      min-height: 100svh;
+    }
+
+    /* 38% is chosen, not measured: the curve's leftmost point is 43.88% of the
+       section, so a box starting here gives the clip 5.9% of clearance and lets
+       object-fit work on something near the visible shape's own proportions
+       instead of on the whole section. `make-reserve-path.mjs` bakes this number
+       into both paths — change it there, not here. */
+    .reserve__fig {
+      position: absolute;
+      inset: 0 0 0 38%;
+      width: auto;
+      aspect-ratio: auto;
+    }
+
+    .reserve__frame { clip-path: url(#reserve-curve); }
+    .reserve__img   { object-position: 62% 47%; }
+
+    .reserve__ringpath--tall { display: none; }
+    .reserve__ringpath--wide { display: block; }
+
+    /* Vertically centred on the section's own axis rather than pinned to the
+       comp's y-positions. The comp leaves its bottom 22.7% to a vertical
+       Japanese lockup and a contour texture, neither of which is being built;
+       holding its offsets without them would leave a fifth of the section empty
+       at the foot and read as an unfinished page.
+
+       Centred by `align-items` on the section, not by `top: 50%` and a
+       translate. A transform moves the paint but not the layout box, so the
+       translated version leaves the section's scrollHeight 240px past its
+       clientHeight — which is exactly the reading used to prove nothing is
+       being silently clipped by `overflow: hidden`. Centring in flow keeps that
+       check honest. */
+    .reserve__copy {
+      position: relative;
+      margin-left: 6.5%;                 /* the comp's own left margin */
+      width: calc(31 * var(--u));
+      padding: 0;
+    }
+
+    .reserve__eyebrow { font-size: calc(0.78 * var(--u));
+                        gap: calc(1.35 * var(--u)); }
+    .reserve__eyebrow::after { width: calc(6.4 * var(--u));
+                               height: max(1px, calc(0.07 * var(--u))); }
+
+    /* Sized by ink WIDTH, not by the comp's font-size: Cormorant Garamond runs
+       about a fifth narrower than the didone the comp is set in, so matching
+       its size lands "YOUR TABLE" short by that much. Solved against the comp's
+       measured 29.56u and verified in the browser, not estimated. */
+    .reserve__title  { margin-top: calc(4.12 * var(--u));
+                       font-size: calc(5.06 * var(--u));
+                       line-height: calc(5.47 * var(--u)); }
+    .reserve__rule   { margin-top: calc(1.48 * var(--u));
+                       width: calc(2.54 * var(--u));
+                       height: max(1.5px, calc(0.1 * var(--u))); }
+    /* Leading is set as a length in --u, not a multiple of font-size, so the
+       comp's measured line pitch holds even where a px floor has overridden the
+       font-size — which is what keeps the block's height exactly proportional
+       to --u, and the one-screen arithmetic reliable rather than approximate. */
+    .reserve__body   { margin-top: calc(2.18 * var(--u));
+                       font-size: max(12px, calc(1.04 * var(--u)));
+                       line-height: calc(2.0 * var(--u));
+                       /* Measured off the font, not the block, so the paragraph
+                          holds the same characters-per-line when the 12px floor
+                          takes over and stays three lines either way instead of
+                          spilling to a fourth. */
+                       max-width: calc(22.6 * var(--res-body)); }
+
+    .reserve__cta    { margin-top: calc(3.4 * var(--u));
+                       width: calc(20.44 * var(--u));
+                       gap: calc(2.2 * var(--u));
+                       padding: calc(1.42 * var(--u)) calc(1.9 * var(--u)); }
+    .reserve__ctalbl { font-size: max(11px, calc(0.92 * var(--u))); }
+    .reserve__arrow  { width: calc(1.85 * var(--u)); }
+    .reserve__ctasub { margin-top: calc(1.15 * var(--u));
+                       font-size: max(9.5px, calc(0.68 * var(--u)));
+                       line-height: calc(1.1 * var(--u)); }
+
+    .reserve__meta      { margin-top: calc(2.39 * var(--u));
+                          grid-template-columns: calc(16.96 * var(--u)) auto; }
+    .reserve__metaitem  { padding-right: calc(2.4 * var(--u)); }
+    .reserve__metaitem + .reserve__metaitem { padding-left: calc(2.4 * var(--u));
+                                              padding-right: 0; }
+    /* Sized on the DRAWN mark, not the box: both glyphs sit inside about 69%
+       of their 24-unit viewBox, so matching the comp on box size lands the
+       ink a third small. 2.5u of box puts 1.72u of stroke on the page
+       against the comp's measured 1.76u. */
+    .reserve__icon      { width: calc(2.5 * var(--u));
+                          height: calc(2.5 * var(--u)); }
+    .reserve__metalbl   { margin-top: calc(0.8 * var(--u));
+                          font-size: max(9.5px, calc(0.72 * var(--u))); }
+    .reserve__metaval   { margin-top: calc(0.72 * var(--u));
+                          font-size: max(11px, calc(0.95 * var(--u)));
+                          line-height: calc(1.62 * var(--u)); }
+  }
+
+  /* Tablet. The phone's clamps all reach their ceiling well before 820px, so
+     left-aligned type that fills a 390px screen fills less than half of this
+     one and strands 400px of bare ground down the right flank. The block is
+     scaled up rather than centred: centring would break the left-aligned
+     editorial column the comp is built on, and the column is what the section
+     is. Every ceiling below is raised in proportion, so the rhythm is the same
+     block read larger — never one element grown to plug a gap. */
+  @media (min-width: 640px) and (max-width: 999px) {
+    .reserve {
+      --res-eyebrow:  clamp(0.76rem, 1.15vw, 0.9rem);
+      --res-title:    clamp(3.4rem, 8.4vw, 4.9rem);
+      --res-body:     clamp(1.04rem, 1.5vw, 1.18rem);
+      --res-ctalbl:   clamp(0.86rem, 1.2vw, 0.98rem);
+      --res-ctasub:   clamp(0.7rem, 0.95vw, 0.78rem);
+      --res-metalbl:  clamp(0.7rem, 0.95vw, 0.8rem);
+      --res-metaval:  clamp(0.9rem, 1.25vw, 1.02rem);
+      --res-icon:     clamp(27px, 3.6vw, 34px);
+    }
+
+    .reserve__fig  { aspect-ratio: 3 / 2; }
+    .reserve__copy { padding-inline: 9%; }
+    .reserve__body { max-width: 42ch; }
+    .reserve__cta  { width: min(100%, 26rem); }
+    .reserve__meta { max-width: 34rem; }
+    .reserve__metaitem { padding-right: clamp(28px, 6vw, 46px); }
+    .reserve__metaitem + .reserve__metaitem {
+      padding-left: clamp(28px, 6vw, 46px);
+      padding-right: 0;
+    }
+  }
+  /* ================================================================ ending
+
+     The closing frame. Measured from the reference crop (1320x619), which
+     is a dark frame; the ground here is cream instead, so every value that
+     described "light ink on dark" is inverted to the same perceptual
+     weight rather than copied as a number.
+
+       ground luminance          7.7
+       wordmark ink width        880 / 1320 = 66.67% of viewport width
+       wordmark peak luminance   16.7  → delta +9 over the ground
+       nav gaps                  34px and 35px = 2.58% of width, even
+       nav cap height            ~10px → ~11px type = 0.83% of width
+       nav luminance             ~110 resting, 254 hovered
+       wordmark → nav            16px = 1.21% of width
+       nav → copyright           20px = 1.52% of width
+
+     The +9 delta is the whole brief: the wordmark has to be present and
+     almost not there. On a dark ground that is 3.6% white; on cream it is
+     roughly 4.5% ink, because the same delta costs a different alpha when
+     the ground is at the other end of the range. The value below was set
+     by measuring the render, not by choosing a number that sounded right.
+     ==================================================================== */
+
+  .ending {
+    /* The mark no longer matches the reference's width, and that is the
+       point. The reference's wordmark is a script: ascenders and descenders
+       make its ink 24.5% as tall as it is wide. Letterspaced caps have only
+       cap height, so at the reference's matched 66.9% width they came out
+       14% as tall — correct on the measurement and visibly short of its
+       vertical presence. Reaching that ratio honestly would need caps
+       1595px wide on a 1440px screen, so width is spent instead: the mark
+       runs to ~92% of the viewport, which is as large as it can be and
+       still read as MISONO rather than as a cropped M and O. */
+    --end-mark:   clamp(4.4rem, 19.9vw, 20rem);
+    /* The last 15% of height comes from the block, not the size — see
+       .ending__mark. */
+    --end-stretch: 1.15;
+    /* The reference's three links span 195 of 1320 = 14.77% of the
+       viewport, with 2.58% between them. Size and tracking were fitted
+       together to that span, and it closed at 0.16em — the hero wordmark's
+       own tracking, which is where it should have started. The reference's
+       per-word widths are not usable: its nav is dim, small and JPEG-
+       compressed, and the measured widths move with the threshold, so only
+       the total span and the even gaps are trustworthy. */
+    --end-link:   max(10.5px, 0.76vw);
+    --end-note:   max(9.5px, 0.72vw);
+    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the three links  */
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Substantial, not endless, and no taller than the mark can fill. The
+       mark scales with width; the block would otherwise scale with height,
+       and on a portrait tablet that split put a 123px mark inside a 704px
+       block — 17.5% against the desktop's 33%, which is the vertical
+       presence draining out exactly where there is most room for it. The
+       52vw term ties the block back to the axis the mark is sized on. It
+       binds only where the viewport is tall relative to its width: at
+       1440x900 and 1280x720 the svh term still wins, and 44rem still caps
+       a large desktop. */
+    min-height: min(72svh, 44rem, 52vw);
+    /* No inline padding on the section. At this size the mark is wider than
+       a 7.18%-inset content box, and an overflowing nowrap line does not
+       centre — text-align puts its start at the content edge and lets the
+       whole overflow run off the end side, which walked the mark 54px
+       right. The nav carries its own inset instead; nothing else here comes
+       near an edge. */
+    padding: clamp(72px, 12vw, 160px) 0 clamp(28px, 2.05vw, 44px);
+    /* No rule, no border: the reservation section is the same cream and the
+       two are meant to meet without a seam. What separates them is a two-
+       step deepening across the height of this block — far too small to
+       read as a band, just enough that the page settles rather than ending
+       on the same flat value it has held for three sections. */
+    background: linear-gradient(180deg, var(--cream) 0%, #FAF5F1 100%);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* The wordmark is not redrawn. Same family, weight and tracking as
+     .hero__name, including the negative right margin that cancels the
+     trailing letter-space — without it the block centres on its box and
+     lands 0.08em left of true. */
+  .ending__mark {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: var(--end-mark);
+    /* Cormorant's caps measure 0.653em, so the line box is set to exactly
+       that. The box then *is* the ink, and every gap below is a real
+       ink-to-ink measurement instead of one padded by half-leading — at
+       this size the default leading was putting 22px of invisible air
+       under the mark and walking the nav out of position. */
+    line-height: 0.653;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+    color: rgba(47, 27, 25, 0.045);
+    user-select: none;
+    /* Once the mark is as wide as the screen allows, height is the only
+       axis left. A 1.15 vertical scale thickens Cormorant's horizontal
+       hairlines by 15% against unchanged stems — at 4.5% alpha that is
+       below the threshold of anything you can see, and it buys 28px of
+       cap height that the size could not.
+
+       Anchored at the baseline, so the mark grows upward into the empty
+       cream and the 16px gap down to the nav holds without recalculation.
+       The transform is also outside layout, which is what keeps the block's
+       own height honest: the flex column still measures the unscaled box.
+
+       The 0.08em nudge is the other half of the centring: letter-spacing
+       adds a trailing space after the final O that the line box counts as
+       width, so centred text sits half a letter-space left of true. The
+       hero solves this with margin-right: -0.16em, which cannot work here —
+       the width is what overflows. Same correction, moved into the
+       transform where it costs no layout. */
+    transform: translateX(0.08em) scaleY(var(--end-stretch));
+    transform-origin: 50% 100%;
+  }
+
+  .ending__nav {
+    /* The reference's ink-to-ink gap is 16px = 1.21% of width. The link's
+       own tap padding and half-leading contribute ~7.6px of that, so the
+       margin carries the remainder. */
+    margin-top: clamp(8px, 0.68vw, 14px);
+    display: flex;
+    justify-content: center;
+    gap: var(--end-gap);
+    padding-inline: 7.18%;   /* the inset the section gave up, kept here */
+  }
+
+  .ending__link {
+    position: relative;
+    padding: 0.5em 0.15em;
+    font-size: var(--end-link);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    margin-right: -0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    /* The reference runs its links dim and takes them to full brightness on
+       hover. That relationship is kept; the resting value is not — lum 110
+       on its ground is about 3:1, and these are the page's last three
+       links. 6.5:1 resting, full ink on hover. */
+    color: var(--menu-body);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  /* The ink is ~11px tall, which is a 21px target with the padding. This
+     takes the hit area to 44px without entering layout — the ink gaps above
+     and below were measured off the reference and a taller box would walk
+     them apart. */
+  .ending__link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  /* Hairline underline, wiping out from the centre. Scale only, so it costs
+     no layout and nothing but a transform animates. */
+  .ending__link::after {
+    content: "";
+    position: absolute;
+    left: 0.15em;
+    right: calc(0.15em + 0.16em);
+    bottom: 0.35em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform 260ms var(--ease-quiet);
+  }
+
+  .ending__link:hover,
+  .ending__link:focus-visible     { color: var(--menu-ink); }
+  .ending__link:hover::after,
+  .ending__link:focus-visible::after { transform: scaleX(1); }
+
+  .ending__link:focus-visible {
+    outline: 1px solid var(--misono-indigo);
+    outline-offset: 4px;
+    border-radius: 1px;
+  }
+
+  .ending__link:active { transform: translateY(1px); }
+
+  .ending__note {
+    /* 1.52% of width. The reference sets this at roughly 2:1 against its
+       ground, which is understated to the point of unreadable; it is real
+       text, so it holds the body colour. */
+    margin: clamp(10px, 0.9vw, 18px) -0.22em 0 0;
+    font-size: var(--end-note);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--menu-body);
+  }
+
+  /* The three targets are ids the sections above already own — the brief
+     forbids touching them, and only .beyond and .reserve carry an id of
+     their own, so MENU aims at the menu heading. The offset keeps the
+     landing off the top edge of the viewport. */
+  #menu-heading, #beyond, #reserve { scroll-margin-top: clamp(24px, 5vh, 64px); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ending__link,
+    .ending__link::after { transition-duration: 1ms; }
+  }
+
+  /* Phones. The desktop ratio already runs the mark to ~92% of the
+     viewport, so there is almost nothing left to give here — 20vw is the
+     same 92%, and anything past it starts cropping the M. The phone gets
+     its height from the stretch instead, pushed a little harder because a
+     390px screen has proportionally more empty cream to fill. The 72svh
+     minimum goes: on a phone the closing frame is as tall as its contents
+     and no taller. */
+  @media (max-width: 639px) {
+    .ending {
+      --end-mark: 20vw;
+      --end-stretch: 1.22;
+      min-height: 0;
+      padding-top: clamp(64px, 22vw, 108px);
+      padding-bottom: clamp(36px, 11vw, 56px);
+    }
+    .ending__nav { --end-gap: clamp(20px, 6.4vw, 34px); }
+  }
+
+  /* =====================================================================
+     PEACH GROUND. Adopted 2026-08-11: menu.html's paper runs across the
+     homepage too, so the site holds one ground instead of changing colour
+     at the menu link. The cream this replaced is gone from both pages.
+
+     It is all in this block, after every section it affects, rather than
+     spread through the file. That is not tidiness — it is what keeps CSS
+     997–1478 and 1480–1716 byte-identical to the transplanted copies in
+     menu.html, so the re-copy contract in CLAUDE.md still holds. It is
+     also why menu.html needed no change: its own adaptation block, at the
+     foot of that file, already says what this one says. Keep the two in
+     step, and put any future ground work here, never in the copies.
+
+     The mechanism is menu.html's. All five light sections take their
+     ground from var(--cream), so re-pointing that one property moves the
+     lot without touching a declaration. What does NOT follow from it is
+     handled item by item below.
+
+     The hero is untouched: it is a photograph, not a ground, and body
+     stays on --ink so a failed hero image still leaves white type on
+     black rather than white type on peach.
+     ===================================================================== */
+
+  :root {
+    /* hsl(22, 58%, 92%) — menu.html's value, unchanged. The reasoning
+       for the three numbers is written up there and not repeated. */
+    --ground: #F7E8DF;
+
+    /* 1. The ink clears 13.6:1 on the peach and is carried across as-is.
+          The other two are not: peach is darker than cream, and both were
+          set with no margin to spend. Re-derived against the peach —
+          these are menu.html's values, which is the point of the
+          experiment, so the two pages hold one palette and not two. */
+    --menu-body:   #63504A;  /* 6.3:1 — the cream #6B5750 falls to 5.66 */
+    --menu-accent: #99551C;  /* 4.8:1 — the cream #9A5C26 falls to 4.47 */
+  }
+
+  .menu,
+  .beyond,
+  .dish,
+  .reserve,
+  .ending {
+    --cream: var(--ground);
+  }
+
+  /* 2. The gold that bounds the WhatsApp button. #B8813F was picked
+        because it clears 3:1 as a non-text boundary, and on cream it
+        makes it by 0.18 at 3.18:1. On the peach it falls to 2.81:1 and
+        fails. Darkened until it clears with room, 3.26:1. --res-hair is
+        left alone: it only ever marks (the rule, the ring), so no
+        minimum applies, and on the button's dark hover it still reads
+        at 7.8:1. */
+  .reserve {
+    --res-gold: #AC7634;
+  }
+
+  /* 3. The closing gradient's tail is a literal, so --cream cannot reach
+        it. The step across the block is (-2, -3, -4) — "far too small to
+        read as a band, just enough that the page settles". Same step
+        applied to the peach rather than a new value chosen by eye, which
+        is also what puts this file's foot and menu.html's on the same
+        colour. Footer links stay at 6.2:1 at their dimmest. */
+  .ending {
+    background: linear-gradient(180deg, var(--ground) 0%, #F5E5DB 100%);
+  }
+
+  /* 4. The dish hairlines. Written as a literal because they are
+        --menu-body at 62%, and the literal was mixed from the cream
+        value. Re-mixed from the peach one so the stated relationship
+        stays true. It composites to #9B8A83 against #9F8E86 before —
+        about five levels, which is under the threshold, so this is
+        bookkeeping rather than a visible fix. Kept anyway: the next
+        person to change --menu-body should find these following it. */
+  .dish__rule,
+  .dish__col--b::before {
+    background: rgba(99, 80, 74, 0.62);
+  }
+
+  /* 5. The ending wordmark needs NO change, which is worth recording
+        because it looks like it should have one. Its alpha is 0.045 and
+        the note above calls the resulting +9 luminance delta "the whole
+        brief" — but that delta is (ground - ink) x alpha, and ground
+        minus ink is within a few points of the same on both grounds.
+        Measured: 9,10,10 on cream and 9,9,9 on the peach. Re-deriving it
+        would have made it wrong. */
+</style>
+</head>
+<body>
+
+<main>
+  <section class="hero" aria-labelledby="misono-name">
+
+    <!--
+      Supplied by the client as `misono hero section pic.png` (1717x916),
+      re-encoded to JPEG here — the source PNG was 1.9MB for a photograph.
+      The frame is already graded, so the treatment below is deliberately thin.
+    -->
+    <div class="hero__media">
+      <!--
+        One file at every width, on purpose. A narrow viewport crops this
+        frame hard, so a downscaled variant would be upscaled ~3.5x on a
+        phone; the full frame is only 1.8x and visibly sharper for 300KB more.
+      -->
+      <picture>
+        <source type="image/avif" sizes="103.2vw"
+                srcset="assets/img/r/hero-omakase-1717-280.avif 280w, assets/img/r/hero-omakase-1717-350.avif 350w, assets/img/r/hero-omakase-1717-1010.avif 1010w, assets/img/r/hero-omakase-1717-1270.avif 1270w, assets/img/r/hero-omakase-1717-1717.avif 1717w">
+        <source type="image/webp" sizes="103.2vw"
+                srcset="assets/img/r/hero-omakase-1717-280.webp 280w, assets/img/r/hero-omakase-1717-1717.webp 1717w">
+        <img class="hero__img" src="assets/img/hero-omakase-1717.jpg" alt="" fetchpriority="high" decoding="sync" width="1717" height="916" loading="eager">
+      </picture>
+    </div>
+
+    <div class="hero__warm"></div>
+    <div class="hero__wash"></div>
+    <div class="hero__grain"></div>
+
+    <!-- The Misono mon, placed as supplied. -->
+    <svg class="hero__mark" viewBox="0 0 100 100" role="img" aria-label="Misono">
+      <defs>
+        <path id="mm-petal" d="M50 50 C55 44 68 25 50 11 C32 25 45 44 50 50 Z"/>
+        <path id="mm-core"  d="M50 50 C54.3 46 54.3 42 50 37.5 C45.7 42 45.7 46 50 50 Z"/>
+      </defs>
+      <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+        <use href="#mm-petal"/>
+        <use href="#mm-petal" transform="rotate(90 50 50)"/>
+        <use href="#mm-petal" transform="rotate(180 50 50)"/>
+        <use href="#mm-petal" transform="rotate(270 50 50)"/>
+      </g>
+      <g fill="currentColor">
+        <use href="#mm-core"/>
+        <use href="#mm-core" transform="rotate(90 50 50)"/>
+        <use href="#mm-core" transform="rotate(180 50 50)"/>
+        <use href="#mm-core" transform="rotate(270 50 50)"/>
+      </g>
+    </svg>
+
+    <div class="hero__brand">
+      <h1 class="hero__name" id="misono-name">MISONO</h1>
+      <p class="hero__tagline">The Art of Japanese Dining</p>
+
+      <nav class="hero__social" aria-label="Misono on social media">
+        <a href="#" aria-label="Misono on Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56-.79.3-1.46.72-2.13 1.38C1.35 2.68.94 3.35.63 4.14c-.3.76-.5 1.63-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.38 2.13.67.67 1.34 1.08 2.13 1.38.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.15-.26 2.91-.56.79-.3 1.46-.71 2.13-1.38.67-.67 1.08-1.34 1.38-2.13.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.15-.56-2.91-.3-.79-.71-1.46-1.38-2.13C21.32 1.35 20.65.94 19.86.63c-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0Z"/><path d="M12 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84ZM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4Z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg>
+        </a>
+        <a href="#" aria-label="Misono on Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M24 12a12 12 0 1 0-13.88 11.85v-8.38H7.08V12h3.04V9.36c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.24 2.69.24v2.95h-1.51c-1.49 0-1.96.93-1.96 1.87V12h3.33l-.53 3.47h-2.8v8.38A12 12 0 0 0 24 12Z"/></svg>
+        </a>
+        <a href="#" aria-label="Misono on TikTok">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.44 0h-3.9v15.67a3.16 3.16 0 0 1-3.15 3.02 3.16 3.16 0 0 1-3.16-3.15 3.17 3.17 0 0 1 2.92-3.15V8.43a7.05 7.05 0 0 0-6.82 7.11A7.05 7.05 0 0 0 9.42 22.6a7.05 7.05 0 0 0 7.07-7.06V7.5a8.9 8.9 0 0 0 5.16 1.65V5.25a5.28 5.28 0 0 1-5.21-5.25Z"/></svg>
+        </a>
+      </nav>
+    </div>
+
+  </section>
+
+  <section class="menu" aria-labelledby="menu-heading">
+    <div class="menu__inner">
+
+      <div class="menu__head">
+        <p class="menu__eyebrow">The Art of Teppanyaki</p>
+
+        <!--
+          The heading is the list of what goes on the griddle, with the
+          featured one pulled out of it in italic — the reference's own
+          structure. <em> carries that emphasis rather than leaving the
+          italic to CSS alone.
+
+          The featured line still sets the 1120px breakpoint (see the CSS).
+          "Wagyu A5" is narrower than the "Sushi & Sashimi" it replaces, so
+          the two-column layout has more clearance than it was measured for,
+          not less. Re-measure if it is ever renamed to something longer.
+        -->
+        <h2 class="menu__list" id="menu-heading">
+          <span class="menu__item">Lobster</span>
+          <span class="menu__item">Scallops</span>
+          <span class="menu__item">Garlic Rice</span>
+          <em class="menu__item menu__item--featured">Wagyu A5</em>
+        </h2>
+      </div>
+
+      <a class="menu__cta" href="menu.html">Explore Menu</a>
+
+      <div class="menu__figure">
+        <figure class="menu__fig">
+          <div class="menu__frame">
+            <!--
+              Supplied by the client, 2026-08-12, and it replaces the sourced
+              flambe stock frame that stood here — this one is the counter
+              itself, which is what the section is about. The master is
+              `assets/img/teppenyaki image.png` (1536x1024); keep it, this is
+              a crop of it and there is no other copy.
+
+              The crop is a full-width horizontal band at y 210-920, which is
+              1536x710 — the 2.162:1 the container asks for below, so
+              object-fit has nothing left to do.
+
+              The band is chosen for the stadium, not for the rectangle. The
+              radius clamps to half the height, so at 2.162:1 the outer 23.1%
+              at each end is a semicircular cap and only the middle 53.8% is
+              full height. Everything that has to survive was checked against
+              the cap circles rather than the frame edge: both hands, the
+              knife and the sliced wagyu sit in the straight middle; the plate
+              at the left clears the cap arc down to its rim and loses only
+              the outermost sliver of ginger; the far mushroom at x 1470-1500
+              sits at y 390-440 against an arc that admits y 199-511 there.
+              Move the band and re-derive those three before trusting it.
+
+              It arrives graded and needs no pass: black point already at 0,
+              highlights ceiling at 209 rather than clipped, median luma 40.
+              Do not run it through the gallery bake.
+            -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 1200px) 85.6vw, 56.9vw"
+                      srcset="assets/img/r/teppanyaki-counter-840.avif 840w, assets/img/r/teppanyaki-counter-1030.avif 1030w, assets/img/r/teppanyaki-counter-1230.avif 1230w, assets/img/r/teppanyaki-counter-1536.avif 1536w">
+              <source type="image/webp" sizes="(max-width: 1200px) 85.6vw, 56.9vw"
+                      srcset="assets/img/r/teppanyaki-counter-840.webp 840w, assets/img/r/teppanyaki-counter-1536.webp 1536w">
+              <img class="menu__img"
+                 src="assets/img/teppanyaki-counter.jpg"
+                 alt="A chef slicing seared wagyu on the teppan with a long knife, steam rising off the iron beside grilled leeks and mushrooms."
+                 width="1536" height="710" loading="lazy" decoding="async" fetchpriority="low">
+            </picture>
+          </div>
+
+          <figcaption class="menu__caption">
+            A5 wagyu, lobster and the morning&rsquo;s vegetables, cooked right in front of
+            you on iron held to the degree. Every cut, sear and turn is yours to watch, and
+            the plate arrives the moment it leaves the griddle.
+          </figcaption>
+        </figure>
+      </div>
+
+    </div>
+  </section>
+<section class="beyond" id="beyond" aria-labelledby="beyond-title">
+
+    <div class="beyond__head">
+      <h2 class="beyond__title" id="beyond-title">A unique experience</h2>
+      <hr class="beyond__rule" aria-hidden="true">
+      <p class="beyond__copy">The counter is the whole room &mdash; the fish, the knife, and
+        the hands that join them, close enough to watch. Courses come one piece at a time,
+        in the order the chef decides, for as long as you are hungry.</p>
+    </div>
+
+    <div class="beyond__gal">
+
+      <!--
+        One label for the whole strip. Each row is three copies of the same
+        nine dishes; announcing 27 tiles would be noise, not information. The
+        CTA sits outside this element, or role="img" would swallow it.
+
+        No decoding="async" on these. It lets the browser present frames
+        without them, so the strip renders with holes on first paint and
+        blank in a capture.
+      -->
+      <div class="beyond__rows" role="img" aria-label="Dishes from the Misono kitchen">
+
+        <div class="beyond__row beyond__row--a">
+          <div class="beyond__track">
+            <!-- copy 1 -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.avif 306w">
+              <source type="image/webp" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.webp 306w">
+              <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="306" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.avif 310w, assets/img/r/gallery/food3-380.avif 380w, assets/img/r/gallery/food3-550.avif 550w, assets/img/r/gallery/food3-670.avif 670w">
+              <source type="image/webp" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.webp 310w, assets/img/r/gallery/food3-670.webp 670w">
+              <img src="assets/img/gallery/food3.jpg" alt="" width="671" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.avif 250w, assets/img/r/gallery/food5-370.avif 370w, assets/img/r/gallery/food5-445.avif 445w">
+              <source type="image/webp" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.webp 250w, assets/img/r/gallery/food5-445.webp 445w">
+              <img src="assets/img/gallery/food5.jpg" alt="" width="445" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.avif 290w, assets/img/r/gallery/food8-360.avif 360w, assets/img/r/gallery/food8-530.avif 530w, assets/img/r/gallery/food8-637.avif 637w">
+              <source type="image/webp" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.webp 290w, assets/img/r/gallery/food8-637.webp 637w">
+              <img src="assets/img/gallery/food8.jpg" alt="" width="637" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.avif 390w, assets/img/r/gallery/food2-480.avif 480w, assets/img/r/gallery/food2-710.avif 710w, assets/img/r/gallery/food2-850.avif 850w">
+              <source type="image/webp" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.webp 390w, assets/img/r/gallery/food2-850.webp 850w">
+              <img src="assets/img/gallery/food2.jpg" alt="" width="856" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.avif 260w, assets/img/r/gallery/food6-320.avif 320w, assets/img/r/gallery/food6-470.avif 470w, assets/img/r/gallery/food6-560.avif 560w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.webp 260w, assets/img/r/gallery/food6-560.webp 560w">
+              <img src="assets/img/gallery/food6.jpg" alt="" width="563" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.avif 250w, assets/img/r/gallery/food9-370.avif 370w, assets/img/r/gallery/food9-450.avif 450w">
+              <source type="image/webp" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.webp 250w, assets/img/r/gallery/food9-450.webp 450w">
+              <img src="assets/img/gallery/food9.jpg" alt="" width="450" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.avif 240w, assets/img/r/gallery/food4-290.avif 290w, assets/img/r/gallery/food4-420.avif 420w, assets/img/r/gallery/food4-510.avif 510w">
+              <source type="image/webp" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.webp 240w, assets/img/r/gallery/food4-510.webp 510w">
+              <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+              <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <!-- copy 2 -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.avif 306w">
+              <source type="image/webp" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.webp 306w">
+              <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="306" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.avif 310w, assets/img/r/gallery/food3-380.avif 380w, assets/img/r/gallery/food3-550.avif 550w, assets/img/r/gallery/food3-670.avif 670w">
+              <source type="image/webp" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.webp 310w, assets/img/r/gallery/food3-670.webp 670w">
+              <img src="assets/img/gallery/food3.jpg" alt="" width="671" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.avif 250w, assets/img/r/gallery/food5-370.avif 370w, assets/img/r/gallery/food5-445.avif 445w">
+              <source type="image/webp" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.webp 250w, assets/img/r/gallery/food5-445.webp 445w">
+              <img src="assets/img/gallery/food5.jpg" alt="" width="445" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.avif 290w, assets/img/r/gallery/food8-360.avif 360w, assets/img/r/gallery/food8-530.avif 530w, assets/img/r/gallery/food8-637.avif 637w">
+              <source type="image/webp" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.webp 290w, assets/img/r/gallery/food8-637.webp 637w">
+              <img src="assets/img/gallery/food8.jpg" alt="" width="637" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.avif 390w, assets/img/r/gallery/food2-480.avif 480w, assets/img/r/gallery/food2-710.avif 710w, assets/img/r/gallery/food2-850.avif 850w">
+              <source type="image/webp" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.webp 390w, assets/img/r/gallery/food2-850.webp 850w">
+              <img src="assets/img/gallery/food2.jpg" alt="" width="856" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.avif 260w, assets/img/r/gallery/food6-320.avif 320w, assets/img/r/gallery/food6-470.avif 470w, assets/img/r/gallery/food6-560.avif 560w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.webp 260w, assets/img/r/gallery/food6-560.webp 560w">
+              <img src="assets/img/gallery/food6.jpg" alt="" width="563" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.avif 250w, assets/img/r/gallery/food9-370.avif 370w, assets/img/r/gallery/food9-450.avif 450w">
+              <source type="image/webp" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.webp 250w, assets/img/r/gallery/food9-450.webp 450w">
+              <img src="assets/img/gallery/food9.jpg" alt="" width="450" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.avif 240w, assets/img/r/gallery/food4-290.avif 290w, assets/img/r/gallery/food4-420.avif 420w, assets/img/r/gallery/food4-510.avif 510w">
+              <source type="image/webp" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.webp 240w, assets/img/r/gallery/food4-510.webp 510w">
+              <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+              <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <!-- copy 3 -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.avif 306w">
+              <source type="image/webp" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.webp 306w">
+              <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="306" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.avif 310w, assets/img/r/gallery/food3-380.avif 380w, assets/img/r/gallery/food3-550.avif 550w, assets/img/r/gallery/food3-670.avif 670w">
+              <source type="image/webp" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.webp 310w, assets/img/r/gallery/food3-670.webp 670w">
+              <img src="assets/img/gallery/food3.jpg" alt="" width="671" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.avif 250w, assets/img/r/gallery/food5-370.avif 370w, assets/img/r/gallery/food5-445.avif 445w">
+              <source type="image/webp" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.webp 250w, assets/img/r/gallery/food5-445.webp 445w">
+              <img src="assets/img/gallery/food5.jpg" alt="" width="445" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.avif 290w, assets/img/r/gallery/food8-360.avif 360w, assets/img/r/gallery/food8-530.avif 530w, assets/img/r/gallery/food8-637.avif 637w">
+              <source type="image/webp" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.webp 290w, assets/img/r/gallery/food8-637.webp 637w">
+              <img src="assets/img/gallery/food8.jpg" alt="" width="637" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.avif 390w, assets/img/r/gallery/food2-480.avif 480w, assets/img/r/gallery/food2-710.avif 710w, assets/img/r/gallery/food2-850.avif 850w">
+              <source type="image/webp" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.webp 390w, assets/img/r/gallery/food2-850.webp 850w">
+              <img src="assets/img/gallery/food2.jpg" alt="" width="856" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.avif 260w, assets/img/r/gallery/food6-320.avif 320w, assets/img/r/gallery/food6-470.avif 470w, assets/img/r/gallery/food6-560.avif 560w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.webp 260w, assets/img/r/gallery/food6-560.webp 560w">
+              <img src="assets/img/gallery/food6.jpg" alt="" width="563" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.avif 250w, assets/img/r/gallery/food9-370.avif 370w, assets/img/r/gallery/food9-450.avif 450w">
+              <source type="image/webp" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.webp 250w, assets/img/r/gallery/food9-450.webp 450w">
+              <img src="assets/img/gallery/food9.jpg" alt="" width="450" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.avif 240w, assets/img/r/gallery/food4-290.avif 290w, assets/img/r/gallery/food4-420.avif 420w, assets/img/r/gallery/food4-510.avif 510w">
+              <source type="image/webp" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.webp 240w, assets/img/r/gallery/food4-510.webp 510w">
+              <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+              <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+          </div>
+        </div>
+
+        <div class="beyond__row beyond__row--b">
+          <div class="beyond__track">
+            <!-- copy 1 -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.avif 260w, assets/img/r/gallery/food6-320.avif 320w, assets/img/r/gallery/food6-470.avif 470w, assets/img/r/gallery/food6-560.avif 560w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.webp 260w, assets/img/r/gallery/food6-560.webp 560w">
+              <img src="assets/img/gallery/food6.jpg" alt="" width="563" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.avif 250w, assets/img/r/gallery/food9-370.avif 370w, assets/img/r/gallery/food9-450.avif 450w">
+              <source type="image/webp" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.webp 250w, assets/img/r/gallery/food9-450.webp 450w">
+              <img src="assets/img/gallery/food9.jpg" alt="" width="450" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.avif 390w, assets/img/r/gallery/food2-480.avif 480w, assets/img/r/gallery/food2-710.avif 710w, assets/img/r/gallery/food2-850.avif 850w">
+              <source type="image/webp" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.webp 390w, assets/img/r/gallery/food2-850.webp 850w">
+              <img src="assets/img/gallery/food2.jpg" alt="" width="856" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+              <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.avif 310w, assets/img/r/gallery/food3-380.avif 380w, assets/img/r/gallery/food3-550.avif 550w, assets/img/r/gallery/food3-670.avif 670w">
+              <source type="image/webp" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.webp 310w, assets/img/r/gallery/food3-670.webp 670w">
+              <img src="assets/img/gallery/food3.jpg" alt="" width="671" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.avif 240w, assets/img/r/gallery/food4-290.avif 290w, assets/img/r/gallery/food4-420.avif 420w, assets/img/r/gallery/food4-510.avif 510w">
+              <source type="image/webp" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.webp 240w, assets/img/r/gallery/food4-510.webp 510w">
+              <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.avif 306w">
+              <source type="image/webp" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.webp 306w">
+              <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="306" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.avif 290w, assets/img/r/gallery/food8-360.avif 360w, assets/img/r/gallery/food8-530.avif 530w, assets/img/r/gallery/food8-637.avif 637w">
+              <source type="image/webp" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.webp 290w, assets/img/r/gallery/food8-637.webp 637w">
+              <img src="assets/img/gallery/food8.jpg" alt="" width="637" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.avif 250w, assets/img/r/gallery/food5-370.avif 370w, assets/img/r/gallery/food5-445.avif 445w">
+              <source type="image/webp" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.webp 250w, assets/img/r/gallery/food5-445.webp 445w">
+              <img src="assets/img/gallery/food5.jpg" alt="" width="445" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <!-- copy 2 -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.avif 260w, assets/img/r/gallery/food6-320.avif 320w, assets/img/r/gallery/food6-470.avif 470w, assets/img/r/gallery/food6-560.avif 560w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.webp 260w, assets/img/r/gallery/food6-560.webp 560w">
+              <img src="assets/img/gallery/food6.jpg" alt="" width="563" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.avif 250w, assets/img/r/gallery/food9-370.avif 370w, assets/img/r/gallery/food9-450.avif 450w">
+              <source type="image/webp" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.webp 250w, assets/img/r/gallery/food9-450.webp 450w">
+              <img src="assets/img/gallery/food9.jpg" alt="" width="450" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.avif 390w, assets/img/r/gallery/food2-480.avif 480w, assets/img/r/gallery/food2-710.avif 710w, assets/img/r/gallery/food2-850.avif 850w">
+              <source type="image/webp" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.webp 390w, assets/img/r/gallery/food2-850.webp 850w">
+              <img src="assets/img/gallery/food2.jpg" alt="" width="856" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+              <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.avif 310w, assets/img/r/gallery/food3-380.avif 380w, assets/img/r/gallery/food3-550.avif 550w, assets/img/r/gallery/food3-670.avif 670w">
+              <source type="image/webp" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.webp 310w, assets/img/r/gallery/food3-670.webp 670w">
+              <img src="assets/img/gallery/food3.jpg" alt="" width="671" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.avif 240w, assets/img/r/gallery/food4-290.avif 290w, assets/img/r/gallery/food4-420.avif 420w, assets/img/r/gallery/food4-510.avif 510w">
+              <source type="image/webp" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.webp 240w, assets/img/r/gallery/food4-510.webp 510w">
+              <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.avif 306w">
+              <source type="image/webp" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.webp 306w">
+              <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="306" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.avif 290w, assets/img/r/gallery/food8-360.avif 360w, assets/img/r/gallery/food8-530.avif 530w, assets/img/r/gallery/food8-637.avif 637w">
+              <source type="image/webp" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.webp 290w, assets/img/r/gallery/food8-637.webp 637w">
+              <img src="assets/img/gallery/food8.jpg" alt="" width="637" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.avif 250w, assets/img/r/gallery/food5-370.avif 370w, assets/img/r/gallery/food5-445.avif 445w">
+              <source type="image/webp" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.webp 250w, assets/img/r/gallery/food5-445.webp 445w">
+              <img src="assets/img/gallery/food5.jpg" alt="" width="445" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <!-- copy 3 -->
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.avif 260w, assets/img/r/gallery/food6-320.avif 320w, assets/img/r/gallery/food6-470.avif 470w, assets/img/r/gallery/food6-560.avif 560w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.8vw, (max-width: 600px) 40.5vw, (max-width: 900px) 32.4vw, (max-width: 1200px) 21.6vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food6-260.webp 260w, assets/img/r/gallery/food6-560.webp 560w">
+              <img src="assets/img/gallery/food6.jpg" alt="" width="563" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.avif 250w, assets/img/r/gallery/food9-370.avif 370w, assets/img/r/gallery/food9-450.avif 450w">
+              <source type="image/webp" sizes="(max-width: 480px) 37.4vw, (max-width: 600px) 32.4vw, (max-width: 900px) 25.9vw, (max-width: 1200px) 17.3vw, (max-width: 1440px) 13.4vw, 11.2vw"
+                      srcset="assets/img/r/gallery/food9-250.webp 250w, assets/img/r/gallery/food9-450.webp 450w">
+              <img src="assets/img/gallery/food9.jpg" alt="" width="450" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.avif 390w, assets/img/r/gallery/food2-480.avif 480w, assets/img/r/gallery/food2-710.avif 710w, assets/img/r/gallery/food2-850.avif 850w">
+              <source type="image/webp" sizes="(max-width: 480px) 71.2vw, (max-width: 600px) 61.6vw, (max-width: 900px) 49.3vw, (max-width: 1000px) 32.9vw, (max-width: 1200px) 30.6vw, (max-width: 1800px) 25.5vw, 21.2vw"
+                      srcset="assets/img/r/gallery/food2-390.webp 390w, assets/img/r/gallery/food2-850.webp 850w">
+              <img src="assets/img/gallery/food2.jpg" alt="" width="856" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+              <source type="image/webp" sizes="(max-width: 480px) 46.9vw, (max-width: 600px) 40.6vw, (max-width: 900px) 32.5vw, (max-width: 1200px) 21.7vw, (max-width: 1440px) 16.8vw, 14vw"
+                      srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+              <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.avif 310w, assets/img/r/gallery/food3-380.avif 380w, assets/img/r/gallery/food3-550.avif 550w, assets/img/r/gallery/food3-670.avif 670w">
+              <source type="image/webp" sizes="(max-width: 480px) 55.8vw, (max-width: 600px) 48.3vw, (max-width: 900px) 38.6vw, (max-width: 1200px) 25.8vw, (max-width: 1800px) 20vw, 16.6vw"
+                      srcset="assets/img/r/gallery/food3-310.webp 310w, assets/img/r/gallery/food3-670.webp 670w">
+              <img src="assets/img/gallery/food3.jpg" alt="" width="671" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.avif 240w, assets/img/r/gallery/food4-290.avif 290w, assets/img/r/gallery/food4-420.avif 420w, assets/img/r/gallery/food4-510.avif 510w">
+              <source type="image/webp" sizes="(max-width: 480px) 42.4vw, (max-width: 600px) 36.7vw, (max-width: 900px) 29.4vw, (max-width: 1200px) 19.6vw, (max-width: 1440px) 15.2vw, 12.6vw"
+                      srcset="assets/img/r/gallery/food4-240.webp 240w, assets/img/r/gallery/food4-510.webp 510w">
+              <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.avif 306w">
+              <source type="image/webp" sizes="(max-width: 480px) 25.5vw, (max-width: 600px) 22vw, (max-width: 900px) 17.6vw, (max-width: 1200px) 11.7vw, 7.6vw"
+                      srcset="assets/img/r/gallery/foodinspo1-306.webp 306w">
+              <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="306" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.avif 290w, assets/img/r/gallery/food8-360.avif 360w, assets/img/r/gallery/food8-530.avif 530w, assets/img/r/gallery/food8-637.avif 637w">
+              <source type="image/webp" sizes="(max-width: 480px) 53vw, (max-width: 600px) 45.9vw, (max-width: 900px) 36.7vw, (max-width: 1200px) 24.5vw, (max-width: 1440px) 19vw, 15.8vw"
+                      srcset="assets/img/r/gallery/food8-290.webp 290w, assets/img/r/gallery/food8-637.webp 637w">
+              <img src="assets/img/gallery/food8.jpg" alt="" width="637" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+            <picture>
+              <source type="image/avif" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.avif 250w, assets/img/r/gallery/food5-370.avif 370w, assets/img/r/gallery/food5-445.avif 445w">
+              <source type="image/webp" sizes="(max-width: 480px) 37vw, (max-width: 600px) 32vw, (max-width: 900px) 25.6vw, (max-width: 1200px) 17.1vw, (max-width: 1440px) 13.2vw, 11vw"
+                      srcset="assets/img/r/gallery/food5-250.webp 250w, assets/img/r/gallery/food5-445.webp 445w">
+              <img src="assets/img/gallery/food5.jpg" alt="" width="445" height="560" loading="lazy" decoding="async" fetchpriority="low" data-warm=".beyond">
+            </picture>
+          </div>
+        </div>
+
+      </div>
+
+      <a class="beyond__cta" href="menu.html">Explore Menu</a>
+
+    </div>
+  </section>
+
+  <section class="dish" aria-labelledby="dish-title">
+
+    <div class="dish__head">
+      <p class="dish__eyebrow">Special Menu</p>
+      <h2 class="dish__title" id="dish-title">Chirashi Sushi</h2>
+    </div>
+
+    <div class="dish__inner">
+
+      <figure class="dish__fig">
+        <!--
+          Baked from `foodfood.png` (1254px square, opaque cream ground). The
+          ground was flood-filled from the border out to alpha, the silhouette
+          feathered by a pixel so the turning edge has no staircase, and the
+          frame re-cropped to 1122px square about a least-squares fit of the
+          rim — centre (638.1, 635.2), r 548.6. The source is already a true
+          overhead frame, so nothing is corrected for perspective.
+        -->
+        <picture>
+          <source type="image/webp" sizes="(max-width: 480px) 89.6vw, (max-width: 700px) 84.6vw, (max-width: 820px) 72.5vw, (max-width: 900px) 61.9vw, (max-width: 1000px) 56.4vw, (max-width: 1200px) 50.9vw, 44vw"
+                  srcset="assets/img/r/chirashi-plate-340.webp 340w, assets/img/r/chirashi-plate-420.webp 420w, assets/img/r/chirashi-plate-610.webp 610w, assets/img/r/chirashi-plate-820.webp 820w, assets/img/r/chirashi-plate-1122.webp 1122w">
+          <img class="dish__plate"
+             src="assets/img/chirashi-plate.webp"
+             alt="Chirashi sushi seen from directly overhead: slices of salmon and tuna, fanned avocado, cucumber, wakame, pickled ginger and wasabi set around a cup of soy sauce on seasoned rice, in a black ceramic bowl."
+             width="1122" height="1122" loading="lazy" decoding="async" fetchpriority="low">
+        </picture>
+      </figure>
+
+      <div class="dish__col dish__col--a">
+        <div class="dish__block">
+          <h3 class="dish__label">Neta</h3>
+          <p class="dish__note">The fish. Salmon and akami, sliced thick against the
+            grain and laid over the rice in the order it is meant to be eaten.</p>
+        </div>
+
+        <hr class="dish__rule" aria-hidden="true">
+
+        <div class="dish__block">
+          <h3 class="dish__label">Shari</h3>
+          <p class="dish__note">The rice. Warm, loosely packed, and seasoned so
+            lightly it reads as sweetness rather than vinegar.</p>
+        </div>
+      </div>
+
+      <div class="dish__col dish__col--b">
+        <div class="dish__block">
+          <h3 class="dish__label">Yakumi</h3>
+          <p class="dish__note">The seasonings. Wasabi grated to order on sharkskin,
+            ginger cured in our kitchen, sesame toasted the same morning.</p>
+        </div>
+
+        <hr class="dish__rule" aria-hidden="true">
+
+        <div class="dish__block">
+          <h3 class="dish__label">Tsuma</h3>
+          <p class="dish__note">The garnish. Avocado, cucumber and wakame, cut to
+            clear the palate between one piece and the next.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================================================== reservation ====
+       Rebuilt 2026-08-15 against `assets/img/inspooooo.png`. Spec:
+       docs/superpowers/specs/2026-08-15-reservation-redesign-design.md
+
+       PLACEHOLDERS — swap all of these together before launch:
+         · the wa.me number below is +254 700 000 000, invented
+         · the opening hours and the two cities were supplied by the client
+           in conversation and are not confirmed against anything; both are
+           claims a guest can hold the restaurant to
+       Photograph: Pexels 36352192 by Gül Işık, Kyoto. Pexels Licence —
+       commercial use, no attribution required.
+       ==================================================================== -->
+  <section class="reserve" id="reserve" aria-labelledby="reserve-title">
+
+    <!-- Both curves are generated by `make-reserve-path.mjs` from the tables
+         `measure-reserve-ref.mjs` prints. They live here rather than in the
+         page's sprite sheet so this block stays self-contained when it is
+         copied to menu.html and about.html. -->
+    <svg class="reserve__defs" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="reserve-curve" clipPathUnits="objectBoundingBox">
+          <path d="M0.6189 0C0.5905 0.0104 0.5569 0.0209 0.5337 0.0313C0.5106 0.0417 0.4959 0.0521 0.4802 0.0625C0.4644 0.0729 0.4506 0.0834 0.4392 0.0938C0.4278 0.1042 0.4186 0.1146 0.4119 0.125C0.4018 0.1406 0.3935 0.1563 0.3889 0.1719C0.3827 0.1927 0.3796 0.2136 0.3794 0.2344C0.3792 0.2552 0.3833 0.2761 0.3877 0.2969C0.3921 0.3177 0.4001 0.3386 0.4056 0.3594C0.4085 0.3705 0.415 0.3815 0.4131 0.3926C0.4115 0.4017 0.4203 0.4108 0.3952 0.4199C0.3916 0.4212 0.3365 0.4225 0.3269 0.4238C0.298 0.4277 0.2916 0.4316 0.2797 0.4355C0.2618 0.4414 0.2484 0.4472 0.2376 0.4531C0.2183 0.4635 0.202 0.474 0.1894 0.4844C0.1705 0.5 0.1546 0.5157 0.1432 0.5313C0.128 0.5521 0.1171 0.573 0.1095 0.5938C0.0999 0.6198 0.0921 0.6459 0.0916 0.6719C0.0911 0.6979 0.0953 0.724 0.1065 0.75C0.1177 0.776 0.1333 0.8021 0.1589 0.8281C0.1794 0.8489 0.2078 0.8698 0.245 0.8906C0.2729 0.9062 0.308 0.9219 0.3542 0.9375C0.385 0.9479 0.3924 0.9584 0.476 0.9688C0.5594 0.9792 0.7288 0.9896 0.8552 1L1 1L1 0Z"/>
+        </clipPath>
+        <!-- Stacked, the same silhouette becomes an arch: full width, curved
+             along the bottom, with the two lobes flattened into one bowl. -->
+        <clipPath id="reserve-arch" clipPathUnits="objectBoundingBox">
+          <path d="M0 0L1 0L1 0.8C0.86 0.905 0.7 0.968 0.53 0.962C0.36 0.956 0.17 0.9 0 0.885Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <figure class="reserve__fig">
+      <svg class="reserve__ring" viewBox="0 0 1 1" preserveAspectRatio="none"
+           aria-hidden="true" focusable="false">
+        <path class="reserve__ringpath reserve__ringpath--wide"
+              d="M0.6048 0C0.5758 0.0104 0.541 0.0209 0.5177 0.0313C0.4945 0.0417 0.4815 0.0521 0.4655 0.0625C0.4494 0.0729 0.4336 0.0834 0.4215 0.0938C0.4095 0.1042 0.4 0.1146 0.3931 0.125C0.3828 0.1406 0.3747 0.1563 0.37 0.1719C0.3638 0.1927 0.3605 0.2136 0.3605 0.2344C0.3605 0.2552 0.3656 0.2761 0.37 0.2969C0.3744 0.3177 0.3829 0.3386 0.3868 0.3594C0.3888 0.3705 0.3906 0.3815 0.3877 0.3926C0.3853 0.4017 0.3958 0.4108 0.371 0.4199C0.3675 0.4212 0.3126 0.4225 0.3027 0.4238C0.273 0.4277 0.2647 0.4316 0.2523 0.4355C0.2336 0.4414 0.2197 0.4472 0.2094 0.4531C0.1911 0.4635 0.1771 0.474 0.1663 0.4844C0.1501 0.5 0.1371 0.5157 0.1284 0.5313C0.1168 0.5521 0.1091 0.573 0.1053 0.5938C0.1006 0.6198 0.1008 0.6459 0.1029 0.6719C0.105 0.6979 0.1065 0.724 0.1177 0.75C0.1289 0.776 0.1496 0.8021 0.1702 0.8281C0.1867 0.8489 0.2002 0.8698 0.2292 0.8906C0.251 0.9062 0.2797 0.9219 0.3227 0.9375C0.3514 0.9479 0.3814 0.9584 0.4445 0.9688C0.476 0.974 0.5525 0.9792 0.6065 0.9844"/>
+        <path class="reserve__ringpath reserve__ringpath--tall"
+              d="M1 0.833C0.86 0.938 0.7 1.001 0.53 0.995C0.36 0.989 0.17 0.933 0 0.918"/>
+      </svg>
+      <div class="reserve__frame">
+        <picture>
+          <source type="image/avif" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
+                  srcset="assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
+          <source type="image/webp" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
+                  srcset="assets/img/r/reserve-interior-1150.webp 1150w, assets/img/r/reserve-interior-1400.webp 1400w">
+          <img class="reserve__img" src="assets/img/reserve-interior.jpg"
+             width="1400" height="1576"
+             alt="A dim Japanese dining room: dark wood tables set with ceramic
+                  dishes and vermilion lacquer cups, two small glass pendants
+                  lit warm above a counter, shoji screens behind." loading="lazy" decoding="async" fetchpriority="low">
+        </picture>
+      </div>
+    </figure>
+
+    <div class="reserve__copy">
+      <p class="reserve__eyebrow">Reserve</p>
+
+      <h2 class="reserve__title" id="reserve-title">Reserve<br>your table</h2>
+
+      <hr class="reserve__rule" aria-hidden="true">
+
+      <p class="reserve__body">A counter, a season, and a chef who decides the
+        order. Tell us when you would like to sit and how many are coming &mdash;
+        the evening is arranged from there.</p>
+
+      <a class="reserve__cta"
+         href="https://wa.me/254700000000?text=Hello%20Misono%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
+         target="_blank" rel="noopener">
+        <span class="reserve__ctalbl">Reserve now</span>
+        <svg class="reserve__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
+          <path d="M0.8 7h22.4M17.4 1.4 23.2 7l-5.8 5.6"/>
+        </svg>
+      </a>
+
+      <p class="reserve__ctasub">Opens WhatsApp &middot; message already written</p>
+
+      <ul class="reserve__meta">
+        <li class="reserve__metaitem">
+          <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="8.2"/>
+            <path d="M12 7.1V12l3.4 2"/>
+          </svg>
+          <span class="reserve__metalbl">Opening hours</span>
+          <!-- CONFIRMED BY THE CLIENT 2026-08-20, and this reverses the
+               2026-08-17 change. Between 17 and 20 August the site carried
+               "Nairobi 12:00-21:30 / Mombasa 12:00-21:00", taken from public
+               listings (misono.co.ke, EatOut, Foursquare) because those were
+               judged more likely to be current than a phrase remembered from
+               conversation. That judgement was wrong: asked directly, the
+               client confirmed the hours they gave on 2026-08-15 — one
+               schedule for both branches, noon to 11pm, every day.
+
+               The listings are therefore stale, not the brief. Worth
+               remembering the next time a public source disagrees with the
+               person who owns the restaurant.
+
+               Two lines, not three. The copy column is an aspect-locked block
+               of 48.1u of measured ink, verified to fit one screen from
+               1000x700 to 2560x1440; a third line changes that height and the
+               fit has to be re-solved. Both lines here are shorter than the
+               branch lines they replace, so the fit can only improve. -->
+          <span class="reserve__metaval">Monday &ndash; Sunday<br>12:00 &ndash; 23:00</span>
+        </li>
+        <li class="reserve__metaitem">
+          <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 21.2s6.3-5.9 6.3-10.5a6.3 6.3 0 1 0-12.6 0c0 4.6 6.3 10.5 6.3 10.5Z"/>
+            <circle cx="12" cy="10.6" r="2.4"/>
+          </svg>
+          <span class="reserve__metalbl">Location</span>
+          <span class="reserve__metaval">Nairobi &amp; Mombasa<br>Kenya</span>
+        </li>
+      </ul>
+    </div>
+
+  </section>
+</main>
+
+<!-- ========================================================= ending ==== -->
+<footer class="ending">
+  <!-- Decorative repeat of the hero's h1. Hidden from assistive tech so the
+       brand name is not announced twice on the way out. -->
+  <p class="ending__mark" aria-hidden="true">MISONO</p>
+
+  <!-- All three now point at real pages, which is what the placeholder note
+       that used to sit above this block was waiting for. Contact went to
+       #reserve until 2026-08-17 — that was the site's only link INTO the
+       reservation block, so the booking CTA is now reached by scrolling
+       rather than by navigating. Noted in CLAUDE.md; it is a consequence of
+       the link change, not an oversight. -->
+  <nav class="ending__nav" aria-label="Footer">
+    <a class="ending__link" href="menu.html">Menu</a>
+    <a class="ending__link" href="about.html">About</a>
+    <a class="ending__link" href="contact.html">Contact</a>
+  </nav>
+
+  <p class="ending__note">&copy; 2026 Misono</p>
+</footer>
+
+<script>
+/* Deferred photography: wake a section's frames 1.5 viewports before it
+   arrives, so nothing is decoding at the moment it has to be on screen.
+   See apply-perf-shell.mjs. Degrades to plain native lazy with JS off. */
+(function () {
+  var imgs = document.querySelectorAll('img[data-warm]');
+  if (!imgs.length) return;
+  var wake = function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var im = list[i];
+      im.loading = 'eager';
+      im.fetchPriority = 'auto';
+      if (im.decode) im.decode().catch(function () {});
+    }
+  };
+  if (!('IntersectionObserver' in window)) return wake(imgs);
+  var groups = {};
+  for (var i = 0; i < imgs.length; i++) {
+    var k = imgs[i].getAttribute('data-warm');
+    (groups[k] = groups[k] || []).push(imgs[i]);
+  }
+  Object.keys(groups).forEach(function (sel) {
+    var host = document.querySelector(sel);
+    if (!host) return wake(groups[sel]);
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      wake(groups[sel]);
+    }, { rootMargin: '150% 0px 150% 0px' });
+    io.observe(host);
+  });
+}());
+</script>
+<script>
+/* prefetch-on-intent — Page transitions. Every internal link on this site goes to one of three
+   other documents, each ~25-50KB over the wire once brotli has had it, so
+   the whole cost of a navigation is one request that could just as easily
+   have happened while the reader was still deciding to click.
+
+   Intent, not idle. Prefetching all three on load would move ~120KB for a
+   reader who may only ever look at one page; prefetching on hover or on
+   touchstart buys most of the same latency back — the gap between "pointer
+   settles on a link" and "pointer-up" is 200-300ms typically, which is
+   more than enough here — and costs nothing for a reader who never aims at
+   one. Each href is fetched at most once.
+
+   Skipped entirely on Save-Data or a 2g connection: speculative bytes are
+   the first thing that should go when someone is paying for them. */
+(function () {
+  var c = navigator.connection;
+  if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
+  var done = {};
+  function warm(href) {
+    if (!href || done[href]) return;
+    var u;
+    try { u = new URL(href, location.href); } catch (e) { return; }
+    if (u.origin !== location.origin || u.pathname === location.pathname) return;
+    done[href] = 1;
+    var l = document.createElement('link');
+    l.rel = 'prefetch';
+    l.as = 'document';
+    l.href = u.href;
+    document.head.appendChild(l);
+  }
+  function onIntent(e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (a) warm(a.getAttribute('href'));
+  }
+  document.addEventListener('pointerover', onIntent, { passive: true, capture: true });
+  document.addEventListener('touchstart', onIntent, { passive: true, capture: true });
+  document.addEventListener('focusin', onIntent, { passive: true });
+}());
+</script>
+</body>
+</html>

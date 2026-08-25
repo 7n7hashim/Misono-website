@@ -1,0 +1,13 @@
+# Dependencies — restore with `npm install`.
+node_modules/
+
+# Build output — `node build.mjs` regenerates it from source, and it is 20MB
+# of duplicated assets plus their .br/.gz siblings.
+dist/
+
+# Screenshot scratch. The directory itself is kept: every shooter in this
+# project writes into it and CLAUDE.md says to empty it after each assignment.
+temporary screenshots/*.png
+
+.DS_Store
+*.log

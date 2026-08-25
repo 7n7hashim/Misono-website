@@ -1,0 +1,2033 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Misono — The Menu</title>
+<link rel="preload" as="image" type="image/avif"
+      imagesrcset="assets/img/r/hero-omakase-1717-280.avif 280w, assets/img/r/hero-omakase-1717-350.avif 350w, assets/img/r/hero-omakase-1717-1010.avif 1010w, assets/img/r/hero-omakase-1717-1270.avif 1270w, assets/img/r/hero-omakase-1717-1717.avif 1717w"
+      imagesizes="(max-width: 900px) 40.2vw, 15.1vw" fetchpriority="high">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Exceptional flavors. The Misono carte — omakase, sushi and sashimi, teppanyaki.">
+
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-normal-300-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jost-normal-300-400.woff2">
+
+<!-- Arms the entrance, and it has to happen HERE rather than beside the
+     observer at the foot of the body. Every rest state in that block is the
+     finished composition and `.js` is what takes it away, so a class added
+     after the body has parsed would let the heading paint in place and then
+     be snatched back — about.html can add it at the end because the section
+     it arms is below the fold, and this one is the first thing on screen. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<style>
+  /* =====================================================================
+     PERFORMANCE — self-hosted type and the <picture> box tree.
+     Added by the 2026-08-24 load-time pass; see apply-perf-shell.mjs for the
+     reasoning behind every number in here. Nothing below changes a typeface,
+     a weight, a size or a colour.
+     ===================================================================== */
+
+  @font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 300 400;
+    font-display: swap;
+    src: url(assets/fonts/cormorant-garamond-normal-300-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  @font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 300 400;
+    font-display: swap;
+    src: url(assets/fonts/jost-normal-300-400.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  /* Georgia, bent onto Cormorant's metrics, so the ~150ms before the webfont
+     arrives is not a differently-shaped page. 86.8% is the measured width
+     ratio of the two over a mixed sample; the vertical overrides are
+     Cormorant's own ascent and descent expressed against that adjusted em. */
+  @font-face {
+    font-family: 'Cormorant Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Times');
+    size-adjust: 86.8%;
+    ascent-override: 106%;
+    descent-override: 33.4%;
+    line-gap-override: 0%;
+  }
+
+  /* <picture> generates NO box. Several of these photographs are flex or
+     grid items of their own parent — .beyond__track img is `flex: none` in
+     a max-content row whose width the marquee's translate is a percentage
+     of — and a wrapper would take that slot instead of the <img>. With
+     display:contents the <img> is the flex item again and every measured
+     layout is byte-for-byte what it was. Selector matching is untouched:
+     every rule on this site reaches these images by class or as a
+     descendant, never as a direct child. */
+  picture { display: contents; }
+
+  /* =====================================================================
+     Misono — menu page
+
+     Geometry is measured off `assets/img/menu isnpo.jpeg` and carried
+     across as a share of one scale unit, never in pixels: the reference is
+     a scroll capture roughly 1295px wide and this page is looked at from
+     1280 to 1920, so pixels from one are meaningless in the other.
+
+       frame width           17.1% of W        (17.0-17.2 measured)
+       frame aspect          3:4 portrait
+       upper pair inset      3.5% left, 3.9% right
+       lower pair inset      7.3% left, 2.5% right
+       stacked gap           6.4% of W         (83px at W=1295)
+       right column drift    2.2% upper, 3.2% lower
+       eyebrow rule          2.47% of W
+
+     The finding that matters more than any single number: the lower pair is
+     NOT aligned to the upper pair. Left is inset further, right is inset
+     less, so the whole bottom row shifts right — and the right column hangs
+     lower than the left in both rows. Straighten any of those four numbers
+     and the composition collapses into a grid.
+
+     VERTICAL CONSTRUCTION. The reference is a phone capture cropped at the
+     bottom: its lower two frames run off the end of the image, so where its
+     section actually began and ended cannot be recovered from it. The
+     heading is therefore centred on the viewport, per the brief, and the
+     field is built symmetrically outward from that centre line:
+
+       upper pair bottom    -3.2% of W        \  the 6.4% stacked gap,
+       lower pair top       +3.2% of W        /  straddling the centre
+       so upper top         -26.0%, lower bottom +26.0%
+
+     Captions hang under the lower pair only, and the right column drifts
+     down, so the raw field runs 26.0% up and 31.8% down — bottom-heavy. The
+     whole frame set is therefore lifted by half that difference, 2.9%, which
+     balances the margins top and bottom while leaving the heading itself
+     exactly on the centre line. That is the only reason the four offsets
+     below are not round numbers.
+     ===================================================================== */
+
+  :root {
+    /* GROUND. This page diverges from the homepage: where index.html sits on
+       --cream #FCF8F5, the menu sits on a muted peach. Named --ground rather
+       than --peach so the name survives the next experiment.
+
+       hsl(22, 58%, 92%). The three numbers that keep it from going cheap:
+       hue held at 22 (apricot, not the pink of hue 12 or the tan of 34),
+       saturation capped at 58 so it reads as a tint of paper rather than as
+       a colour, and lightness at 92 — low enough that it is unmistakably
+       peach next to white, high enough to stay a ground and not a surface.
+
+       The peach runs the whole page, including the two sections transplanted
+       from index.html — see the adaptation block at the foot of this file.
+
+       The ink is unchanged and clears 13.6:1 on it. The other two are NOT:
+       peach is darker than cream, which cost both of them contrast, so each
+       is re-derived against this ground rather than carried over. */
+    --ground:      #F7E8DF;  /* peach — every section on this page          */
+    --cream:       #FCF8F5;  /* the homepage's ground. Kept only so the      */
+                             /* transplanted CSS has a defined fallback; it  */
+                             /* is overridden to --ground where it is used.  */
+    --menu-ink:    #2F1B19;  /* 13.6:1 on the peach                         */
+    --menu-body:   #63504A;  /*  6.3:1 — the cream #6B5750 falls to 5.66    */
+    --menu-accent: #99551C;  /*  4.8:1 — the cream #9A5C26 falls to 4.47    */
+    --misono-indigo: #3A5280;
+    --hairline:    rgba(47, 27, 25, 0.18);
+
+    /* The one scale unit the whole composition is built from. Pure vw
+       overflows a wide-short window — 57.8vw of field height is 1110px at
+       1920 — so the unit is capped against the height as well. Every
+       SIZE below is a share of this, which is what keeps the block scaling
+       as one piece instead of the rhythm compressing.
+
+       The cap is 160vh because the heading is centred: the field has to fit
+       symmetrically about the centre line, so what must clear the window is
+       28.9% of W above it and 28.9% below, plus padding. Solving that at
+       900px high gives W = 1440 exactly — which is why the frames hit their
+       measured 17.1% dead on at both 1440x900 and 1280x800 rather than
+       landing short the way a tighter cap would leave them.
+
+       POSITIONS are a share of the viewport, not of W. The reference insets
+       its frames from the window edge, so pinning them to a capped unit
+       instead pushes every frame inward — at 1440x900 it cost 2.3% of the
+       width on all four, which is a third of the upper-left inset. */
+    --W: min(100vw, 160vh);
+
+    --frame:  calc(var(--W) * 0.171);
+
+    --ease-quiet: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    /* The entrance's two curves. Both overshoot — they end above 1 and come
+       back — which is the whole point: an element that decelerates onto its
+       mark has been placed there, one that passes it and returns has settled
+       there. The numbers are solved, not guessed, because y2 is not the
+       overshoot: the peak of cubic-bezier(x1,y1,x2,y2) is somewhere around
+       t=0.8 and is a good deal lower than y2.
+
+         --ease-settle  y2 = 1.12  peaks at 1.026  ~2.6%   depth only
+         --ease-pop     y2 = 1.20  peaks at 1.055  ~5.5%   depth + rotation
+
+       Read against the travel they drive, 2.6% of 290px is 7px and 5.5% of
+       240px is 13px — a frame that eases past its plane by a few pixels, a
+       display line that comes forward past the page and drops back. Any more
+       than this on type at 300 weight stops reading as weight and starts
+       reading as a bounce. */
+    --ease-settle: cubic-bezier(0.18, 0.84, 0.26, 1.12);
+    --ease-pop:    cubic-bezier(0.15, 0.90, 0.22, 1.20);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    /* The hover transitions are small, but "reduce" means reduce: the states
+       still change, they just stop being animated. */
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ::selection { background: rgba(153, 85, 28, 0.18); color: var(--menu-ink); }
+
+
+  /* ============================================================ flavors */
+
+  /* A flat peach across a whole viewport reads as a swatch. The bloom fixes
+     that: a warm near-white lifted over the ground toward the centre, where
+     the heading sits, so the corners fall away and the peach stops going
+     dead. It is not meant to be seen as a gradient.
+
+     It fades to TRANSPARENT, not to --ground. Interpolating to the ground
+     colour looks equivalent and is not: the ellipse is 85% of the box high
+     and centred at 46%, so at 900px tall the bottom edge only reaches 63.5%
+     along the gradient — still mid-interpolation, and one level off the
+     carte that begins immediately below it. Fading to transparent lets the
+     body's own --ground show through wherever the bloom has run out, so the
+     edges match by construction at every viewport rather than at the one
+     that happened to be measured. */
+  .flavors {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(115% 85% at 50% 46%,
+        rgba(255, 247, 243, 0.55) 0%,
+        rgba(255, 247, 243, 0.22) 40%,
+        rgba(255, 247, 243, 0)    78%);
+  }
+
+  /* Paper. A whisper of grain so the peach reads as stock rather than as a
+     flat fill, and so the four shadows have something to sit into. It earns
+     more of its keep here than it did on the cream — a tinted ground shows
+     banding across a soft radial that a near-white hides. */
+  .flavors::before {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* The full section, so that a frame's `top: 50%` is the true centre of the
+     window and its percentage insets resolve against the window edge the way
+     the reference's do. Only the frames' sizes are scaled off W. */
+  .flavors__field {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* ------------------------------------------------------------- title */
+
+  /* Dead centre of the window, both axes. The whole block is centred — rule,
+     eyebrow and both display lines — not just the display, so the assembly
+     reads as one centred mass rather than a heading with a label floating
+     above it. */
+  .flavors__title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* 48%, not 52%. The binding constraint is not the upper pair but the
+       LOWER-LEFT frame, which is inset furthest (7.3%) and so reaches
+       furthest into the centre — at 52% the title's box clipped it by 5px.
+       The ink was clear by 214px either side, so nothing showed, but a box
+       that overlaps only because the text happens to be short is a trap for
+       whoever edits this copy next. 48% clears every frame's box outright,
+       and still leaves the longest display line 413px inside 691px. */
+    width: 48%;
+    text-align: center;
+  }
+
+  .flavors__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--W) * 0.0110);
+    margin: 0 0 calc(var(--W) * 0.026);
+    font-size: max(10px, calc(var(--W) * 0.00855));
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    /* Tracking is applied to the right of every glyph including the last,
+       which walks a centred line left by half an em. Pull it back. */
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-body);
+    white-space: nowrap;
+  }
+
+  .flavors__eyebrow::before,
+  .flavors__eyebrow::after {
+    content: "";
+    width: calc(var(--W) * 0.0247);
+    height: 1px;
+    background: currentColor;
+    opacity: 0.55;
+    flex: none;
+  }
+  .flavors__eyebrow::before { margin-right: calc(var(--W) * -0.004); }
+
+  /* Set to the reference's WIDTH, not to its font-size. The reference face is
+     a wider didone: at its measured 5.1% of W it runs "Exceptional" to 28.7%
+     of the viewport, where Cormorant Garamond at the same 5.1% reaches only
+     22.8% — measured, not guessed. Matching the nominal size would have left
+     the title reading small in a composition this open, so the size is driven
+     up by that same 1.26 ratio until the word occupies the reference's width. */
+  .flavors__display {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: calc(var(--W) * 0.0610);
+    line-height: 0.92;
+    letter-spacing: 0.012em;
+    text-indent: 0.012em;
+    color: var(--menu-ink);
+  }
+
+  .flavors__display span { display: block; }
+
+  /* There was a scroll cue in the lower centre here. It is gone: with the
+     heading on the centre line, anything sitting below it in the same column
+     reads as part of the heading and breaks the symmetry the composition is
+     built on. The space below the centre is meant to be empty. */
+
+  /* ------------------------------------------------------------ frames */
+
+  .frame {
+    position: absolute;
+    width: var(--frame);
+    margin: 0;
+  }
+
+  /* Measured insets. The lower pair deliberately does not line up with the
+     upper pair — left is pushed in to 7.3%, right pulled out to 2.5% — and
+     the right column runs 2.2% low up top, 3.2% low down below. Straighten
+     any of these four numbers and the composition turns into a grid.
+
+     Every vertical offset is measured from the window's centre line, which
+     is where the heading sits, so the four frames read as framing it. The
+     symmetric values would be -26.0 / -23.8 / +3.2 / +6.4; each carries the
+     -2.9% lift described at the top of this file, which is what balances the
+     captions and the drift and leaves equal margin above and below. */
+  .frame--ul { left: 3.5%;  top: calc(50% - var(--W) * 0.289); }
+  .frame--ur { right: 3.9%; top: calc(50% - var(--W) * 0.267); }
+  .frame--ll { left: 7.3%;  top: calc(50% + var(--W) * 0.003); }
+  .frame--lr { right: 2.5%; top: calc(50% + var(--W) * 0.035); }
+
+  .frame__plate {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #EDDCD1;   /* holds the frame before the photograph paints */
+    /* Layered and warm. A neutral black shadow on peach goes grey and dirty;
+       these are tinted toward the ember so the prints sit on the paper
+       instead of hovering over it. Carried up a little from the cream build —
+       a darker ground swallows a shadow, and at the old opacities the frames
+       had started to look pasted on rather than laid down. */
+    box-shadow:
+      0 1px 2px rgba(47, 27, 25, 0.06),
+      0 6px 14px rgba(122, 72, 38, 0.09),
+      0 22px 48px rgba(122, 72, 38, 0.12);
+  }
+
+  .frame__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.001);   /* kills the hairline of background at the edge */
+  }
+
+  /* Corrected per frame, not on one shared curve. These were shot under
+     different light — the counter is tungsten, the teppan is firelight, the
+     chirashi is daylight on white, the sashimi is direct flash — so one
+     curve across all four leaves at least two of them wrong. */
+  .frame--ul .frame__img { filter: contrast(1.03); }
+  .frame--ur .frame__img { filter: saturate(0.88) contrast(1.04); }
+
+  /* The sashimi is the only frame shot on direct flash, and it arrives with
+     everything that implies: blown speculars, candy-bright cucumber, cool
+     cast, and a rim of white plate in the corner. Left as shot it is the one
+     amateur frame in a composition of four, which drags the whole page down.
+
+     Cropped hard into the nigiri and the ikura — the two things worth
+     looking at — so the cucumber ribbon and the plate rim fall outside the
+     frame. Then corrected: saturation well down, a whisper of sepia to pull
+     the flash's cool cast back toward the warmth of the other three, and
+     brightness off to seat the highlights. */
+  .frame--lr .frame__img {
+    filter: saturate(0.8) contrast(1.02) brightness(0.955) sepia(0.09);
+    object-position: 58% 50%;
+    transform: scale(1.38) translateY(-7%);
+  }
+
+  /* The chirashi is the one frame that needs a crop as well as a curve. It
+     was shot on a white sweep, and object-fit alone leaves a band of that
+     sweep inside the frame — on a cream ground the band reads as a pale
+     rectangle rather than as a photograph, and the bowl stops being the
+     subject. Scaled up until the lacquer runs to the edges, so the frame
+     lands as the dark graphic circle the composition needs down there. */
+  .frame--ll .frame__img {
+    filter: contrast(1.04);
+    object-position: 50% 47%;
+    transform: scale(1.27);
+  }
+
+  .frame__caption {
+    margin: calc(var(--W) * 0.013) 0 0;
+    text-align: center;
+    font-size: max(9px, calc(var(--W) * 0.0072));
+    font-weight: 300;
+    letter-spacing: 0.26em;
+    text-indent: 0.26em;
+    text-transform: uppercase;
+    color: var(--menu-body);
+  }
+
+  /* =========================================================== entrance */
+
+  /* The composition assembling itself, once, when the section is reached.
+     Nothing here moves where anything ends up: every rest state is a true
+     `transform: none`, and the whole block is behind `.js`, so with scripting
+     off the section renders finished. That is also what `node screenshot.mjs`
+     needs — a full-page capture uses captureBeyondViewport and never moves
+     the layout viewport, so an observer-driven reveal shoots blank; emulate
+     `prefers-reduced-motion` or shoot the viewport instead.
+
+     DEPTH COMES FROM A `perspective` PROPERTY ON THE TWO PARENTS, not from a
+     `perspective()` function inside each element's transform. Two reasons,
+     both load-bearing:
+
+       - The rest state can then be `transform: none`. A hairline Cormorant at
+         300 left sitting under a composited transform gets rasterised once
+         and stretched, and it shows — the same finding that keeps
+         `will-change` off about.html's statement. Do not add `will-change`
+         here either; these elements move for two seconds and then are type
+         for the rest of the visit.
+       - `.flavors__field`'s perspective-origin is its own centre, which is
+         the centre of the window, which is where the heading is. So a frame
+         pushed back in Z is projected TOWARD the heading, and its slide out
+         to its own measured inset comes free from the projection coming
+         undone. The Z is the depth; the sideways travel is what perspective
+         does with it. Nothing writes a per-frame translateX, which is why the
+         four measured insets at .frame--ul/ur/ll/lr are still the only thing
+         deciding where a frame lands.
+
+     The title's side carries its own, shorter perspective so the two display
+     lines come at the reader about their own centre rather than toward a
+     vanishing point a few hundred pixels off to the side. And it is declared
+     TWICE, on `.flavors__title` for the eyebrow and again on
+     `.flavors__display` for the two lines, because **`perspective` applies to
+     an element's direct children only** and the lines are grandchildren:
+     title > h1 > span. Declared on the title alone it reaches the eyebrow and
+     stops, and the lines' `translateZ` then has no camera to be projected
+     through — which does not error, does not warn, and does not look broken
+     either. It looks like a heading that fades up while the frames behind it
+     move in depth, i.e. like a design decision. Measure the apparent scale
+     rather than trusting the eye: `shoot-flavors.mjs` prints it, and a line
+     reading 1.000 at t=0 is this failure, not a subtle animation.
+
+     All three parents already establish a containing block or a stacking
+     context (`position: absolute`, a `transform`, a block box), so adding
+     `perspective` costs nothing at rest: every child sits at z = 0 and a
+     child at z = 0 projects to itself exactly. The composition measured at
+     the top of this file is unchanged, to the pixel, the moment it settles. */
+  .flavors__field   { perspective: 1500px; }
+  .flavors__title   { perspective: 1100px; }
+  .flavors__display { perspective: 1100px; }
+
+  /* The armed state. `--in-*` are per-element so the shared transition below
+     is written once: delay is the choreography, `--in-move` the travel time,
+     `--in-fade` the fade, which is deliberately the shorter of the two — the
+     move is the thing worth watching, so each element is fully opaque well
+     before it stops moving. Fading and travelling over the same span reads as
+     a cross-dissolve and throws the depth away. */
+  .js .flavors__eyebrow,
+  .js .flavors__display span,
+  .js .frame {
+    opacity: 0;
+    transition:
+      opacity   var(--in-fade, 900ms)  var(--ease-quiet)                 var(--in-delay, 0ms),
+      transform var(--in-move, 1500ms) var(--in-ease, var(--ease-settle)) var(--in-delay, 0ms);
+  }
+
+  /* THE MENU emerges: depth and nothing else. -80px against the title's
+     1100px perspective is 0.932 scale, so it arrives 7% small and grows into
+     place. No rotation on purpose — 10px caps at 0.34em tracking are the one
+     thing on this page that a rotateX would only make mushy, and holding the
+     eyebrow to pure depth is what leaves the rotation below reading as the
+     display's own gesture rather than as a house effect applied twice. */
+  .js .flavors__eyebrow {
+    --in-delay: 0ms;
+    --in-move: 1200ms;
+    transform: translate3d(0, 6px, -80px);
+  }
+
+  /* Exceptional / Flavors pop forward. -210px and -240px against 1100px of
+     perspective is 0.84 and 0.82 scale — the lines start a sixth small and
+     come at the reader, which is a different move from the eyebrow's rather
+     than a louder one. The overshoot carries them a little past the page
+     before they drop back onto it.
+
+     The second line is 30px deeper and 140ms later. Both numbers are small,
+     and they are what stops two authored lines of one heading arriving as a
+     single glued slab. */
+  .js .flavors__display span:nth-child(1) {
+    --in-delay: 190ms;
+    --in-fade: 850ms;
+    --in-ease: var(--ease-pop);
+    transform: translate3d(0, 14px, -210px) rotateX(7deg);
+  }
+  .js .flavors__display span:nth-child(2) {
+    --in-delay: 330ms;
+    --in-fade: 850ms;
+    --in-ease: var(--ease-pop);
+    transform: translate3d(0, 16px, -240px) rotateX(8deg);
+  }
+
+  /* The four frames, from behind the page. Ordered the way the composition
+     is read — upper-left, upper-right, then across the bottom — and each at
+     its own depth, deepest at lower-left, so they do not arrive as one plane
+     sliding forward. The frame is transformed, never `.frame__img`: those
+     transforms are the per-photograph crops and are not motion. */
+  .js .frame { --in-fade: 1000ms; }
+  .js .frame--ul { --in-delay: 300ms; transform: translate3d(0, 10px, -230px) rotateX(4deg); }
+  .js .frame--ur { --in-delay: 390ms; transform: translate3d(0, 11px, -255px) rotateX(4.5deg); }
+  .js .frame--ll { --in-delay: 490ms; transform: translate3d(0, 13px, -290px) rotateX(5deg); }
+  .js .frame--lr { --in-delay: 580ms; transform: translate3d(0, 12px, -265px) rotateX(4.5deg); }
+
+  /* Settled. One selector puts everything back, and `transform: none` is
+     what makes it the measured composition again rather than an approximation
+     of it. */
+  .js .flavors.is-in .flavors__eyebrow,
+  .js .flavors.is-in .flavors__display span,
+  .js .flavors.is-in .frame {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Every property the armed state touches is put back BY NAME here, not by
+     leaning on the blanket rule at the top of this file. That rule only
+     shortens durations; it does not undo a starting transform, so without
+     this a reader who asks for less motion would get the composition parked
+     280px behind the page. */
+  @media (prefers-reduced-motion: reduce) {
+    .js .flavors__eyebrow,
+    .js .flavors__display span,
+    .js .frame {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* ============================================================== carte */
+
+  .carte {
+    /* No seam. Same ground, same grain reading — the carte is the same
+       sheet of paper, further down. */
+    background: var(--ground);
+    padding: clamp(72px, 9vw, 168px) 7.18% clamp(84px, 10vw, 190px);
+  }
+
+  .carte__inner { max-width: 1180px; margin-inline: auto; }
+
+  .carte__head {
+    text-align: center;
+    margin-bottom: clamp(52px, 6vw, 104px);
+  }
+
+  .carte__eyebrow {
+    margin: 0 0 0.9em;
+    font-size: max(10px, 0.72rem);
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .carte__title {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(32px, 3.6vw, 56px);
+    line-height: 1.04;
+    letter-spacing: -0.005em;
+  }
+
+  .carte__note {
+    margin: 1.4em auto 0;
+    max-width: 46ch;
+    font-size: clamp(13px, 1.02vw, 15px);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--menu-body);
+  }
+
+  .carte__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(44px, 5vw, 88px) clamp(48px, 6vw, 112px);
+  }
+
+  @media (min-width: 900px) {
+    .carte__grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .course__name {
+    margin: 0 0 0.85em;
+    padding-bottom: 0.85em;
+    border-bottom: 1px solid var(--hairline);
+    font-size: max(10px, 0.72rem);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .course__list { margin: 0; }
+
+  /* Name left, price right, baselines locked. No dot leaders: they are the
+     default answer for a menu and they drag the eye across dead space. The
+     alignment does the same job silently. */
+  .dish {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 0 1.1em;
+    padding: 0.62em 0;
+  }
+
+  .dish__name {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(18px, 1.5vw, 23px);
+    line-height: 1.25;
+  }
+
+  .dish__price {
+    margin: 0;
+    font-size: max(11px, 0.78rem);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    color: var(--menu-body);
+    white-space: nowrap;
+  }
+
+  /* Only the omakase carries notes. Describing every dish turns a carte
+     into a catalogue; the counter menu is the one where the guest is
+     choosing a length of evening rather than a plate. */
+  .dish__note {
+    grid-column: 1 / -1;
+    margin: 0.4em 0 0;
+    max-width: 42ch;
+    font-size: clamp(12px, 0.95vw, 13.5px);
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--menu-body);
+  }
+
+  .course--wide { grid-column: 1 / -1; }
+
+  @media (min-width: 900px) {
+    .course--wide .course__list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(48px, 6vw, 112px);
+    }
+  }
+
+  /* ========================================================== responsive
+
+     Below 900px the four-around-the-title composition has nowhere to go:
+     the frames would be 60px wide. It becomes a centred title with a
+     staggered pair of columns beneath it — the drift between the two
+     columns is kept, so it is still refusing to be a grid, just at a size
+     where the centre can no longer be held open.
+     ===================================================================== */
+
+  @media (max-width: 899px) {
+    .flavors {
+      min-height: 0;
+      display: block;
+      padding: clamp(56px, 12vw, 96px) 6% clamp(64px, 13vw, 104px);
+    }
+
+    .flavors__field {
+      position: static;
+      inset: auto;
+      width: 100%;
+      height: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+      align-items: start;
+    }
+
+    .flavors__title {
+      position: static;
+      transform: none;
+      width: 100%;
+      grid-column: 1 / -1;
+      margin-bottom: clamp(36px, 9vw, 64px);
+    }
+
+    .flavors__eyebrow {
+      gap: 3.2vw;
+      margin-bottom: 1.9em;
+      font-size: max(10px, 2.6vw);
+    }
+    .flavors__eyebrow::before,
+    .flavors__eyebrow::after { width: 6.4vw; }
+    .flavors__eyebrow::before { margin-right: -1vw; }
+
+    .flavors__display { font-size: clamp(38px, 12.4vw, 74px); }
+
+    .frame {
+      position: static;
+      width: 100%;
+    }
+
+    /* The stagger, kept. The right column runs a frame-tenth low, exactly
+       as it does on the desktop composition. */
+    .frame--ur,
+    .frame--lr { margin-top: 7vw; }
+
+    .frame__caption {
+      margin-top: 3.2vw;
+      font-size: max(9px, 2.1vw);
+    }
+
+  }
+
+  @media (max-width: 560px) {
+    .flavors__field { gap: 6vw; }
+    .frame--ur,
+    .frame--lr { margin-top: 9vw; }
+  }
+  /* =====================================================================
+     BELOW THIS LINE IS COPIED FROM index.html, NOT WRITTEN FOR THIS PAGE.
+
+     The reserve section (index.html 997-1524) and the ending (1525-1761),
+     verbatim apart from one deletion: the copied ending carried a global
+     `html { scroll-behavior: smooth }` that is not part of the component and
+     that this file already sets at the top.
+
+     They are byte-identical on purpose. If either needs to change, change it
+     in index.html and re-copy, or the two pages will drift apart — which is
+     the exact thing this transplant exists to prevent.
+     ===================================================================== */
+
+  /* ------------------------------------------------------------- reserve */
+  /* Rebuilt 2026-08-15 against `assets/img/inspooooo.png` (1536x1024, exactly
+     3:2), replacing the 2026-08-10 composition entirely. The spec at
+     docs/superpowers/specs/2026-08-15-reservation-redesign-design.md carries
+     the measured tables every number here comes from; `measure-reserve-ref.mjs`
+     reprints them and `make-reserve-path.mjs` regenerates the two curves.
+
+     Geometry is a share of the viewport or of one scale unit, never a pixel:
+     the comp is 1536 wide and is read at widths it was never drawn at.
+
+     THE GROUND. The comp's is #FEFDFA. This section stays on the site's peach.
+     Adopting the ivory would put a hard seam against the ending block that sits
+     directly below this one on all three pages, and a second ground is reserved
+     for full-viewport photographs. So contrast is re-derived against the peach
+     rather than carried across — two of the comp's four ink values fail on it:
+     its #BE754C button border measures 2.7:1 and its #B35F40 accent 3.1:1. */
+
+  .reserve {
+    /* Two golds, unchanged from the old section. The comp's hairline is far too
+       pale to carry text or to bound a control, so the paler value is confined
+       to marks that state nothing — the rule under the eyebrow, the ring around
+       the photograph. Anything a guest reads or clicks takes --menu-accent
+       (4.8:1) or --res-gold, which clears 3:1 as a non-text boundary. */
+    --res-hair: #D4AD7E;
+    --res-gold: #B8813F;
+
+    --res-eyebrow:  clamp(0.66rem, 2.85vw, 0.76rem);
+    --res-title:    clamp(2.35rem, 11.9vw, 3.6rem);
+    --res-lead:     1.075;
+    --res-body:     clamp(0.95rem, 3.9vw, 1.04rem);
+    --res-ctalbl:   clamp(0.76rem, 3.2vw, 0.86rem);
+    --res-ctasub:   clamp(0.64rem, 2.45vw, 0.7rem);
+    --res-metalbl:  clamp(0.66rem, 2.5vw, 0.7rem);
+    --res-metaval:  clamp(0.82rem, 3.3vw, 0.9rem);
+    --res-icon:     clamp(22px, 5.6vw, 27px);
+
+    position: relative;
+    background: var(--cream);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    /* Stacked, the photograph leads: it is the argument for booking, and the
+       heading reads better once the room has been seen. Side by side the order
+       reverses to the comp's. */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* The clip paths live in the section's own markup, not the page's sprite
+     sheet, so this block stays self-contained when it is copied to the other
+     two pages. `width: 0` rather than `display: none` — a display-none SVG
+     still defines its clip paths in Chrome, but not in every engine. */
+  .reserve__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* ---------------------------------------------------- the photograph */
+
+  .reserve__fig {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    /* Stacked, the frame is an arch: full width, curved along the bottom, so
+       the shape still reads as cut paper rather than as a rectangle. */
+    aspect-ratio: 1 / 1;
+  }
+
+  /* The comp's tan curve is not an offset of the photograph's edge — measured,
+     it runs 1.2% of the width outside it down the upper lobe, converges and
+     CROSSES at y≈60%, is invisible from there to y≈87%, and reappears widening
+     to 2.1% at the foot. Sitting the ring *under* an opaque photograph
+     reproduces all three for free: it is drawn once, in full, and the occlusion
+     is real rather than drawn. */
+  .reserve__ring {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    /* The mobile ring hangs below its box by design. */
+    overflow: visible;
+    color: var(--res-hair);
+  }
+
+  .reserve__ringpath {
+    fill: none;
+    stroke: currentColor;
+    /* preserveAspectRatio="none" stretches the ring with the section, which is
+       what keeps it registered against a clip path in the same units — but it
+       would stretch the stroke with it too, leaving the line thick on one flank
+       and thin on the other. This is the one property that fixes that. It has
+       nothing to do with dash length; see the experience section's note. */
+    vector-effect: non-scaling-stroke;
+    stroke-width: 1.4;
+  }
+
+  .reserve__ringpath--wide { display: none; }
+
+  .reserve__frame {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    clip-path: url(#reserve-arch);
+  }
+
+  .reserve__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+    /* Graded here rather than re-baked, because the file is shared with nothing
+       and the old contained blob wanted it as it is. Full-bleed, it covers half
+       the screen, and the file measures 62 of 255 — the floor of the chapters
+       band, which is where a lit macro belongs, not a wide interior. Lifted to
+       ~78, the band this room's subject actually sits in.
+
+       contrast() BEFORE brightness(), and below 1: contrast pulls toward 128,
+       which opens the shadows and pulls the pendants back from the ceiling
+       before the lift multiplies them. Brightness alone at the 1.26 the same
+       mean needs would clip both lamps to flat white discs.
+
+       No scrim: the room is the reason to book, and veiling it would be
+       self-defeating. */
+    filter: saturate(1.08) contrast(0.94) brightness(1.18);
+    animation: reserve-drift 32s var(--ease-quiet) infinite alternate;
+  }
+
+  /* The mask holds still and the room moves inside it. Animating the frame
+     instead would drag the curve across the ground, which is the one edge on
+     the page a reader is actually watching. */
+  @keyframes reserve-drift {
+    from { transform: scale(1)     translate3d(0, 0, 0);      }
+    to   { transform: scale(1.035) translate3d(-0.8%, -1%, 0); }
+  }
+
+  /* ---------------------------------------------------------- the copy */
+
+  .reserve__copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(38px, 9vw, 64px) 7.5% clamp(52px, 12vw, 84px);
+  }
+
+  /* Takes the slot the comp fills with a blossom seal and a long rule. The mon
+     is deliberately not here: the seal's job is to open the column, and an
+     eyebrow does that with a word instead of a mark. */
+  .reserve__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 18px);
+    margin: 0;
+    font-weight: 400;
+    font-size: var(--res-eyebrow);
+    line-height: 1;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  .reserve__eyebrow::after {
+    content: "";
+    width: clamp(2.4rem, 7vw, 3.6rem);
+    height: max(1px, 0.07vw);
+    background: var(--res-hair);
+  }
+
+  /* All caps, against the 2026-08-10 spec's explicit sentence-case decision.
+     That decision held the convention `.dish__title` and `.menu` establish and
+     was right at the time; the client has since supplied a comp in caps and
+     asked for it. A deliberate reversal on instruction, recorded so nobody
+     quietly restores it. */
+  .reserve__title {
+    margin: clamp(20px, 5vw, 30px) 0 0;
+    font-family: "Cormorant Garamond", ui-serif, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: var(--res-title);
+    line-height: var(--res-lead);
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  .reserve__rule {
+    width: clamp(2.2rem, 4.5vw, 3.2rem);
+    height: max(1.5px, 0.099vw);
+    margin: clamp(18px, 4vw, 26px) 0 0;
+    border: 0;
+    background: var(--res-hair);
+  }
+
+  .reserve__body {
+    max-width: 34ch;
+    margin: clamp(20px, 4.4vw, 30px) 0 0;
+    font-weight: 300;
+    font-size: var(--res-body);
+    line-height: 1.9;
+    color: var(--menu-body);
+  }
+
+  /* ------------------------------------------------------------ the CTA */
+  /* The mechanism is unchanged: this still opens WhatsApp with the message
+     already written. Only the control's appearance follows the comp — an
+     outlined rectangle with a label and an arrow, where the old one carried a
+     drawn WhatsApp glyph and a second line inside the box. */
+
+  .reserve__cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 6vw, 34px);
+    width: min(100%, 19rem);
+    margin-top: clamp(26px, 6vw, 38px);
+    padding: clamp(15px, 3.6vw, 20px) clamp(20px, 4.4vw, 28px);
+    /* Square, where the menu's CTA is a pill: against a curved photograph and
+       a hairline rule, the one straight-edged shape is what gives the column
+       its spine. It is also what the comp draws. */
+    border: max(1.5px, 0.12vw) solid var(--res-gold);
+    text-decoration: none;
+    color: var(--menu-accent);
+    /* Matched to the fill's 520ms rather than the 420ms `.menu__cta` uses.
+       Finishing early is what causes the dip: the lettering reaches cream while
+       the ink is still short of the right edge. */
+    transition: color 520ms var(--ease-quiet),
+                border-color 520ms var(--ease-quiet);
+  }
+
+  .reserve__cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--menu-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  /* Tracking leaves a space after the final letter, which sits the lettering
+     half of it left of centre. Half the tracking back squares it up — the same
+     correction `.menu__cta` makes. */
+  .reserve__ctalbl {
+    font-size: var(--res-ctalbl);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .reserve__arrow {
+    flex: none;
+    width: clamp(22px, 5.4vw, 28px);
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 520ms var(--ease-quiet);
+  }
+
+  .reserve__cta:hover,
+  .reserve__cta:focus-visible { color: var(--cream); border-color: var(--menu-ink); }
+
+  .reserve__cta:hover::before,
+  .reserve__cta:focus-visible::before { transform: scaleX(1); }
+
+  .reserve__cta:hover .reserve__arrow,
+  .reserve__cta:focus-visible .reserve__arrow { transform: translateX(22%); }
+
+  .reserve__cta:active { transform: translateY(1px); }
+
+  .reserve__cta:focus-visible {
+    outline: 1.5px solid var(--menu-ink);
+    outline-offset: 5px;
+  }
+
+  /* Beneath the box, not inside it. Inside, the control becomes two lines and
+     the comp's clean single line is lost; beneath, the button is exactly the
+     comp's and the guest still learns where the tap goes before making it.
+     --menu-accent rather than --res-gold: this is text, so it needs 4.5:1. */
+  .reserve__ctasub {
+    margin: clamp(11px, 2.6vw, 15px) 0 0;
+    font-weight: 300;
+    font-size: var(--res-ctasub);
+    line-height: 1.5;
+    letter-spacing: 0.13em;
+    text-indent: 0.065em;
+    text-transform: uppercase;
+    color: var(--menu-accent);
+  }
+
+  /* ----------------------------------------------------- the two items */
+
+  .reserve__meta {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    width: 100%;
+    margin: clamp(34px, 8vw, 52px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reserve__metaitem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: clamp(20px, 5vw, 32px);
+  }
+
+  .reserve__metaitem + .reserve__metaitem {
+    padding-right: 0;
+    padding-left: clamp(20px, 5vw, 32px);
+  }
+
+  /* The comp's divider fades out toward the bottom rather than ruling the full
+     height — it reads as a seam between two columns, not as a table. */
+  .reserve__metaitem + .reserve__metaitem::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: max(1px, 0.08vw);
+    background: linear-gradient(to bottom,
+      var(--res-hair) 6%,
+      rgba(212, 173, 126, 0) 92%);
+  }
+
+  .reserve__icon {
+    display: block;
+    width: var(--res-icon);
+    height: var(--res-icon);
+    fill: none;
+    stroke: var(--menu-accent);
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reserve__metalbl {
+    margin-top: clamp(13px, 3vw, 18px);
+    font-size: var(--res-metalbl);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+    color: var(--menu-ink);
+  }
+
+  .reserve__metaval {
+    margin-top: clamp(9px, 2.2vw, 13px);
+    font-weight: 300;
+    font-size: var(--res-metaval);
+    line-height: 1.65;
+    color: var(--menu-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reserve__img        { animation: none; }
+    .reserve__cta,
+    .reserve__cta::before,
+    .reserve__arrow      { transition: none; }
+    .reserve__cta:active { transform: none; }
+  }
+
+  /* ---- side by side, on the comp's measured proportions ---------------- */
+  /* Every length below is a multiple of one unit, --u, so the left column is a
+     single aspect-locked block: change --u and the whole thing scales with the
+     comp's measured ratios intact. 1u is 1% of the comp's width.
+
+     Measured, the column stands 48.1u of ink tall — 72.2% of the comp's height
+     at 0.6667u per percent. Capping --u at 1.62svh is therefore what holds it
+     inside 78% of the viewport, leaving 11% of air above and below. It clears
+     the screen by re-scaling and re-centring the whole block with every ratio
+     intact, never by compressing the vertical rhythm, which is the one move
+     that would actually read as cramped.
+
+     Below roughly 640px of viewport height the 8.6px floor takes over and the
+     section is allowed to run past one screen rather than shrink the body copy
+     out of legibility.
+
+     The photograph needs none of this arithmetic: it is full-bleed and its clip
+     is expressed in fractions of its own box. */
+  @media (min-width: 1000px) {
+    .reserve {
+      --u: max(8.6px, min(1vw, 1.62svh));
+
+      flex-direction: row;
+      align-items: center;
+      min-height: 100svh;
+    }
+
+    /* 38% is chosen, not measured: the curve's leftmost point is 43.88% of the
+       section, so a box starting here gives the clip 5.9% of clearance and lets
+       object-fit work on something near the visible shape's own proportions
+       instead of on the whole section. `make-reserve-path.mjs` bakes this number
+       into both paths — change it there, not here. */
+    .reserve__fig {
+      position: absolute;
+      inset: 0 0 0 38%;
+      width: auto;
+      aspect-ratio: auto;
+    }
+
+    .reserve__frame { clip-path: url(#reserve-curve); }
+    .reserve__img   { object-position: 62% 47%; }
+
+    .reserve__ringpath--tall { display: none; }
+    .reserve__ringpath--wide { display: block; }
+
+    /* Vertically centred on the section's own axis rather than pinned to the
+       comp's y-positions. The comp leaves its bottom 22.7% to a vertical
+       Japanese lockup and a contour texture, neither of which is being built;
+       holding its offsets without them would leave a fifth of the section empty
+       at the foot and read as an unfinished page.
+
+       Centred by `align-items` on the section, not by `top: 50%` and a
+       translate. A transform moves the paint but not the layout box, so the
+       translated version leaves the section's scrollHeight 240px past its
+       clientHeight — which is exactly the reading used to prove nothing is
+       being silently clipped by `overflow: hidden`. Centring in flow keeps that
+       check honest. */
+    .reserve__copy {
+      position: relative;
+      margin-left: 6.5%;                 /* the comp's own left margin */
+      width: calc(31 * var(--u));
+      padding: 0;
+    }
+
+    .reserve__eyebrow { font-size: calc(0.78 * var(--u));
+                        gap: calc(1.35 * var(--u)); }
+    .reserve__eyebrow::after { width: calc(6.4 * var(--u));
+                               height: max(1px, calc(0.07 * var(--u))); }
+
+    /* Sized by ink WIDTH, not by the comp's font-size: Cormorant Garamond runs
+       about a fifth narrower than the didone the comp is set in, so matching
+       its size lands "YOUR TABLE" short by that much. Solved against the comp's
+       measured 29.56u and verified in the browser, not estimated. */
+    .reserve__title  { margin-top: calc(4.12 * var(--u));
+                       font-size: calc(5.06 * var(--u));
+                       line-height: calc(5.47 * var(--u)); }
+    .reserve__rule   { margin-top: calc(1.48 * var(--u));
+                       width: calc(2.54 * var(--u));
+                       height: max(1.5px, calc(0.1 * var(--u))); }
+    /* Leading is set as a length in --u, not a multiple of font-size, so the
+       comp's measured line pitch holds even where a px floor has overridden the
+       font-size — which is what keeps the block's height exactly proportional
+       to --u, and the one-screen arithmetic reliable rather than approximate. */
+    .reserve__body   { margin-top: calc(2.18 * var(--u));
+                       font-size: max(12px, calc(1.04 * var(--u)));
+                       line-height: calc(2.0 * var(--u));
+                       /* Measured off the font, not the block, so the paragraph
+                          holds the same characters-per-line when the 12px floor
+                          takes over and stays three lines either way instead of
+                          spilling to a fourth. */
+                       max-width: calc(22.6 * var(--res-body)); }
+
+    .reserve__cta    { margin-top: calc(3.4 * var(--u));
+                       width: calc(20.44 * var(--u));
+                       gap: calc(2.2 * var(--u));
+                       padding: calc(1.42 * var(--u)) calc(1.9 * var(--u)); }
+    .reserve__ctalbl { font-size: max(11px, calc(0.92 * var(--u))); }
+    .reserve__arrow  { width: calc(1.85 * var(--u)); }
+    .reserve__ctasub { margin-top: calc(1.15 * var(--u));
+                       font-size: max(9.5px, calc(0.68 * var(--u)));
+                       line-height: calc(1.1 * var(--u)); }
+
+    .reserve__meta      { margin-top: calc(2.39 * var(--u));
+                          grid-template-columns: calc(16.96 * var(--u)) auto; }
+    .reserve__metaitem  { padding-right: calc(2.4 * var(--u)); }
+    .reserve__metaitem + .reserve__metaitem { padding-left: calc(2.4 * var(--u));
+                                              padding-right: 0; }
+    /* Sized on the DRAWN mark, not the box: both glyphs sit inside about 69%
+       of their 24-unit viewBox, so matching the comp on box size lands the
+       ink a third small. 2.5u of box puts 1.72u of stroke on the page
+       against the comp's measured 1.76u. */
+    .reserve__icon      { width: calc(2.5 * var(--u));
+                          height: calc(2.5 * var(--u)); }
+    .reserve__metalbl   { margin-top: calc(0.8 * var(--u));
+                          font-size: max(9.5px, calc(0.72 * var(--u))); }
+    .reserve__metaval   { margin-top: calc(0.72 * var(--u));
+                          font-size: max(11px, calc(0.95 * var(--u)));
+                          line-height: calc(1.62 * var(--u)); }
+  }
+
+  /* Tablet. The phone's clamps all reach their ceiling well before 820px, so
+     left-aligned type that fills a 390px screen fills less than half of this
+     one and strands 400px of bare ground down the right flank. The block is
+     scaled up rather than centred: centring would break the left-aligned
+     editorial column the comp is built on, and the column is what the section
+     is. Every ceiling below is raised in proportion, so the rhythm is the same
+     block read larger — never one element grown to plug a gap. */
+  @media (min-width: 640px) and (max-width: 999px) {
+    .reserve {
+      --res-eyebrow:  clamp(0.76rem, 1.15vw, 0.9rem);
+      --res-title:    clamp(3.4rem, 8.4vw, 4.9rem);
+      --res-body:     clamp(1.04rem, 1.5vw, 1.18rem);
+      --res-ctalbl:   clamp(0.86rem, 1.2vw, 0.98rem);
+      --res-ctasub:   clamp(0.7rem, 0.95vw, 0.78rem);
+      --res-metalbl:  clamp(0.7rem, 0.95vw, 0.8rem);
+      --res-metaval:  clamp(0.9rem, 1.25vw, 1.02rem);
+      --res-icon:     clamp(27px, 3.6vw, 34px);
+    }
+
+    .reserve__fig  { aspect-ratio: 3 / 2; }
+    .reserve__copy { padding-inline: 9%; }
+    .reserve__body { max-width: 42ch; }
+    .reserve__cta  { width: min(100%, 26rem); }
+    .reserve__meta { max-width: 34rem; }
+    .reserve__metaitem { padding-right: clamp(28px, 6vw, 46px); }
+    .reserve__metaitem + .reserve__metaitem {
+      padding-left: clamp(28px, 6vw, 46px);
+      padding-right: 0;
+    }
+  }
+  /* ================================================================ ending
+
+     The closing frame. Measured from the reference crop (1320x619), which
+     is a dark frame; the ground here is cream instead, so every value that
+     described "light ink on dark" is inverted to the same perceptual
+     weight rather than copied as a number.
+
+       ground luminance          7.7
+       wordmark ink width        880 / 1320 = 66.67% of viewport width
+       wordmark peak luminance   16.7  → delta +9 over the ground
+       nav gaps                  34px and 35px = 2.58% of width, even
+       nav cap height            ~10px → ~11px type = 0.83% of width
+       nav luminance             ~110 resting, 254 hovered
+       wordmark → nav            16px = 1.21% of width
+       nav → copyright           20px = 1.52% of width
+
+     The +9 delta is the whole brief: the wordmark has to be present and
+     almost not there. On a dark ground that is 3.6% white; on cream it is
+     roughly 4.5% ink, because the same delta costs a different alpha when
+     the ground is at the other end of the range. The value below was set
+     by measuring the render, not by choosing a number that sounded right.
+     ==================================================================== */
+
+  .ending {
+    /* The mark no longer matches the reference's width, and that is the
+       point. The reference's wordmark is a script: ascenders and descenders
+       make its ink 24.5% as tall as it is wide. Letterspaced caps have only
+       cap height, so at the reference's matched 66.9% width they came out
+       14% as tall — correct on the measurement and visibly short of its
+       vertical presence. Reaching that ratio honestly would need caps
+       1595px wide on a 1440px screen, so width is spent instead: the mark
+       runs to ~92% of the viewport, which is as large as it can be and
+       still read as MISONO rather than as a cropped M and O. */
+    --end-mark:   clamp(4.4rem, 19.9vw, 20rem);
+    /* The last 15% of height comes from the block, not the size — see
+       .ending__mark. */
+    --end-stretch: 1.15;
+    /* The reference's three links span 195 of 1320 = 14.77% of the
+       viewport, with 2.58% between them. Size and tracking were fitted
+       together to that span, and it closed at 0.16em — the hero wordmark's
+       own tracking, which is where it should have started. The reference's
+       per-word widths are not usable: its nav is dim, small and JPEG-
+       compressed, and the measured widths move with the threshold, so only
+       the total span and the even gaps are trustworthy. */
+    --end-link:   max(10.5px, 0.76vw);
+    --end-note:   max(9.5px, 0.72vw);
+    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the three links  */
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Substantial, not endless, and no taller than the mark can fill. The
+       mark scales with width; the block would otherwise scale with height,
+       and on a portrait tablet that split put a 123px mark inside a 704px
+       block — 17.5% against the desktop's 33%, which is the vertical
+       presence draining out exactly where there is most room for it. The
+       52vw term ties the block back to the axis the mark is sized on. It
+       binds only where the viewport is tall relative to its width: at
+       1440x900 and 1280x720 the svh term still wins, and 44rem still caps
+       a large desktop. */
+    min-height: min(72svh, 44rem, 52vw);
+    /* No inline padding on the section. At this size the mark is wider than
+       a 7.18%-inset content box, and an overflowing nowrap line does not
+       centre — text-align puts its start at the content edge and lets the
+       whole overflow run off the end side, which walked the mark 54px
+       right. The nav carries its own inset instead; nothing else here comes
+       near an edge. */
+    padding: clamp(72px, 12vw, 160px) 0 clamp(28px, 2.05vw, 44px);
+    /* No rule, no border: the reservation section is the same cream and the
+       two are meant to meet without a seam. What separates them is a two-
+       step deepening across the height of this block — far too small to
+       read as a band, just enough that the page settles rather than ending
+       on the same flat value it has held for three sections. */
+    background: linear-gradient(180deg, var(--cream) 0%, #FAF5F1 100%);
+    color: var(--menu-ink);
+    font-family: Jost, ui-sans-serif, system-ui, sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* The wordmark is not redrawn. Same family, weight and tracking as
+     .hero__name, including the negative right margin that cancels the
+     trailing letter-space — without it the block centres on its box and
+     lands 0.08em left of true. */
+  .ending__mark {
+    margin: 0;
+    font-family: "Cormorant Garamond", Cormorant, 'Cormorant Fallback', Georgia, serif;
+    font-weight: 300;
+    font-size: var(--end-mark);
+    /* Cormorant's caps measure 0.653em, so the line box is set to exactly
+       that. The box then *is* the ink, and every gap below is a real
+       ink-to-ink measurement instead of one padded by half-leading — at
+       this size the default leading was putting 22px of invisible air
+       under the mark and walking the nav out of position. */
+    line-height: 0.653;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+    color: rgba(47, 27, 25, 0.045);
+    user-select: none;
+    /* Once the mark is as wide as the screen allows, height is the only
+       axis left. A 1.15 vertical scale thickens Cormorant's horizontal
+       hairlines by 15% against unchanged stems — at 4.5% alpha that is
+       below the threshold of anything you can see, and it buys 28px of
+       cap height that the size could not.
+
+       Anchored at the baseline, so the mark grows upward into the empty
+       cream and the 16px gap down to the nav holds without recalculation.
+       The transform is also outside layout, which is what keeps the block's
+       own height honest: the flex column still measures the unscaled box.
+
+       The 0.08em nudge is the other half of the centring: letter-spacing
+       adds a trailing space after the final O that the line box counts as
+       width, so centred text sits half a letter-space left of true. The
+       hero solves this with margin-right: -0.16em, which cannot work here —
+       the width is what overflows. Same correction, moved into the
+       transform where it costs no layout. */
+    transform: translateX(0.08em) scaleY(var(--end-stretch));
+    transform-origin: 50% 100%;
+  }
+
+  .ending__nav {
+    /* The reference's ink-to-ink gap is 16px = 1.21% of width. The link's
+       own tap padding and half-leading contribute ~7.6px of that, so the
+       margin carries the remainder. */
+    margin-top: clamp(8px, 0.68vw, 14px);
+    display: flex;
+    justify-content: center;
+    gap: var(--end-gap);
+    padding-inline: 7.18%;   /* the inset the section gave up, kept here */
+  }
+
+  .ending__link {
+    position: relative;
+    padding: 0.5em 0.15em;
+    font-size: var(--end-link);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    margin-right: -0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    /* The reference runs its links dim and takes them to full brightness on
+       hover. That relationship is kept; the resting value is not — lum 110
+       on its ground is about 3:1, and these are the page's last three
+       links. 6.5:1 resting, full ink on hover. */
+    color: var(--menu-body);
+    transition: color 220ms var(--ease-quiet);
+  }
+
+  /* The ink is ~11px tall, which is a 21px target with the padding. This
+     takes the hit area to 44px without entering layout — the ink gaps above
+     and below were measured off the reference and a taller box would walk
+     them apart. */
+  .ending__link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  /* Hairline underline, wiping out from the centre. Scale only, so it costs
+     no layout and nothing but a transform animates. */
+  .ending__link::after {
+    content: "";
+    position: absolute;
+    left: 0.15em;
+    right: calc(0.15em + 0.16em);
+    bottom: 0.35em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform 260ms var(--ease-quiet);
+  }
+
+  .ending__link:hover,
+  .ending__link:focus-visible     { color: var(--menu-ink); }
+  .ending__link:hover::after,
+  .ending__link:focus-visible::after { transform: scaleX(1); }
+
+  .ending__link:focus-visible {
+    outline: 1px solid var(--misono-indigo);
+    outline-offset: 4px;
+    border-radius: 1px;
+  }
+
+  .ending__link:active { transform: translateY(1px); }
+
+  .ending__note {
+    /* 1.52% of width. The reference sets this at roughly 2:1 against its
+       ground, which is understated to the point of unreadable; it is real
+       text, so it holds the body colour. */
+    margin: clamp(10px, 0.9vw, 18px) -0.22em 0 0;
+    font-size: var(--end-note);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--menu-body);
+  }
+
+  /* The three targets are ids the sections above already own — the brief
+     forbids touching them, and only .beyond and .reserve carry an id of
+     their own, so MENU aims at the menu heading. The offset keeps the
+     landing off the top edge of the viewport. */
+  #menu-heading, #beyond, #reserve { scroll-margin-top: clamp(24px, 5vh, 64px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ending__link,
+    .ending__link::after { transition-duration: 1ms; }
+  }
+
+  /* Phones. The desktop ratio already runs the mark to ~92% of the
+     viewport, so there is almost nothing left to give here — 20vw is the
+     same 92%, and anything past it starts cropping the M. The phone gets
+     its height from the stretch instead, pushed a little harder because a
+     390px screen has proportionally more empty cream to fill. The 72svh
+     minimum goes: on a phone the closing frame is as tall as its contents
+     and no taller. */
+  @media (max-width: 639px) {
+    .ending {
+      --end-mark: 20vw;
+      --end-stretch: 1.22;
+      min-height: 0;
+      padding-top: clamp(64px, 22vw, 108px);
+      padding-bottom: clamp(36px, 11vw, 56px);
+    }
+    .ending__nav { --end-gap: clamp(20px, 6.4vw, 34px); }
+  }
+
+  /* =====================================================================
+     PEACH ADAPTATION of the two transplanted sections.
+
+     The peach runs the whole page, so the copied blocks cannot stay on
+     cream. Nothing above is edited to achieve that — every change lives
+     here, after the copies, so the copies remain byte-identical to
+     index.html and can still be re-copied from it wholesale.
+
+     Both sections take their ground from var(--cream), so re-pointing that
+     one property at --ground moves them without touching a declaration.
+     Three things do not follow from it and are handled individually below.
+     ===================================================================== */
+
+  .reserve,
+  .ending {
+    --cream: var(--ground);
+  }
+
+  /* 1. The gold that bounds the WhatsApp button. index.html picked #B8813F
+        precisely because it clears 3:1 as a non-text boundary — on cream it
+        makes it by 0.18, at 3.18:1. The peach is darker, and that margin was
+        not there to spend: it falls to 2.81:1 and fails. Darkened until it
+        clears again with room, 3.26:1. --res-hair is untouched: it is only
+        ever decorative here (the rule, the ring), so no minimum applies to
+        it, and on the button's dark hover state it still reads at 7.8:1. */
+  .reserve {
+    --res-gold: #AC7634;
+  }
+
+  /* 2. The closing gradient's tail is a literal, so --cream cannot reach it.
+        The homepage deepens its foot by exactly (-2, -3, -4) across the
+        block — "far too small to read as a band, just enough that the page
+        settles". Same step applied to the peach rather than a new value
+        chosen by eye. Leaves the footer links at 6.2:1 at their dimmest. */
+  .ending {
+    background: linear-gradient(180deg, var(--ground) 0%, #F5E5DB 100%);
+  }
+
+  /* 3. The wordmark needed NO change, which is worth recording because it
+        looks like it should have. Its alpha is 0.045 and the homepage's
+        comment calls the resulting +9 luminance delta "the whole brief" —
+        but that delta is (ground - ink) x alpha, and ground-ink is within a
+        few points of the same on both grounds. Measured: 9,10,10 on cream
+        and 9,9,9 on the peach. Re-deriving it would have made it wrong. */
+</style>
+</head>
+<body>
+
+  <!-- ==================================================== the composition
+
+       Four photographs floating around a centred title. There is no header
+       here on purpose: the reference has none, and anything set into the
+       top-left corner crowds the upper-left frame, which is only 3.5% and
+       6.2% off the two edges. Navigation lives in the footer.
+       ================================================================== -->
+  <section class="flavors" aria-labelledby="flavors-title">
+    <div class="flavors__field">
+
+      <div class="flavors__title">
+        <p class="flavors__eyebrow">The Menu</p>
+        <h1 class="flavors__display" id="flavors-title">
+          <span>Exceptional</span>
+          <span>Flavors</span>
+        </h1>
+      </div>
+
+      <!-- Upper-left. The counter — the room's own craftsmanship, and the
+           darkest warm mass of the four. It holds the top-left the way the
+           reference's chef portrait does. -->
+      <figure class="frame frame--ul">
+        <div class="frame__plate">
+          <picture>
+            <source type="image/avif" sizes="(max-width: 900px) 40.2vw, 15.1vw"
+                    srcset="assets/img/r/hero-omakase-1717-280.avif 280w, assets/img/r/hero-omakase-1717-350.avif 350w, assets/img/r/hero-omakase-1717-1010.avif 1010w, assets/img/r/hero-omakase-1717-1270.avif 1270w, assets/img/r/hero-omakase-1717-1717.avif 1717w">
+            <source type="image/webp" sizes="(max-width: 900px) 40.2vw, 15.1vw"
+                    srcset="assets/img/r/hero-omakase-1717-280.webp 280w, assets/img/r/hero-omakase-1717-1717.webp 1717w">
+            <img class="frame__img"
+               src="assets/img/hero-omakase-1717.jpg"
+               alt="The omakase counter at Misono, a chef working behind the pass under low warm light."
+               width="900" height="1200" loading="eager" decoding="sync" fetchpriority="high">
+          </picture>
+        </div>
+        <figcaption class="frame__caption">The Counter</figcaption>
+      </figure>
+
+      <!-- Upper-right. Flame off the teppan. The second dark anchor: the two
+           upper frames carry the weight so the title can sit high between
+           them. Desaturated a touch — at full strength the orange is the
+           loudest thing on a cream page and it pulls the eye off the type. -->
+      <figure class="frame frame--ur">
+        <div class="frame__plate">
+          <picture>
+            <source type="image/avif" sizes="(max-width: 900px) 39.6vw, 14.9vw"
+                    srcset="assets/img/r/teppanyaki-flambe-270.avif 270w, assets/img/r/teppanyaki-flambe-340.avif 340w, assets/img/r/teppanyaki-flambe-410.avif 410w, assets/img/r/teppanyaki-flambe-500.avif 500w, assets/img/r/teppanyaki-flambe-670.avif 670w">
+            <source type="image/webp" sizes="(max-width: 900px) 39.6vw, 14.9vw"
+                    srcset="assets/img/r/teppanyaki-flambe-270.webp 270w, assets/img/r/teppanyaki-flambe-670.webp 670w">
+            <img class="frame__img"
+               src="assets/img/teppanyaki-flambe.jpg"
+               alt="Flame rising off the teppan as sauce hits searing wagyu."
+               width="900" height="1200" loading="eager" decoding="sync">
+          </picture>
+        </div>
+        <figcaption class="frame__caption">Teppanyaki</figcaption>
+      </figure>
+
+      <!-- Lower-left. Chirashi in the black bowl, shot on a white ground.
+           Cropped tight so the bowl fills the frame and reads as a dark
+           graphic circle — left loose, the white ground dissolves into the
+           cream and the frame disappears. -->
+      <figure class="frame frame--ll">
+        <div class="frame__plate">
+          <picture>
+            <source type="image/webp" sizes="(max-width: 600px) 48.7vw, (max-width: 900px) 52.7vw, 18.4vw"
+                    srcset="assets/img/r/chirashi-plate-340.webp 340w, assets/img/r/chirashi-plate-420.webp 420w, assets/img/r/chirashi-plate-610.webp 610w, assets/img/r/chirashi-plate-820.webp 820w, assets/img/r/chirashi-plate-1122.webp 1122w">
+            <img class="frame__img"
+               src="assets/img/chirashi-plate.webp"
+               alt="Chirashi in a black lacquer bowl: salmon, tuna, avocado, cucumber and wasabi around a dish of soy."
+               width="900" height="1200" loading="eager" decoding="sync">
+          </picture>
+        </div>
+        <figcaption class="frame__caption">Chirashi</figcaption>
+      </figure>
+
+      <!-- Lower-right. Salmon nigiri and ikura gunkan, close. The brightest
+           of the four, and shot on direct flash, so it takes the heaviest
+           correction of the set. -->
+      <figure class="frame frame--lr">
+        <div class="frame__plate">
+          <picture>
+            <source type="image/avif" sizes="(max-width: 600px) 51.6vw, (max-width: 900px) 57.3vw, 19.7vw"
+                    srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
+            <source type="image/webp" sizes="(max-width: 600px) 51.6vw, (max-width: 900px) 57.3vw, 19.7vw"
+                    srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+            <img class="frame__img"
+               src="assets/img/gallery/food7.jpg"
+               alt="Salmon nigiri and ikura gunkan close up, cucumber and radish alongside."
+               width="900" height="1200" loading="eager" decoding="sync">
+          </picture>
+        </div>
+        <figcaption class="frame__caption">Sashimi</figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- ========================================================== the carte
+
+       PLACEHOLDER CONTENT. Every dish name, note and price below is
+       invented to hold the layout. None of it has been confirmed by the
+       client. Replace the whole block when the real carte arrives — the
+       markup pattern is name / price, with a note only where a note earns
+       its place.
+       ================================================================== -->
+  <section class="carte" id="carte" aria-labelledby="carte-title">
+    <div class="carte__inner">
+
+      <header class="carte__head">
+        <p class="carte__eyebrow">Kitchen &amp; Counter</p>
+        <h2 class="carte__title" id="carte-title">The Carte</h2>
+        <p class="carte__note">
+          The counter changes with the market, so the omakase is written the morning
+          it is served. Everything else below is on every night.
+        </p>
+      </header>
+
+      <div class="carte__grid">
+
+        <section class="course course--wide" aria-labelledby="course-omakase">
+          <h3 class="course__name" id="course-omakase">Omakase</h3>
+          <div class="course__list">
+            <div class="dish">
+              <p class="dish__name">Nine Courses</p>
+              <p class="dish__price">KES 12,500</p>
+              <p class="dish__note">Seasonal sashimi, two hot plates, eight pieces of nigiri and a dessert. About two hours.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Fifteen Courses</p>
+              <p class="dish__price">KES 19,500</p>
+              <p class="dish__note">The full counter, cooked in front of you and paced to the room. Best taken early.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Wagyu Omakase</p>
+              <p class="dish__price">KES 24,000</p>
+              <p class="dish__note">Fifteen courses built around A5, finished on the teppan. Two guests minimum.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sake Pairing</p>
+              <p class="dish__price">KES 7,500</p>
+              <p class="dish__note">Five pours chosen against the menu on the night, poured as each course lands.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-sushi">
+          <h3 class="course__name" id="course-sushi">Sushi &amp; Sashimi</h3>
+          <div class="course__list">
+            <div class="dish"><p class="dish__name">Otoro Nigiri</p><p class="dish__price">KES 2,400</p></div>
+            <div class="dish"><p class="dish__name">Salmon Nigiri</p><p class="dish__price">KES 950</p></div>
+            <div class="dish"><p class="dish__name">Yellowtail Sashimi</p><p class="dish__price">KES 1,850</p></div>
+            <div class="dish"><p class="dish__name">Ikura Gunkan</p><p class="dish__price">KES 1,200</p></div>
+            <div class="dish"><p class="dish__name">Chirashi Bowl</p><p class="dish__price">KES 3,600</p></div>
+            <div class="dish"><p class="dish__name">Sashimi Moriawase</p><p class="dish__price">KES 5,200</p></div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-teppan">
+          <h3 class="course__name" id="course-teppan">Teppanyaki</h3>
+          <div class="course__list">
+            <div class="dish"><p class="dish__name">Wagyu A5</p><p class="dish__price">KES 8,900</p></div>
+            <div class="dish"><p class="dish__name">Lobster Tail</p><p class="dish__price">KES 6,400</p></div>
+            <div class="dish"><p class="dish__name">Hokkaido Scallops</p><p class="dish__price">KES 3,800</p></div>
+            <div class="dish"><p class="dish__name">Black Cod</p><p class="dish__price">KES 4,200</p></div>
+            <div class="dish"><p class="dish__name">Garlic Rice</p><p class="dish__price">KES 1,100</p></div>
+            <div class="dish"><p class="dish__name">Market Vegetables</p><p class="dish__price">KES 1,400</p></div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-small">
+          <h3 class="course__name" id="course-small">Small Plates</h3>
+          <div class="course__list">
+            <div class="dish"><p class="dish__name">Edamame, Sea Salt</p><p class="dish__price">KES 700</p></div>
+            <div class="dish"><p class="dish__name">Agedashi Tofu</p><p class="dish__price">KES 1,150</p></div>
+            <div class="dish"><p class="dish__name">Pork Gyoza</p><p class="dish__price">KES 1,300</p></div>
+            <div class="dish"><p class="dish__name">Chicken Karaage</p><p class="dish__price">KES 1,450</p></div>
+            <div class="dish"><p class="dish__name">Miso Soup</p><p class="dish__price">KES 650</p></div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-dessert">
+          <h3 class="course__name" id="course-dessert">Dessert</h3>
+          <div class="course__list">
+            <div class="dish"><p class="dish__name">Matcha Mochi</p><p class="dish__price">KES 950</p></div>
+            <div class="dish"><p class="dish__name">Yuzu Sorbet</p><p class="dish__price">KES 850</p></div>
+            <div class="dish"><p class="dish__name">Black Sesame Custard</p><p class="dish__price">KES 1,050</p></div>
+            <div class="dish"><p class="dish__name">Hojicha Ice Cream</p><p class="dish__price">KES 800</p></div>
+          </div>
+        </section>
+
+        <!-- Wide, because six courses in two columns leaves the last one
+             alone on the left with a hole beside it. Running the drinks
+             across the foot closes the block. -->
+        <section class="course course--wide" aria-labelledby="course-sake">
+          <h3 class="course__name" id="course-sake">Sake &amp; Whisky</h3>
+          <div class="course__list">
+            <div class="dish"><p class="dish__name">Junmai Daiginjo, glass</p><p class="dish__price">KES 1,800</p></div>
+            <div class="dish"><p class="dish__name">Nigori, glass</p><p class="dish__price">KES 1,400</p></div>
+            <div class="dish"><p class="dish__name">Sake Flight, three</p><p class="dish__price">KES 3,200</p></div>
+            <div class="dish"><p class="dish__name">Japanese Whisky, measure</p><p class="dish__price">KES 2,600</p></div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <!-- ==================================================== reservation ====
+       Rebuilt 2026-08-15 against `assets/img/inspooooo.png`. Spec:
+       docs/superpowers/specs/2026-08-15-reservation-redesign-design.md
+
+       PLACEHOLDERS — swap all of these together before launch:
+         · the wa.me number below is +254 700 000 000, invented
+         · the opening hours and the two cities were supplied by the client
+           in conversation and are not confirmed against anything; both are
+           claims a guest can hold the restaurant to
+       Photograph: Pexels 36352192 by Gül Işık, Kyoto. Pexels Licence —
+       commercial use, no attribution required.
+       ==================================================================== -->
+  <section class="reserve" id="reserve" aria-labelledby="reserve-title">
+
+    <!-- Both curves are generated by `make-reserve-path.mjs` from the tables
+         `measure-reserve-ref.mjs` prints. They live here rather than in the
+         page's sprite sheet so this block stays self-contained when it is
+         copied to menu.html and about.html. -->
+    <svg class="reserve__defs" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="reserve-curve" clipPathUnits="objectBoundingBox">
+          <path d="M0.6189 0C0.5905 0.0104 0.5569 0.0209 0.5337 0.0313C0.5106 0.0417 0.4959 0.0521 0.4802 0.0625C0.4644 0.0729 0.4506 0.0834 0.4392 0.0938C0.4278 0.1042 0.4186 0.1146 0.4119 0.125C0.4018 0.1406 0.3935 0.1563 0.3889 0.1719C0.3827 0.1927 0.3796 0.2136 0.3794 0.2344C0.3792 0.2552 0.3833 0.2761 0.3877 0.2969C0.3921 0.3177 0.4001 0.3386 0.4056 0.3594C0.4085 0.3705 0.415 0.3815 0.4131 0.3926C0.4115 0.4017 0.4203 0.4108 0.3952 0.4199C0.3916 0.4212 0.3365 0.4225 0.3269 0.4238C0.298 0.4277 0.2916 0.4316 0.2797 0.4355C0.2618 0.4414 0.2484 0.4472 0.2376 0.4531C0.2183 0.4635 0.202 0.474 0.1894 0.4844C0.1705 0.5 0.1546 0.5157 0.1432 0.5313C0.128 0.5521 0.1171 0.573 0.1095 0.5938C0.0999 0.6198 0.0921 0.6459 0.0916 0.6719C0.0911 0.6979 0.0953 0.724 0.1065 0.75C0.1177 0.776 0.1333 0.8021 0.1589 0.8281C0.1794 0.8489 0.2078 0.8698 0.245 0.8906C0.2729 0.9062 0.308 0.9219 0.3542 0.9375C0.385 0.9479 0.3924 0.9584 0.476 0.9688C0.5594 0.9792 0.7288 0.9896 0.8552 1L1 1L1 0Z"/>
+        </clipPath>
+        <!-- Stacked, the same silhouette becomes an arch: full width, curved
+             along the bottom, with the two lobes flattened into one bowl. -->
+        <clipPath id="reserve-arch" clipPathUnits="objectBoundingBox">
+          <path d="M0 0L1 0L1 0.8C0.86 0.905 0.7 0.968 0.53 0.962C0.36 0.956 0.17 0.9 0 0.885Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <figure class="reserve__fig">
+      <svg class="reserve__ring" viewBox="0 0 1 1" preserveAspectRatio="none"
+           aria-hidden="true" focusable="false">
+        <path class="reserve__ringpath reserve__ringpath--wide"
+              d="M0.6048 0C0.5758 0.0104 0.541 0.0209 0.5177 0.0313C0.4945 0.0417 0.4815 0.0521 0.4655 0.0625C0.4494 0.0729 0.4336 0.0834 0.4215 0.0938C0.4095 0.1042 0.4 0.1146 0.3931 0.125C0.3828 0.1406 0.3747 0.1563 0.37 0.1719C0.3638 0.1927 0.3605 0.2136 0.3605 0.2344C0.3605 0.2552 0.3656 0.2761 0.37 0.2969C0.3744 0.3177 0.3829 0.3386 0.3868 0.3594C0.3888 0.3705 0.3906 0.3815 0.3877 0.3926C0.3853 0.4017 0.3958 0.4108 0.371 0.4199C0.3675 0.4212 0.3126 0.4225 0.3027 0.4238C0.273 0.4277 0.2647 0.4316 0.2523 0.4355C0.2336 0.4414 0.2197 0.4472 0.2094 0.4531C0.1911 0.4635 0.1771 0.474 0.1663 0.4844C0.1501 0.5 0.1371 0.5157 0.1284 0.5313C0.1168 0.5521 0.1091 0.573 0.1053 0.5938C0.1006 0.6198 0.1008 0.6459 0.1029 0.6719C0.105 0.6979 0.1065 0.724 0.1177 0.75C0.1289 0.776 0.1496 0.8021 0.1702 0.8281C0.1867 0.8489 0.2002 0.8698 0.2292 0.8906C0.251 0.9062 0.2797 0.9219 0.3227 0.9375C0.3514 0.9479 0.3814 0.9584 0.4445 0.9688C0.476 0.974 0.5525 0.9792 0.6065 0.9844"/>
+        <path class="reserve__ringpath reserve__ringpath--tall"
+              d="M1 0.833C0.86 0.938 0.7 1.001 0.53 0.995C0.36 0.989 0.17 0.933 0 0.918"/>
+      </svg>
+      <div class="reserve__frame">
+        <picture>
+          <source type="image/avif" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
+                  srcset="assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
+          <source type="image/webp" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
+                  srcset="assets/img/r/reserve-interior-1150.webp 1150w, assets/img/r/reserve-interior-1400.webp 1400w">
+          <img class="reserve__img" src="assets/img/reserve-interior.jpg"
+             width="1400" height="1576"
+             alt="A dim Japanese dining room: dark wood tables set with ceramic
+                  dishes and vermilion lacquer cups, two small glass pendants
+                  lit warm above a counter, shoji screens behind." loading="lazy" decoding="async" fetchpriority="low">
+        </picture>
+      </div>
+    </figure>
+
+    <div class="reserve__copy">
+      <p class="reserve__eyebrow">Reserve</p>
+
+      <h2 class="reserve__title" id="reserve-title">Reserve<br>your table</h2>
+
+      <hr class="reserve__rule" aria-hidden="true">
+
+      <p class="reserve__body">A counter, a season, and a chef who decides the
+        order. Tell us when you would like to sit and how many are coming &mdash;
+        the evening is arranged from there.</p>
+
+      <a class="reserve__cta"
+         href="https://wa.me/254700000000?text=Hello%20Misono%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
+         target="_blank" rel="noopener">
+        <span class="reserve__ctalbl">Reserve now</span>
+        <svg class="reserve__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
+          <path d="M0.8 7h22.4M17.4 1.4 23.2 7l-5.8 5.6"/>
+        </svg>
+      </a>
+
+      <p class="reserve__ctasub">Opens WhatsApp &middot; message already written</p>
+
+      <ul class="reserve__meta">
+        <li class="reserve__metaitem">
+          <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="8.2"/>
+            <path d="M12 7.1V12l3.4 2"/>
+          </svg>
+          <span class="reserve__metalbl">Opening hours</span>
+          <!-- CONFIRMED BY THE CLIENT 2026-08-20, and this reverses the
+               2026-08-17 change. Between 17 and 20 August the site carried
+               "Nairobi 12:00-21:30 / Mombasa 12:00-21:00", taken from public
+               listings (misono.co.ke, EatOut, Foursquare) because those were
+               judged more likely to be current than a phrase remembered from
+               conversation. That judgement was wrong: asked directly, the
+               client confirmed the hours they gave on 2026-08-15 — one
+               schedule for both branches, noon to 11pm, every day.
+
+               The listings are therefore stale, not the brief. Worth
+               remembering the next time a public source disagrees with the
+               person who owns the restaurant.
+
+               Two lines, not three. The copy column is an aspect-locked block
+               of 48.1u of measured ink, verified to fit one screen from
+               1000x700 to 2560x1440; a third line changes that height and the
+               fit has to be re-solved. Both lines here are shorter than the
+               branch lines they replace, so the fit can only improve. -->
+          <span class="reserve__metaval">Monday &ndash; Sunday<br>12:00 &ndash; 23:00</span>
+        </li>
+        <li class="reserve__metaitem">
+          <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 21.2s6.3-5.9 6.3-10.5a6.3 6.3 0 1 0-12.6 0c0 4.6 6.3 10.5 6.3 10.5Z"/>
+            <circle cx="12" cy="10.6" r="2.4"/>
+          </svg>
+          <span class="reserve__metalbl">Location</span>
+          <span class="reserve__metaval">Nairobi &amp; Mombasa<br>Kenya</span>
+        </li>
+      </ul>
+    </div>
+
+  </section>
+
+<!-- ========================================================= ending ==== -->
+<footer class="ending">
+  <!-- Decorative repeat of the hero's h1. Hidden from assistive tech so the
+       brand name is not announced twice on the way out. -->
+  <p class="ending__mark" aria-hidden="true">MISONO</p>
+
+  <!-- All three now point at real pages, which is what the placeholder note
+       that used to sit above this block was waiting for. Contact went to
+       #reserve until 2026-08-17 — that was the site's only link INTO the
+       reservation block, so the booking CTA is now reached by scrolling
+       rather than by navigating. Noted in CLAUDE.md; it is a consequence of
+       the link change, not an oversight. -->
+  <nav class="ending__nav" aria-label="Footer">
+    <a class="ending__link" href="menu.html" aria-current="page">Menu</a>
+    <a class="ending__link" href="about.html">About</a>
+    <a class="ending__link" href="contact.html">Contact</a>
+  </nav>
+
+  <p class="ending__note">&copy; 2026 Misono</p>
+</footer>
+
+<script>
+/* The menu page's only script: it decides WHEN the entrance runs. What runs
+   is entirely in the `entrance` block of the stylesheet — one class here,
+   every transform derived from it there, same contract as about.html.
+
+   The observer, not a load handler, because the trigger is the section being
+   reached. On this page those very nearly coincide — .flavors is the first
+   thing in the body — but the callback still lands after the armed state has
+   had a paint, which is what a transition needs, and the section keeps
+   behaving correctly if anything is ever placed above it.
+
+   0.3, not 0. The section is a full viewport tall, so at any threshold near
+   zero it is already intersecting on the first frame no matter how far down
+   the page a reader is restored to; a third of it has to be on screen before
+   the composition starts assembling.
+
+   Then disconnect: this is an arrival, not a scroll effect. Coming back up
+   the page must not replay it. */
+(function () {
+  var flavors = document.querySelector('.flavors');
+  if (!flavors) return;
+
+  /* No observer, no choreography — hand it the finished state at once rather
+     than leaving the heading 280px behind the page forever. */
+  if (!('IntersectionObserver' in window)) {
+    flavors.classList.add('is-in');
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    flavors.classList.add('is-in');
+    io.disconnect();
+  }, { threshold: 0.3 });
+
+  io.observe(flavors);
+})();
+</script>
+
+<script>
+/* Deferred photography: wake a section's frames 1.5 viewports before it
+   arrives, so nothing is decoding at the moment it has to be on screen.
+   See apply-perf-shell.mjs. Degrades to plain native lazy with JS off. */
+(function () {
+  var imgs = document.querySelectorAll('img[data-warm]');
+  if (!imgs.length) return;
+  var wake = function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var im = list[i];
+      im.loading = 'eager';
+      im.fetchPriority = 'auto';
+      if (im.decode) im.decode().catch(function () {});
+    }
+  };
+  if (!('IntersectionObserver' in window)) return wake(imgs);
+  var groups = {};
+  for (var i = 0; i < imgs.length; i++) {
+    var k = imgs[i].getAttribute('data-warm');
+    (groups[k] = groups[k] || []).push(imgs[i]);
+  }
+  Object.keys(groups).forEach(function (sel) {
+    var host = document.querySelector(sel);
+    if (!host) return wake(groups[sel]);
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      wake(groups[sel]);
+    }, { rootMargin: '150% 0px 150% 0px' });
+    io.observe(host);
+  });
+}());
+</script>
+<script>
+/* prefetch-on-intent — Page transitions. Every internal link on this site goes to one of three
+   other documents, each ~25-50KB over the wire once brotli has had it, so
+   the whole cost of a navigation is one request that could just as easily
+   have happened while the reader was still deciding to click.
+
+   Intent, not idle. Prefetching all three on load would move ~120KB for a
+   reader who may only ever look at one page; prefetching on hover or on
+   touchstart buys most of the same latency back — the gap between "pointer
+   settles on a link" and "pointer-up" is 200-300ms typically, which is
+   more than enough here — and costs nothing for a reader who never aims at
+   one. Each href is fetched at most once.
+
+   Skipped entirely on Save-Data or a 2g connection: speculative bytes are
+   the first thing that should go when someone is paying for them. */
+(function () {
+  var c = navigator.connection;
+  if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
+  var done = {};
+  function warm(href) {
+    if (!href || done[href]) return;
+    var u;
+    try { u = new URL(href, location.href); } catch (e) { return; }
+    if (u.origin !== location.origin || u.pathname === location.pathname) return;
+    done[href] = 1;
+    var l = document.createElement('link');
+    l.rel = 'prefetch';
+    l.as = 'document';
+    l.href = u.href;
+    document.head.appendChild(l);
+  }
+  function onIntent(e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (a) warm(a.getAttribute('href'));
+  }
+  document.addEventListener('pointerover', onIntent, { passive: true, capture: true });
+  document.addEventListener('touchstart', onIntent, { passive: true, capture: true });
+  document.addEventListener('focusin', onIntent, { passive: true });
+}());
+</script>
+</body>
+</html>

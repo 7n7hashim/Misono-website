@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Misono">
+  <!--
+    Single-colour Misono mon on a transparent ground, for use over dark
+    surfaces. Same geometry as misono-mark.svg — see the provenance note
+    there: this is traced from a photograph of the printed logo and should
+    be checked against real artwork.
+  -->
+  <defs>
+    <path id="mm-petal" d="M50 50 C55 44 68 25 50 11 C32 25 45 44 50 50 Z"/>
+    <path id="mm-core"  d="M50 50 C54.3 46 54.3 42 50 37.5 C45.7 42 45.7 46 50 50 Z"/>
+  </defs>
+
+  <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+    <use href="#mm-petal"/>
+    <use href="#mm-petal" transform="rotate(90 50 50)"/>
+    <use href="#mm-petal" transform="rotate(180 50 50)"/>
+    <use href="#mm-petal" transform="rotate(270 50 50)"/>
+  </g>
+  <g fill="currentColor">
+    <use href="#mm-core"/>
+    <use href="#mm-core" transform="rotate(90 50 50)"/>
+    <use href="#mm-core" transform="rotate(180 50 50)"/>
+    <use href="#mm-core" transform="rotate(270 50 50)"/>
+  </g>
+</svg>

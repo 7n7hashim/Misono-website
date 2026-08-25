@@ -1,0 +1,1513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Misono — The art of Japanese dining</title>
+<meta name="description" content="Misono. Omakase in Nairobi — the art of Japanese dining.">
+<meta name="theme-color" content="#080D17">
+
+<!-- The Misono mon on its navy ground. Traced from the supplied photo of the
+     printed logo — see brand_assets/misono-mark.svg for provenance. -->
+<link rel="icon" href="brand_assets/misono-mark.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300&display=swap">
+
+<!-- Scene 1's still is the only image visible before video paints. -->
+<link rel="preload" as="image" href="assets/img/hero-1-slice.jpg" media="(min-width: 768px)">
+<link rel="preload" as="image" href="assets/img/hero-1-slice-tall.jpg" media="(max-width: 767px)">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   MISONO — hero
+
+   One full-screen scene at a time. Three clips run in sequence —
+   slicing → garnishing → serving → repeat — and the transition dips
+   through darkness rather than dissolving flatly: the outgoing
+   scene blurs and drifts back as a veil deepens over it, then
+   lifts on the incoming one. The lockup sits above every layer
+   and never fades, so MISONO holds while the film moves behind it.
+   ───────────────────────────────────────────────────────────── */
+
+:root{
+  /* Palette — indigo (ai / aizome), pitched down from the navy in the logo.
+     The footage is graded warm, so food reads warm against a cool stage. */
+  --ai:#080D17;        /* base: near-black indigo */
+  --kon:#101827;       /* elevated surface */
+  --gunjo:#3A5280;     /* the logo's navy */
+  --washi:#EDE7DC;     /* primary type: warm off-white, never #FFF */
+  --hai:#8A8177;       /* ash: micro-labels */
+  --shirogane:#A9A093; /* lifted ash: tagline, which sits over moving footage */
+
+  /* The veil as a bare triplet, so every scrim stop retunes from one place. */
+  --veil:8 13 23;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+
+  /* Transition timing. site.js reads these off the DOM, so the CSS and the
+     sequencer can never disagree about how long a crossfade takes. */
+  --hold:5000ms;
+  --trans:1200ms;
+
+  --track:.42em;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ai);
+  color:var(--washi);
+  font-family:'Jost',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ── Stage ─────────────────────────────────────────────────── */
+
+.hero{
+  position:relative;
+  height:100vh;
+  height:100svh;           /* avoids the mobile URL-bar jump */
+  min-height:34rem;
+  overflow:hidden;
+  background:var(--ai);
+  isolation:isolate;       /* contains the grain's blend mode */
+}
+
+.stage{position:absolute;inset:0;background:var(--ai)}
+
+/* ── Scenes ────────────────────────────────────────────────── */
+
+/* The resting state is also the *departing* state: a scene that loses
+   .is-active drifts back and blurs out on exactly the same curve it
+   arrived on. One class toggle drives both halves of the transition. */
+.scene{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transform:scale(1.06);
+  filter:blur(14px);
+  transition:
+    opacity var(--trans) var(--ease),
+    transform var(--trans) var(--ease),
+    filter var(--trans) var(--ease);
+}
+.scene.is-active{
+  opacity:1;
+  transform:scale(1);
+  filter:blur(0);
+}
+
+.scene video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  /* Held back until the clip can actually paint, so a scene never arrives
+     as a hole. Scene 1 shows its still underneath in the meantime. */
+  opacity:0;
+  transition:opacity 700ms var(--ease);
+  /* Drift lives on the video, not the scene, so it never fights the
+     transform the transition is animating. */
+  animation:drift 26s ease-in-out infinite alternate;
+}
+.scene video.is-painted{opacity:1}
+.scene:nth-child(2) video{animation-duration:31s;animation-delay:-9s}
+.scene:nth-child(3) video{animation-duration:23s;animation-delay:-5s}
+
+@keyframes drift{
+  from{transform:scale(1.02)}
+  to{transform:scale(1.07)}
+}
+
+/* Scene 1 shows its still until the video can paint, so the hero is never
+   an empty black box on first load. */
+.scene--first{
+  background-image:url('assets/img/hero-1-slice-tall.jpg');
+  background-size:cover;
+  background-position:center;
+}
+@media (min-width:768px){
+  .scene--first{background-image:url('assets/img/hero-1-slice.jpg')}
+}
+
+/* ── Veil: the constant darkening ──────────────────────────── */
+
+.veil{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  /* Each clip is already graded down at encode time, so this only shapes the
+     frame — it must not double-darken the footage into mud. */
+  background:
+    /* A soft pool right behind the lockup. Scenes 2 and 3 put their brightest
+       subject at frame centre, so the type needs a floor that does not depend
+       on what the footage happens to be doing at that moment. */
+    radial-gradient(50% 23% at 50% 50%,
+      rgb(var(--veil) / .50) 0%,
+      rgb(var(--veil) / .20) 64%,
+      rgb(var(--veil) / 0) 100%),
+    radial-gradient(125% 92% at 50% 50%,
+      rgb(var(--veil) / .14) 0%,
+      rgb(var(--veil) / .44) 56%,
+      rgb(var(--veil) / .78) 100%),
+    linear-gradient(to bottom,
+      rgb(var(--veil) / .48) 0%,
+      rgb(var(--veil) / .14) 26%,
+      rgb(var(--veil) / .34) 50%,
+      rgb(var(--veil) / .16) 74%,
+      rgb(var(--veil) / .60) 100%);
+}
+
+/* ── Dip: the darkness the transition passes through ───────── */
+
+/* Sits above the footage and below the lockup. This is what stops the
+   change of scene reading as a slideshow dissolve — the room goes dark
+   for a moment and comes back somewhere else. */
+.dip{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:radial-gradient(140% 100% at 50% 50%,
+    rgb(var(--veil) / .82) 0%,
+    rgb(var(--veil) / 1) 100%);
+}
+.dip.is-dipping{animation:dip var(--trans) var(--ease)}
+
+@keyframes dip{
+  0%{opacity:0}
+  42%{opacity:.58}
+  100%{opacity:0}
+}
+
+/* ── Grain: kills banding across the dark gradients ────────── */
+
+.grain{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.038;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+
+/* ── Navigation ────────────────────────────────────────────── */
+
+/* Above the dip, like the lockup — the chrome holds steady while the film
+   changes underneath it. Brand mark left, links right, both deliberately
+   small enough to read as chrome rather than content. */
+.nav{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:clamp(1.75rem,3.1vw,2.6rem) clamp(1.6rem,4vw,3.6rem);
+  animation:fade 1000ms var(--ease) 700ms both;
+}
+
+.nav-brand{
+  display:block;
+  line-height:0;
+  border-radius:2px;
+}
+.nav-brand .mon{
+  width:clamp(1.35rem,1.95vw,1.75rem);
+  opacity:.92;
+}
+.nav-brand:focus-visible{outline:1px solid var(--washi);outline-offset:.6rem}
+
+.nav-links{
+  display:flex;
+  gap:clamp(1.9rem,3.6vw,3.5rem);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+/* Nudged up from 9px so the chrome is easier to notice, but still well under
+   the wordmark — the centre lockup stays the focal point. */
+.nav-links a{
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.65rem;            /* 10.4px */
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:var(--shirogane);
+  text-decoration:none;
+  transition:color .4s var(--ease);
+}
+.nav-links a:hover,
+.nav-links a:focus-visible{color:var(--washi)}
+.nav-links a:focus-visible{outline:1px solid var(--washi);outline-offset:.55rem}
+
+/* ── Branding — fixed, and never part of a transition ──────── */
+
+.lockup{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:0 6vw;
+  pointer-events:none;
+}
+
+/* Masked rather than <img>: an SVG loaded through <img> is an isolated
+   document, so its currentColor would resolve to black instead of inheriting
+   the palette. This way the mark's colour still comes from the tokens. */
+.mon{
+  display:block;
+  aspect-ratio:1;
+  background-color:var(--washi);
+  -webkit-mask:url('brand_assets/misono-mark-mono.svg') center/contain no-repeat;
+          mask:url('brand_assets/misono-mark-mono.svg') center/contain no-repeat;
+}
+
+/* Drop-in point for the real wordmark: replace this <h1>'s text node with
+   <img src="brand_assets/logo.svg" alt="Misono"> and delete font-family,
+   letter-spacing and text-indent below. Do not recolour or redraw it. */
+/* Small on purpose. The scale here is chrome-like, not headline-like — the
+   footage is the hero and the wordmark sits quietly inside it, ringed by
+   negative space. ~66px at 1440, held under 70px on wider screens. */
+.wordmark{
+  margin:0;
+  font-family:'Marcellus',Georgia,serif;
+  font-weight:400;
+  font-size:clamp(2.05rem,4.6vw,4.3rem);
+  line-height:1;
+  text-transform:uppercase;
+  color:var(--washi);
+  letter-spacing:var(--track);
+  /* Cancels the trailing letter-space so the word stays optically centred. */
+  text-indent:var(--track);
+  text-shadow:0 2px 26px rgb(var(--veil) / .5);
+  animation:rise-word 1400ms var(--ease) both;
+}
+
+.tagline{
+  margin:1.6rem 0 0;
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.5625rem;          /* 9px */
+  letter-spacing:.42em;
+  text-indent:.42em;
+  text-transform:uppercase;
+  color:var(--shirogane);
+  /* Tight halo plus a wide one: at 9px over moving footage the close shadow
+     is what actually buys legibility, without lifting the colour or size. */
+  text-shadow:0 0 3px rgb(var(--veil) / .92), 0 1px 20px rgb(var(--veil) / .7);
+  animation:rise 1600ms var(--ease) 340ms both;
+}
+
+/* Floats up and opens its tracking as it settles — a film title card.
+   No overshoot, no scale. */
+@keyframes rise-word{
+  from{
+    opacity:0;
+    transform:translateY(26px);
+    letter-spacing:calc(var(--track) - .12em);
+    text-indent:calc(var(--track) - .12em);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+    letter-spacing:var(--track);
+    text-indent:var(--track);
+  }
+}
+@keyframes rise{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Scroll indicator ──────────────────────────────────────── */
+
+.scroll{
+  position:absolute;
+  left:50%;
+  bottom:2.4rem;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.9rem;
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.625rem;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:var(--hai);
+  text-decoration:none;
+  animation:fade 900ms var(--ease) 1100ms both;
+  transition:color .4s var(--ease);
+}
+.scroll:hover,.scroll:focus-visible{color:var(--washi)}
+.scroll:focus-visible{outline:1px solid var(--washi);outline-offset:.85rem}
+.scroll .line{
+  position:relative;
+  width:1px;
+  height:3rem;
+  overflow:hidden;
+  background:rgba(138,129,119,.28);
+}
+.scroll .line::after{
+  content:'';
+  position:absolute;
+  left:0;
+  width:1px;
+  height:40%;
+  background:var(--washi);
+  animation:travel 2.6s var(--ease) infinite;
+}
+@keyframes travel{
+  0%{transform:translateY(-100%);opacity:0}
+  18%{opacity:1}
+  78%{opacity:1}
+  100%{transform:translateY(250%);opacity:0}
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ── Phone ─────────────────────────────────────────────────── */
+
+@media (max-width:767px){
+  :root{--track:.30em}
+  .lockup{justify-content:flex-start;padding-top:40vh}
+  .wordmark{font-size:clamp(1.75rem,8vw,2.3rem)}
+  .tagline{margin-top:1.3rem;letter-spacing:.34em;text-indent:.34em}
+  .scroll{bottom:1.9rem}
+  /* Four items on a 390px screen: hold the type back to 9px so the row
+     never crowds the mark or wraps. */
+  .nav-links{gap:1rem}
+  .nav-links a{font-size:.5625rem;letter-spacing:.2em}
+  /* A phone shows one clip full-bleed with nothing beside it, so the lockup
+     has no dark margin to fall back on — the band behind it has to work
+     harder here than on a wide screen. */
+  .veil{
+    background:
+      radial-gradient(64% 20% at 50% 44%,
+        rgb(var(--veil) / .50) 0%,
+        rgb(var(--veil) / .20) 64%,
+        rgb(var(--veil) / 0) 100%),
+      radial-gradient(150% 76% at 50% 44%,
+        rgb(var(--veil) / .16) 0%,
+        rgb(var(--veil) / .46) 52%,
+        rgb(var(--veil) / .80) 100%),
+      linear-gradient(to bottom,
+        rgb(var(--veil) / .56) 0%,
+        rgb(var(--veil) / .20) 20%,
+        rgb(var(--veil) / .62) 38%,
+        rgb(var(--veil) / .62) 54%,
+        rgb(var(--veil) / .22) 72%,
+        rgb(var(--veil) / .70) 100%);
+  }
+}
+
+/* ── Static hero: reduced motion, or a headless screenshot ─── */
+
+/* site.js never starts the sequence in this state, so scene 1 simply holds.
+   Everything below just makes sure nothing is mid-animation. */
+.no-anim .nav,
+.no-anim .wordmark,
+.no-anim .tagline,
+.no-anim .scroll,
+.no-anim .scene video,
+.no-anim .scroll .line::after{
+  animation:none !important;
+}
+.no-anim .scene,
+.no-anim .scene video{transition:none !important}
+
+@media (prefers-reduced-motion:reduce){
+  .nav,.wordmark,.tagline,.scroll,.scene video,.scroll .line::after{
+    animation:none !important;
+  }
+  .scene,.scene video{transition:none !important}
+}
+
+@media (prefers-contrast:more){
+  .veil{
+    background:linear-gradient(to bottom,
+      rgb(var(--veil) / .78) 0%,
+      rgb(var(--veil) / .58) 26%,
+      rgb(var(--veil) / .70) 50%,
+      rgb(var(--veil) / .60) 74%,
+      rgb(var(--veil) / .86) 100%);
+  }
+  .tagline{color:#C2BAAF}
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MISONO — a unique experience
+
+   The hero's film keeps running here as a strip. Two rows shear
+   past each other in opposite directions and the edges dissolve
+   into the indigo, so it reads as one continuous gallery rather
+   than a row of cards. No JS: each track holds three identical
+   copies of the sequence and travels exactly one copy, so the
+   loop has no seam to catch.
+   ───────────────────────────────────────────────────────────── */
+
+/* Read in a single screen, so every vertical measure here is driven by viewport
+   *height*, not width — that is what makes it fit at 720, 900 and 1080 alike
+   rather than only at the size it was tuned on. min-height rather than height:
+   if a viewport is too short to hold the composition the section grows instead
+   of clipping the heading off the top. */
+.beyond{
+  position:relative;
+  isolation:isolate;        /* contains the grain's blend mode */
+  overflow:hidden;
+  min-height:100vh;
+  min-height:100svh;        /* avoids the mobile URL-bar jump, as the hero does */
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(2.5rem,7vh,5.5rem) 0;
+  /* A whisper of indigo light from above, so the heading sits in a lit
+     pocket instead of on flat black. Same radial language as the veil. */
+  background:
+    radial-gradient(70% 46% at 50% 0%,
+      rgba(58,82,128,.11) 0%,
+      rgba(58,82,128,.03) 46%,
+      rgba(58,82,128,0) 72%),
+    var(--ai);
+
+  /* Height-driven, so the composition scales with the screen it has to fit.
+     The lower bound also carries a width term: a copy of the sequence is
+     ~8.2x the tile height, and two copies must span the viewport or the loop
+     opens a gap. 6.3vw keeps that true on a wide, short window, where 28vh
+     alone would shrink the tiles too far. */
+  --tile-h:clamp(max(7rem,6.3vw),28vh,21rem);
+  --tile-gap:clamp(.35rem,.7vw,.625rem);
+  --marq-a:56s;
+  --marq-b:70s;
+}
+
+/* ── Heading ───────────────────────────────────────────────── */
+
+/* The head pattern — title, rule, copy, CTA — is shared with sections 3-5.
+   Those classes are added to these selectors rather than restated further
+   down, so the sections below can never drift away from this one. */
+.beyond-head,
+.sec-head{
+  text-align:center;
+  padding:0 clamp(1.6rem,5vw,3rem);
+}
+
+/* Held under the hero wordmark's 66px on purpose. This is a section title;
+   MISONO stays the largest thing on the page. */
+.beyond-title,
+.sec-title{
+  margin:0;
+  font-family:'Marcellus',Georgia,serif;
+  font-weight:400;
+  font-size:clamp(1.45rem,3.05vw,2.75rem);
+  line-height:1.24;
+  text-transform:uppercase;
+  color:var(--washi);
+  letter-spacing:.22em;
+  /* Cancels the trailing letter-space so the line stays optically centred. */
+  text-indent:.22em;
+}
+
+/* The one chromatic note in the section — the logo's navy, 28px of it. */
+.beyond-rule,
+.sec-rule{
+  width:1.75rem;
+  height:1px;
+  margin:clamp(.85rem,2.2vh,1.6rem) auto;
+  border:0;
+  background:var(--gunjo);
+}
+
+.beyond-copy,
+.sec-copy{
+  /* Sized so the sentence breaks on its own full stop rather than mid-clause. */
+  max-width:32.5rem;
+  margin:0 auto;
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.8125rem;       /* 13px */
+  line-height:1.95;
+  letter-spacing:.055em;
+  color:var(--shirogane);
+}
+
+/* ── The strip ─────────────────────────────────────────────── */
+
+.gal{
+  position:relative;
+  margin-top:clamp(1.35rem,4.5vh,3rem);
+}
+
+.gal-rows{
+  display:flex;
+  flex-direction:column;
+  gap:var(--tile-gap);
+}
+
+.gal-row{
+  overflow:hidden;
+  /* The strip dissolves into the indigo at both ends rather than being cut
+     by the viewport — film running through a gate, not a carousel. */
+  -webkit-mask-image:linear-gradient(90deg,
+    transparent 0,#000 7%,#000 93%,transparent 100%);
+          mask-image:linear-gradient(90deg,
+    transparent 0,#000 7%,#000 93%,transparent 100%);
+}
+
+.gal-track{
+  display:flex;
+  width:max-content;
+}
+
+/* margin-right rather than a flex gap: with `gap` the trailing edge of each
+   copy is half a gap short, so travelling exactly one copy would jump. */
+.gal-track img{
+  flex:none;
+  display:block;
+  height:var(--tile-h);
+  width:auto;
+  margin-right:var(--tile-gap);
+  /* Graded at encode time. No runtime filter on 54 moving tiles. */
+}
+
+.gal-row--a .gal-track{
+  will-change:transform;
+  animation:marq-a var(--marq-a) linear infinite;
+}
+.gal-row--b .gal-track{
+  will-change:transform;
+  animation:marq-b var(--marq-b) linear infinite;
+}
+
+/* Three identical copies, so one third is exactly one copy. */
+@keyframes marq-a{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(calc(-100% / 3),0,0)}
+}
+@keyframes marq-b{
+  from{transform:translate3d(calc(-100% / 3),0,0)}
+  to{transform:translate3d(0,0,0)}
+}
+
+/* ── The seam ──────────────────────────────────────────────── */
+
+/* Darkens the join so the ivory stays readable whatever passes behind it.
+   The hero's radial pool, reused at the one place type meets footage. */
+.gal-pool{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(44rem,84vw);
+  height:min(17rem,40vw);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,
+    rgb(var(--veil) / .90) 0%,
+    rgb(var(--veil) / .58) 44%,
+    rgb(var(--veil) / 0) 74%);
+}
+
+/* The hairline box, shared with sections 3-5. Positioning is not shared: the
+   strip's CTA is centred in the seam, the section CTAs sit in normal flow. */
+.gal-cta,
+.sec-cta{
+  padding:1.05rem 2.6rem;
+  /* Clear at rest: a hairline frame with the film running through it, so the
+     strip stays continuous behind the one piece of chrome that crosses it.
+     The seam pool below is what keeps the type legible without a fill. */
+  background:transparent;
+  color:var(--washi);
+  border:1px solid rgb(237 231 220 / .42);
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.6875rem;       /* 11px */
+  letter-spacing:.28em;
+  text-indent:.28em;
+  text-transform:uppercase;
+  text-decoration:none;
+  white-space:nowrap;
+  cursor:pointer;
+  -webkit-appearance:none;
+          appearance:none;
+  /* Outline is reserved for focus alone — a border would shift layout, and a
+     ring on hover as well as the fill would be two gestures where one will do. */
+  outline:1px solid transparent;
+  outline-offset:7px;
+  transition:
+    transform .5s var(--ease),
+    background-color .5s var(--ease),
+    border-color .5s var(--ease),
+    color .5s var(--ease),
+    outline-color .5s var(--ease);
+}
+
+.gal-cta{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+
+/* Fills to ivory and inverts the type. That flip is the whole hover. */
+.gal-cta:hover,
+.gal-cta:focus-visible,
+.gal-cta:active,
+.sec-cta:hover,
+.sec-cta:focus-visible,
+.sec-cta:active{
+  background:var(--washi);
+  border-color:var(--washi);
+  color:var(--ai);
+}
+.gal-cta:focus-visible,
+.sec-cta:focus-visible{outline-color:var(--washi)}
+
+/* Touch never reliably fires :hover, so a tap earns the fill on its own —
+   and on desktop the press settles the 1px lift back down. */
+.gal-cta:hover,
+.gal-cta:focus-visible{transform:translate(-50%,calc(-50% - 1px))}
+.gal-cta:active{transform:translate(-50%,-50%)}
+.sec-cta:hover,
+.sec-cta:focus-visible{transform:translateY(-1px)}
+.sec-cta:active{transform:none}
+
+/* ── Phone ─────────────────────────────────────────────────── */
+
+@media (max-width:767px){
+  /* A copy's width scales exactly with the tile height, so an unchanged
+     duration would already give the same *relative* speed as the desktop.
+     These are only nudged up, so the drift does not read as stalled on a
+     small screen — measured, not halved on instinct. */
+  /* Tuned on its own terms, not scaled down from the desktop. A phone spends
+     far more of its height on the heading (two lines) and the paragraph
+     (three), so the tiles take a smaller share of the screen than the
+     desktop's 28vh — otherwise the type and the strip fight for the same
+     space and the whole thing reads cramped. */
+  .beyond{
+    --marq-a:40s;
+    --marq-b:50s;
+    --tile-h:clamp(8rem,24vh,15rem);
+    padding:clamp(2rem,5.5vh,4rem) 0;
+  }
+  .beyond-rule{margin:clamp(.7rem,1.8vh,1.3rem) auto}
+  .gal{margin-top:clamp(1.1rem,3.5vh,2.5rem)}
+  .beyond-title{font-size:clamp(1.25rem,6.4vw,1.6rem);letter-spacing:.17em;text-indent:.17em}
+  .beyond-copy{font-size:.75rem;line-height:1.9}
+  .gal-cta,
+  .sec-cta{font-size:.625rem;padding:.95rem 2.05rem;letter-spacing:.24em;text-indent:.24em}
+  .gal-row{
+    -webkit-mask-image:linear-gradient(90deg,
+      transparent 0,#000 5%,#000 95%,transparent 100%);
+            mask-image:linear-gradient(90deg,
+      transparent 0,#000 5%,#000 95%,transparent 100%);
+  }
+}
+
+/* Static strip: reduced motion, or a headless screenshot. */
+.no-anim .gal-track{animation:none !important;will-change:auto}
+
+@media (prefers-reduced-motion:reduce){
+  .gal-track{animation:none !important;will-change:auto}
+  .gal-cta,
+  .sec-cta{transition:none !important}
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MISONO — sections 3-5 and the footer
+
+   The film continued as still frames. Each section is one lit form
+   in a dark room: the photograph is graded down at encode time and
+   its edges are dissolved by a mask, so nothing here reads as a
+   picture sitting in a box. Built from the supplied reference,
+   assets/video/design pages vid.mp4.
+
+   The head pattern's declarations are not repeated here — .sec-head,
+   .sec-title, .sec-rule, .sec-copy and .sec-cta are all carried on
+   the .beyond-* / .gal-cta rules above.
+   ───────────────────────────────────────────────────────────── */
+
+.sec{
+  position:relative;
+  isolation:isolate;        /* contains the grain's blend mode */
+  overflow:hidden;
+  background:var(--ai);
+}
+
+/* ── The photograph ────────────────────────────────────────── */
+
+/* Barely feathered, and only top and bottom. Measured against the reference:
+   its frames run clean off all four edges with no vignette at all — the
+   softness in them is the photograph's own falloff, not a mask. A 12-15%
+   feather on each side, which is where this started, put a dark oval frame
+   around every section and read as a filter. The sides are now untouched and
+   the horizontal edges get just enough to absorb a level mismatch where the
+   graded ground meets the page. */
+.plate{
+  --fade-top:4.5%;
+  --fade-bot:4.5%;
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,
+    transparent 0,#000 var(--fade-top),
+    #000 calc(100% - var(--fade-bot)),transparent 100%);
+          mask-image:linear-gradient(180deg,
+    transparent 0,#000 var(--fade-top),
+    #000 calc(100% - var(--fade-bot)),transparent 100%);
+}
+
+/* Oversized by --bleed at top and bottom, which is the room the parallax
+   travels in. Get this wrong and the frame's own edge slides into view. */
+.plate-img{
+  position:absolute;
+  left:0;
+  width:100%;
+  top:calc(var(--bleed) * -1);
+  height:calc(100% + var(--bleed) * 2);
+  object-fit:cover;
+  transform:translate3d(0,var(--p,0px),0);
+  will-change:transform;
+}
+
+/* Dust in the light. Sized 520px and translated exactly 520px, so the tile
+   wraps on itself and the drift has no seam. The layer is inset past the
+   section on every side so a moving edge can never enter the frame. */
+.dust{
+  position:absolute;
+  inset:-560px;
+  pointer-events:none;
+  opacity:.5;
+  background-repeat:repeat;
+  background-size:520px 520px;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%,rgb(237 231 220 / .55),transparent 55%),
+    radial-gradient(1px 1px at 47% 9%,rgb(237 231 220 / .40),transparent 55%),
+    radial-gradient(1.5px 1.5px at 78% 26%,rgb(237 231 220 / .48),transparent 55%),
+    radial-gradient(1px 1px at 31% 44%,rgb(237 231 220 / .35),transparent 55%),
+    radial-gradient(2px 2px at 63% 58%,rgb(237 231 220 / .30),transparent 55%),
+    radial-gradient(1px 1px at 88% 71%,rgb(237 231 220 / .42),transparent 55%),
+    radial-gradient(1.5px 1.5px at 19% 79%,rgb(237 231 220 / .38),transparent 55%),
+    radial-gradient(1px 1px at 55% 88%,rgb(237 231 220 / .45),transparent 55%),
+    radial-gradient(1px 1px at 71% 37%,rgb(237 231 220 / .28),transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 66%,rgb(237 231 220 / .33),transparent 55%),
+    radial-gradient(1px 1px at 6% 52%,rgb(237 231 220 / .36),transparent 55%),
+    radial-gradient(1px 1px at 94% 14%,rgb(237 231 220 / .30),transparent 55%);
+  animation:dust-drift 120s linear infinite;
+}
+@keyframes dust-drift{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-520px,520px,0)}
+}
+
+/* ── Reveal ────────────────────────────────────────────────── */
+
+/* Guarded on `scripting: enabled` rather than a class set by the script.
+   site.js is deferred, so a class would arrive after first paint and the
+   content would flash in before hiding. Where the query is unsupported the
+   page simply renders finished, which is the right way to fail. */
+@media (scripting: enabled){
+  /* 8px, not the 18px this started at. Tracked across the reference frame by
+     frame, its headings rise about 5.6px on a 1890px viewport while their
+     brightness goes from a third to full — the gesture is almost entirely a
+     fade, with just enough movement to give it a direction. An 18px slide
+     read as a different, busier animation. */
+  .reveal > *{
+    opacity:0;
+    transform:translateY(8px);
+    transition:
+      opacity 1100ms var(--ease) var(--d,0ms),
+      transform 1100ms var(--ease) var(--d,0ms);
+  }
+  .reveal.is-in > *{opacity:1;transform:none}
+
+  /* The other half of that gesture: the heading's tracking opens as it
+     arrives. Measured at 2.4% of the line's width over the same beat, which
+     is about .02em. The hero already does this to the wordmark — the same
+     move at chrome scale, on the same easing, is why the page reads as one
+     piece rather than a hero with sections bolted under it.
+     Letter-spacing is a layout property and this is the one place the page
+     animates one: a single line, once, on entry. */
+  .reveal .sec-title{
+    letter-spacing:.20em;
+    text-indent:.20em;
+    transition:
+      opacity 1100ms var(--ease) var(--d,0ms),
+      transform 1100ms var(--ease) var(--d,0ms),
+      letter-spacing 1400ms var(--ease) var(--d,0ms),
+      text-indent 1400ms var(--ease) var(--d,0ms);
+  }
+  .reveal.is-in .sec-title{letter-spacing:.22em;text-indent:.22em}
+
+  /* The rule and the copy follow the title rather than arriving with it —
+     the reference reads as one gesture settling, not four things appearing. */
+  .reveal > *:nth-child(2){--d:140ms}
+  .reveal > *:nth-child(3){--d:260ms}
+  .reveal > *:nth-child(4){--d:380ms}
+
+  /* Fields light left before right, at half the head's spacing. */
+  .reveal--form > *:nth-child(1){--d:0ms}
+  .reveal--form > *:nth-child(2){--d:60ms}
+  .reveal--form > *:nth-child(3){--d:120ms}
+  .reveal--form > *:nth-child(4){--d:180ms}
+  .reveal--form > *:nth-child(5){--d:240ms}
+  .reveal--form > *:nth-child(6){--d:300ms}
+  .reveal--form > *:nth-child(7){--d:360ms}
+  .reveal--form > *:nth-child(8){--d:420ms}
+}
+
+/* The CTA carries its own hover transform, so it is wrapped rather than
+   revealed directly — otherwise the two transforms fight over one property. */
+.sec-act{margin-top:clamp(1.6rem,4vh,2.6rem)}
+
+/* ── Head measure, tuned against the reference ─────────────── */
+
+/* Section 2's copy keeps its own 13px/1.95 — those are pinned by an earlier
+   decision and the section is not in scope. These three set their measure
+   from the reference instead, where the paragraph is a compact block under
+   the heading rather than an airy one. Measured off the recording as a share
+   of viewport width, which is the only way two different viewports compare:
+   its copy sets 29.3% wide at 1.29% line pitch; this page was setting 35.4%
+   at 1.76%, so the block was a fifth wider and a third looser. */
+.omakase .sec-copy,
+.craft .sec-copy{
+  max-width:27.5rem;
+  font-size:.75rem;         /* 12px */
+  line-height:1.62;
+}
+
+/* Their heading-to-copy gap measures 3.47% of viewport width; the rule's own
+   margins were carrying this to 4.10%. */
+.omakase .sec-rule,
+.craft .sec-rule,
+.reserve .sec-rule{margin-block:clamp(.7rem,1.7vh,1.15rem)}
+
+/* ── Section 3: Omakase, entrusted ─────────────────────────── */
+
+.omakase{
+  --bleed:96px;
+  min-height:100vh;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(3rem,9vh,6.5rem) 0;
+}
+
+/* Shapes the frame around the type without darkening the food any further —
+   the same division of labour as the hero's veil. */
+.omakase-veil{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(52% 34% at 50% 50%,
+      rgb(var(--veil) / .86) 0%,
+      rgb(var(--veil) / .44) 58%,
+      rgb(var(--veil) / 0) 100%),
+    radial-gradient(120% 88% at 50% 50%,
+      rgb(var(--veil) / 0) 0%,
+      rgb(var(--veil) / .34) 62%,
+      rgb(var(--veil) / .82) 100%);
+}
+
+.omakase .sec-head{position:relative}
+
+/* ── Section 4: Cut with intention ─────────────────────────── */
+
+/* Tall on purpose: the photograph needs runway to cross the type, which is
+   the whole section. At 100svh it would only ever be a backdrop. */
+.craft{
+  --bleed:180px;
+  min-height:165vh;
+  min-height:165svh;
+  padding:clamp(7vh,11vh,9rem) 0 0;
+}
+
+/* Starts a third of the way down the first screen and runs to the section's
+   foot. An earlier version anchored it to the foot at a fixed 118svh, which
+   left the whole first viewport empty above it — the section read as a
+   heading, then nothing, then a photograph. The frame has to be under the
+   type from the moment the type arrives. */
+/* A long fade at the head of this one. Section 3's frame bleeds off the top of
+   its own section so it has no upper edge to hide; this one begins a third of
+   the way down, and the slate's ground is a warmer dark than the page's
+   indigo — at the 4.5% the others use, the join showed as a band straight
+   across the section. The foot fades long for the same reason, and that is
+   also what carries this frame over into the reservation section: the
+   reference lets its photograph bleed across that join, and a dissolve does it
+   without the seam a second copy of the image left behind. */
+.craft .plate{top:34svh;--fade-top:17%;--fade-bot:20%}
+
+.craft .sec-head{position:relative}
+
+/* Keeps the type off the chopsticks without putting a panel behind it. */
+.craft-pool{
+  position:absolute;
+  left:50%;
+  top:0;
+  width:min(52rem,92vw);
+  height:min(30rem,46svh);
+  transform:translateX(-50%);
+  pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,
+    rgb(var(--veil) / .82) 0%,
+    rgb(var(--veil) / .48) 50%,
+    rgb(var(--veil) / 0) 76%);
+}
+
+/* ── Section 5: Reserve your table ─────────────────────────── */
+
+.reserve{
+  min-height:100vh;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(6rem,16vh,10rem) 0 clamp(3rem,8vh,5.5rem);
+}
+
+/* Section 4's frame is not repeated here. A second copy of it, faded in from
+   the top of this section, put a hard horizontal edge across the join — the
+   two crops do not line up, so the "continuation" announced itself as a seam.
+   Section 4's own feather already dissolves into this section's ground, which
+   is the same colour, and that carries the join on its own. */
+
+.reserve .sec-title{max-width:14em;margin-inline:auto}
+
+.res-form{
+  position:relative;
+  width:min(48rem,88vw);
+  margin:clamp(2.2rem,6vh,3.6rem) auto 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(.7rem,1.6vh,1rem);
+}
+
+.res-field{display:flex}
+.res-field--wide{grid-column:1 / -1}
+
+/* Labels are present and hidden. A placeholder is not a label: it leaves at
+   the first keystroke, and it is not what a screen reader announces. */
+.res-field label{
+  position:absolute;
+  width:1px;height:1px;
+  margin:-1px;padding:0;border:0;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
+.res-field input,
+.res-field select,
+.res-field textarea{
+  width:100%;
+  padding:1.05rem 1.15rem;
+  /* A lift off the ground, not a panel on it. Full --kon read as a row of
+     blue-grey boxes; the reference's fields are barely separable from the
+     page until the hairline catches them. */
+  background:#0C121E;
+  background:color-mix(in srgb,var(--kon) 52%,var(--ai));
+  color:var(--washi);
+  /* Square. The page has no rounded corner anywhere in it. */
+  border:1px solid rgb(237 231 220 / .12);
+  border-radius:0;
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.8125rem;
+  letter-spacing:.055em;
+  -webkit-appearance:none;
+          appearance:none;
+  outline:1px solid transparent;
+  outline-offset:2px;
+  transition:
+    border-color .4s var(--ease),
+    background-color .4s var(--ease),
+    outline-color .4s var(--ease);
+}
+.res-field textarea{
+  min-height:7.5rem;
+  resize:vertical;
+  line-height:1.8;
+}
+.res-field ::placeholder{color:var(--hai);opacity:1}
+
+.res-field input:hover,
+.res-field select:hover,
+.res-field textarea:hover{border-color:rgb(237 231 220 / .22)}
+
+/* Focus lands on the logo's navy — the same chromatic note the rule carries,
+   and the only place colour appears in the form. */
+.res-field input:focus-visible,
+.res-field select:focus-visible,
+.res-field textarea:focus-visible{
+  border-color:var(--gunjo);
+  background:#131C2E;
+  outline-color:rgb(237 231 220 / .5);
+}
+
+/* Drawn, not native: a system chevron would be the one piece of another
+   operating system's design language on the page. */
+.res-select{position:relative;flex:1}
+.res-select::after{
+  content:"";
+  position:absolute;
+  right:1.15rem;
+  top:50%;
+  width:.42rem;
+  height:.42rem;
+  margin-top:-.28rem;
+  border-right:1px solid var(--shirogane);
+  border-bottom:1px solid var(--shirogane);
+  transform:rotate(45deg);
+  pointer-events:none;
+}
+.res-field select{padding-right:2.6rem}
+.res-field select option{background:var(--kon);color:var(--washi)}
+
+.res-submit{
+  grid-column:1 / -1;
+  justify-self:center;
+  margin-top:clamp(1.2rem,3.5vh,2.2rem);
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+
+.foot{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:var(--ai);
+  /* Tall enough that the mark reads as a mark. At the footer's first height
+     the wordmark was clipped to a band of stems and the section looked like
+     an accident rather than a watermark. */
+  padding:clamp(7rem,19vh,11.5rem) clamp(1.6rem,4vw,3.6rem) clamp(2.4rem,5.5vh,3.4rem);
+  text-align:center;
+}
+
+/* A watermark, not a heading. At 6% it carries no typographic weight, so the
+   hero lockup is still the largest thing anyone actually reads — and it is
+   clipped by the footer box, as the reference's is.
+   It is the hero's lockup enlarged, not a second treatment of the name: same
+   uppercase, same --track. Set in mixed case it read as a different wordmark,
+   and the tittle on its "i" landed beside the nav looking like a stray dot. */
+.foot-mark{
+  position:absolute;
+  left:50%;
+  /* Sunk far enough that the nav crosses the letterforms rather than clearing
+     them — the mark is the ground the chrome sits on, not a line above it. */
+  bottom:-.06em;
+  transform:translateX(-50%);
+  margin:0;
+  font-family:'Marcellus',Georgia,serif;
+  font-weight:400;
+  font-size:clamp(3rem,13vw,15rem);
+  line-height:.8;
+  text-transform:uppercase;
+  letter-spacing:var(--track);
+  text-indent:var(--track);
+  white-space:nowrap;
+  color:var(--washi);
+  opacity:.06;
+  user-select:none;
+}
+
+.foot-nav{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:clamp(1.9rem,3.6vw,3.5rem);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+/* The hero nav's exact measure — this is the same chrome, at the other end. */
+.foot-nav a{
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.65rem;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:var(--shirogane);
+  text-decoration:none;
+  transition:color .4s var(--ease);
+}
+.foot-nav a:hover,
+.foot-nav a:focus-visible{color:var(--washi)}
+.foot-nav a:focus-visible{outline:1px solid var(--washi);outline-offset:.55rem}
+
+.foot-fine{
+  position:relative;
+  margin:clamp(1.8rem,4.5vh,2.8rem) 0 0;
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  font-size:.5875rem;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:var(--hai);
+}
+
+/* ── Phone ─────────────────────────────────────────────────── */
+
+@media (max-width:767px){
+  /* A phone spends most of its height on two lines of heading and three of
+     copy, so the sections give the photograph less and the type more. */
+  .omakase{--bleed:60px;padding:clamp(2.5rem,7vh,4rem) 0}
+  .craft{
+    --bleed:110px;
+    min-height:150vh;
+    min-height:150svh;
+  }
+  .craft .plate{top:40svh}
+  .craft-pool{height:min(24rem,40svh)}
+  .omakase .sec-title,
+  .craft .sec-title,
+  .reserve .sec-title{font-size:clamp(1.25rem,6.4vw,1.6rem);letter-spacing:.17em;text-indent:.17em}
+  .omakase .sec-copy,
+  .craft .sec-copy,
+  .reserve .sec-copy{font-size:.75rem;line-height:1.9}
+
+  /* One column: two 44px targets side by side on a 390px screen leaves each
+     of them too narrow to read its own placeholder. */
+  .res-form{grid-template-columns:1fr}
+  .res-field--wide{grid-column:auto}
+
+  .foot{padding-top:clamp(6rem,17vh,8.5rem)}
+  /* Tracking comes back to the hero's phone value so six letters at .42em do
+     not run off both sides of the screen. */
+  .foot-mark{font-size:clamp(2.2rem,15vw,4.5rem);letter-spacing:.3em;text-indent:.3em}
+  .foot-nav{gap:1.4rem}
+  .foot-nav a{font-size:.5625rem;letter-spacing:.2em}
+}
+
+/* Static page: reduced motion, or a headless screenshot. Unlike the hero —
+   whose still state is scene 1's frame — these sections have no meaningful
+   "before", so everything renders finished and only the movement stops. */
+.no-anim .reveal > *{opacity:1;transform:none;transition:none}
+.no-anim .plate-img{transform:none;will-change:auto}
+.no-anim .dust{animation:none}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal > *{opacity:1 !important;transform:none !important;transition:none !important}
+  .plate-img{transform:none !important}
+  .dust{animation:none !important}
+  .res-field input,
+  .res-field select,
+  .res-field textarea{transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<main>
+  <section class="hero" aria-label="Misono — the art of Japanese dining">
+
+    <!-- Decorative throughout: the film carries no information the lockup
+         does not already state. -->
+    <div class="stage" aria-hidden="true">
+      <div class="scene scene--first is-active">
+        <video muted playsinline preload="auto"
+               data-src="assets/video/hero-1-slice.mp4"
+               data-src-tall="assets/video/hero-1-slice-tall.mp4"></video>
+      </div>
+      <div class="scene">
+        <video muted playsinline preload="none"
+               data-src="assets/video/hero-2-plate.mp4"
+               data-src-tall="assets/video/hero-2-plate-tall.mp4"></video>
+      </div>
+      <div class="scene">
+        <video muted playsinline preload="none"
+               data-src="assets/video/hero-3-serve.mp4"
+               data-src-tall="assets/video/hero-3-serve-tall.mp4"></video>
+      </div>
+    </div>
+
+    <div class="veil" aria-hidden="true"></div>
+    <div class="dip" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-brand" href="#beyond" aria-label="Misono — home">
+        <span class="mon" aria-hidden="true"></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#beyond">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="lockup">
+      <h1 class="wordmark">Misono</h1>
+      <p class="tagline">The art of Japanese dining</p>
+    </div>
+
+    <a class="scroll" href="#beyond">
+      Scroll
+      <span class="line" aria-hidden="true"></span>
+    </a>
+
+  </section>
+
+  <section class="beyond" id="beyond" aria-labelledby="beyond-title">
+
+    <div class="beyond-head">
+      <h2 class="beyond-title" id="beyond-title">A unique experience</h2>
+      <hr class="beyond-rule" aria-hidden="true">
+      <p class="beyond-copy">Discover a symphony of flavors where ancient traditions
+        meet modern artistry. Each dish is a curated masterpiece, designed not just
+        to be eaten, but to be felt.</p>
+    </div>
+
+    <div class="gal">
+
+      <!-- One label for the whole strip. Each row is three copies of the same
+           nine dishes — announcing 27 tiles would be noise, not information. -->
+      <div class="gal-rows" role="img" aria-label="Dishes from the Misono kitchen">
+
+        <div class="gal-row gal-row--a">
+          <div class="gal-track">
+        <!-- copy 1 -->
+        <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="332" height="560">
+        <img src="assets/img/gallery/food3.jpg" alt="" width="672" height="560">
+        <img src="assets/img/gallery/food5.jpg" alt="" width="444" height="560">
+        <img src="assets/img/gallery/food8.jpg" alt="" width="638" height="560">
+        <img src="assets/img/gallery/food2.jpg" alt="" width="338" height="560">
+        <img src="assets/img/gallery/food6.jpg" alt="" width="562" height="560">
+        <img src="assets/img/gallery/food9.jpg" alt="" width="524" height="560">
+        <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560">
+        <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560">
+        <!-- copy 2 -->
+        <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="332" height="560">
+        <img src="assets/img/gallery/food3.jpg" alt="" width="672" height="560">
+        <img src="assets/img/gallery/food5.jpg" alt="" width="444" height="560">
+        <img src="assets/img/gallery/food8.jpg" alt="" width="638" height="560">
+        <img src="assets/img/gallery/food2.jpg" alt="" width="338" height="560">
+        <img src="assets/img/gallery/food6.jpg" alt="" width="562" height="560">
+        <img src="assets/img/gallery/food9.jpg" alt="" width="524" height="560">
+        <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560">
+        <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560">
+        <!-- copy 3 -->
+        <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="332" height="560">
+        <img src="assets/img/gallery/food3.jpg" alt="" width="672" height="560">
+        <img src="assets/img/gallery/food5.jpg" alt="" width="444" height="560">
+        <img src="assets/img/gallery/food8.jpg" alt="" width="638" height="560">
+        <img src="assets/img/gallery/food2.jpg" alt="" width="338" height="560">
+        <img src="assets/img/gallery/food6.jpg" alt="" width="562" height="560">
+        <img src="assets/img/gallery/food9.jpg" alt="" width="524" height="560">
+        <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560">
+        <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560">
+          </div>
+        </div>
+
+        <div class="gal-row gal-row--b">
+          <div class="gal-track">
+        <!-- copy 1 -->
+        <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560">
+        <img src="assets/img/gallery/food9.jpg" alt="" width="524" height="560">
+        <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="332" height="560">
+        <img src="assets/img/gallery/food6.jpg" alt="" width="562" height="560">
+        <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560">
+        <img src="assets/img/gallery/food3.jpg" alt="" width="672" height="560">
+        <img src="assets/img/gallery/food8.jpg" alt="" width="638" height="560">
+        <img src="assets/img/gallery/food5.jpg" alt="" width="444" height="560">
+        <img src="assets/img/gallery/food2.jpg" alt="" width="338" height="560">
+        <!-- copy 2 -->
+        <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560">
+        <img src="assets/img/gallery/food9.jpg" alt="" width="524" height="560">
+        <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="332" height="560">
+        <img src="assets/img/gallery/food6.jpg" alt="" width="562" height="560">
+        <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560">
+        <img src="assets/img/gallery/food3.jpg" alt="" width="672" height="560">
+        <img src="assets/img/gallery/food8.jpg" alt="" width="638" height="560">
+        <img src="assets/img/gallery/food5.jpg" alt="" width="444" height="560">
+        <img src="assets/img/gallery/food2.jpg" alt="" width="338" height="560">
+        <!-- copy 3 -->
+        <img src="assets/img/gallery/food7.jpg" alt="" width="564" height="560">
+        <img src="assets/img/gallery/food9.jpg" alt="" width="524" height="560">
+        <img src="assets/img/gallery/foodinspo1.jpg" alt="" width="332" height="560">
+        <img src="assets/img/gallery/food6.jpg" alt="" width="562" height="560">
+        <img src="assets/img/gallery/food4.jpg" alt="" width="510" height="560">
+        <img src="assets/img/gallery/food3.jpg" alt="" width="672" height="560">
+        <img src="assets/img/gallery/food8.jpg" alt="" width="638" height="560">
+        <img src="assets/img/gallery/food5.jpg" alt="" width="444" height="560">
+        <img src="assets/img/gallery/food2.jpg" alt="" width="338" height="560">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="gal-pool" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+
+      <!-- Drop-in point for the real menu URL. -->
+      <a class="gal-cta" href="#menu">Explore menu</a>
+
+    </div>
+
+  </section>
+
+  <!-- ── Section 3 ─────────────────────────────────────────────
+       One long warm form crossing a dark room. The photograph is
+       decorative: the head says everything it says. -->
+  <section class="sec omakase" id="omakase" aria-labelledby="omakase-title">
+
+    <div class="plate" aria-hidden="true">
+      <picture>
+        <source media="(max-width:767px)" srcset="assets/img/scene-omakase-tall.jpg">
+        <img class="plate-img" data-parallax=".55"
+             src="assets/img/scene-omakase.jpg" alt=""
+             width="1800" height="1350">
+      </picture>
+    </div>
+    <div class="dust" aria-hidden="true"></div>
+    <div class="omakase-veil" aria-hidden="true"></div>
+
+    <div class="sec-head reveal">
+      <h2 class="sec-title" id="omakase-title">Omakase, entrusted</h2>
+      <hr class="sec-rule" aria-hidden="true">
+      <p class="sec-copy">Omakase means to entrust. Place the evening in the chef's
+        hands and it is returned one course at a time, each shaped by what the
+        coast offered that morning.</p>
+      <!-- Wrapped: the reveal animates this, the CTA animates itself. -->
+      <div class="sec-act">
+        <!-- Drop-in point for the real menu URL. -->
+        <a class="sec-cta" href="#menu">Discover omakase</a>
+      </div>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+
+  </section>
+
+  <!-- ── Section 4 ─────────────────────────────────────────────
+       The head sits high and the photograph climbs past it. -->
+  <section class="sec craft" id="craft" aria-labelledby="craft-title">
+
+    <div class="plate" aria-hidden="true">
+      <picture>
+        <source media="(max-width:767px)" srcset="assets/img/scene-craft-tall.jpg">
+        <img class="plate-img" data-parallax="1"
+             src="assets/img/scene-craft.jpg" alt=""
+             width="1600" height="1800">
+      </picture>
+    </div>
+    <div class="craft-pool" aria-hidden="true"></div>
+
+    <div class="sec-head reveal">
+      <h2 class="sec-title" id="craft-title">Cut with intention</h2>
+      <hr class="sec-rule" aria-hidden="true">
+      <p class="sec-copy">A single cut decides everything that follows — how the
+        fish sits, how it yields, how it finishes. Nothing that reaches the
+        counter was improvised.</p>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+
+  </section>
+
+  <!-- ── Section 5 ───────────────────────────────────────────── -->
+  <section class="sec reserve" id="reserve" aria-labelledby="reserve-title">
+
+    <div class="sec-head reveal">
+      <h2 class="sec-title" id="reserve-title">Reserve your table</h2>
+    </div>
+
+    <!-- No action yet: the reservation endpoint is still a placeholder, like
+         the address and the hours. Wire `action`/`method` here. -->
+    <form class="res-form reveal reveal--form" novalidate>
+
+      <div class="res-field">
+        <label for="res-name">Name</label>
+        <input id="res-name" name="name" type="text" placeholder="Name"
+               autocomplete="name" required>
+      </div>
+
+      <div class="res-field">
+        <label for="res-phone">Phone</label>
+        <input id="res-phone" name="phone" type="tel" placeholder="Phone"
+               autocomplete="tel" required>
+      </div>
+
+      <div class="res-field">
+        <label for="res-email">Email</label>
+        <input id="res-email" name="email" type="email" placeholder="Email"
+               autocomplete="email" required>
+      </div>
+
+      <div class="res-field">
+        <label for="res-date">Date</label>
+        <!-- Text rather than type=date on purpose: the native picker arrives
+             with its own operating system's styling, which is the one thing
+             the drawn select chevron below exists to avoid. -->
+        <input id="res-date" name="date" type="text" inputmode="numeric"
+               placeholder="Date (dd/mm/yyyy)" autocomplete="off" required>
+      </div>
+
+      <div class="res-field res-select">
+        <label for="res-time">Time</label>
+        <select id="res-time" name="time" required>
+          <option value="" selected>Time</option>
+          <option>18:00</option>
+          <option>18:30</option>
+          <option>19:00</option>
+          <option>19:30</option>
+          <option>20:00</option>
+          <option>20:30</option>
+          <option>21:00</option>
+        </select>
+      </div>
+
+      <div class="res-field res-select">
+        <label for="res-seats">Seats</label>
+        <select id="res-seats" name="seats" required>
+          <option value="" selected>Seats</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8 or more</option>
+        </select>
+      </div>
+
+      <div class="res-field res-field--wide">
+        <label for="res-message">Message</label>
+        <textarea id="res-message" name="message"
+                  placeholder="Message (Special requests, allergies…)"></textarea>
+      </div>
+
+      <button class="sec-cta res-submit" type="submit">Book table</button>
+
+    </form>
+
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="foot-mark" aria-hidden="true">Misono</p>
+  <!-- Menu and About are still placeholders; Contact lands on the form. -->
+  <ul class="foot-nav">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#reserve">Contact</a></li>
+  </ul>
+  <p class="foot-fine">© 2026 Misono</p>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

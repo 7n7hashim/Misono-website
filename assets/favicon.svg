@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- The Misono mon, from brand_assets/misono-mark-mono.svg, flattened to one
+       file with no <use> and no currentColor, because a tab icon has no CSS
+       context to inherit a colour from. Ink is the menu-ink token #2F1B19 on
+       the site's own ground #F7E8DF.
+
+       NOTE: an XML comment may not contain a double hyphen, so the CSS custom
+       property is named in prose above rather than written out. Written the
+       obvious way, the file stops being well-formed XML and the browser shows
+       a broken-image icon with no console error and a clean 200 on the wire.
+
+       Like the mark it comes from, this is TRACED FROM A PHOTOGRAPH of the
+       printed logo and should be redrawn from real artwork before launch. -->
+  <rect width="100" height="100" rx="18" fill="#F7E8DF"/>
+  <g fill="none" stroke="#2F1B19" stroke-width="4" stroke-linejoin="round">
+    <path d="M50 50 C55 44 68 25 50 11 C32 25 45 44 50 50 Z"/>
+    <path d="M50 50 C56 55 75 68 89 50 C75 32 56 45 50 50 Z"/>
+    <path d="M50 50 C45 56 32 75 50 89 C68 75 55 56 50 50 Z"/>
+    <path d="M50 50 C44 45 25 32 11 50 C25 68 44 55 50 50 Z"/>
+  </g>
+  <path fill="#2F1B19" d="M50 50 C54.3 46 54.3 42 50 37.5 C45.7 42 45.7 46 50 50 Z"/>
+</svg>
