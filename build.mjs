@@ -134,6 +134,21 @@ for (const page of PAGES) {
   rows.push([page, Buffer.byteLength(src), buf.length, statSync(join(OUT, page + '.br')).size]);
 }
 
+/* A web manifest names its icons in JSON, which `referenced()` — an HTML
+   attribute scanner — cannot see. Left alone, the 192 and 512 tiles are the
+   one part of the icon set that never reaches dist, and nothing reports it:
+   the manifest copies fine and the pages all render, so the failure only
+   shows up when someone installs the site to a home screen. Follow them. */
+for (const a of [...assets]) {
+  if (!/\.webmanifest$/.test(a) || !existsSync(a)) continue;
+  let icons = [];
+  try { icons = JSON.parse(readFileSync(a, 'utf8')).icons ?? []; }
+  catch { console.log(`WARNING: ${a} is not valid JSON — its icons will not ship`); continue; }
+  for (const i of icons) {
+    if (i.src) assets.add(decodeURIComponent(i.src.replace(/^\.?\//, '')));
+  }
+}
+
 let assetBytes = 0;
 const missing = [];
 for (const a of [...assets].sort()) {

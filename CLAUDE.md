@@ -1,72 +1,151 @@
 # CLAUDE.md — Frontend Website Rules
 
-## Project: Misono
-High-end Japanese omakase restaurant in Kenya (Nairobi assumed — unconfirmed).
+## Project: Li's Chinese Restaurant
+A Chinese restaurant in Kenya with two branches. **Rebranded from Misono, a Japanese
+restaurant, on 2026-08-26** — the architecture was kept and everything else was replaced.
+Spec: `docs/superpowers/specs/2026-08-26-lis-rebrand-design.md`.
 
-A design exists and is being built on. The 2026-08-08 direction was cleared and moved
-to `_archive/`; everything since is new work, and `_archive/` is still not to be read
-for direction.
+**Every fact on this site is researched, not invented, and is listed with its source in
+that spec.** The short version, all read 2026-08-26 from Li's own site
+(`lischineserestaurantnairobi.co.ke`), its published menu and its Mombasa listing:
+
+| | |
+|---|---|
+| Mombasa — **the original** | Petrocity Plaza, 1st floor, Links Road, Nyali, 80112 · +254 799 402101 · Tue–Sun 11:00–21:00 |
+| Nairobi — the second | Petrocity, Limuru Road, Gigiri (QR74+JR2) · +254 746 815 106 · Tue–Sun 11:00–22:30 |
+| Both | closed Mondays |
+| Email | reservations@ / info@ / orders@ / careers@lischineserestaurantnairobi.co.ke |
+| People | Hari Khasu, Executive Chef · Morris Mativo, Manager |
+| Private dining | 2 VIP rooms, 12–15 covers — **Mombasa only**, confirmed there and nowhere else |
+| Services | reservations, takeaway, Uber Eats, full bar, free parking |
+| Socials | IG @lischineserestaurant · IG @lischinese (Msa) · X @LisChinese · TikTok @lischineserestaurantnrb |
+
+**The carte on `menu.html` is REAL** — 84 dishes with Li's own KSh prices, off the
+published menu. Nothing on that page is invented, which reverses what it used to be.
+
+**NEVER ASSERTED, and each for a reason:** no founding year for either branch (none is
+published — the site says only that Mombasa came first); no drive times or distances on
+the location cards; no single phone number presented as reaching both branches; no dish
+that is not on the real carte.
 
 ### The ground
-**The whole site is on a muted peach, `--ground #F7E8DF`.** It started on `menu.html`
-and was taken across to `index.html` on 2026-08-11. The cream it replaced is not a
-second ground and is not used anywhere — see the tokens table for what became of the
-`--cream` token.
+**The whole site is on a warm ivory, `--ground #F6EEE1`.** It replaced a muted peach with
+the rebrand: the ivory reads pink beside a deep red, and the red is the accent the whole
+palette now turns on. The `--cream` token is not a second ground — see the tokens table.
 
-The two exceptions are both full-viewport photographs, not grounds: the homepage hero
-and `about.html`'s opening. `body` stays on `--ink` behind each, deliberately — a
-failed image then leaves white type on black rather than white type on peach.
+The two exceptions are both full-viewport photographs, not grounds: the homepage hero and
+`about.html`'s opening. `body` stays on `--ink` behind each, deliberately — a failed image
+then leaves white type on black rather than white type on ivory.
 
-`about.html`'s statement section was built on `--ink` first, matching its reference,
-and moved to the peach on 2026-08-12; that is settled. **A photograph is the only
-reason to leave the peach.** Re-derive contrast per ground rather than carrying it
-across, and expect roughly four things per section not to follow from re-pointing the
-ground — on the statement they were the vignette's polarity, the grain's blend mode,
-the heading's text-shadows, and the gradient tails that are literals. The arithmetic
-for each is in that file, beside the declaration it belongs to.
-
+**A photograph is the only reason to leave the ivory.** Re-derive contrast per ground
+rather than carrying it across, and expect roughly four things per section not to follow
+from re-pointing the ground — on `about.html`'s statement they were the vignette's
+polarity, the grain's blend mode, the heading's text-shadows, and the gradient tails that
+are literals. The arithmetic for each is in that file, beside the declaration it belongs to.
 ### Pages
-- **`index.html`** — the homepage. Full-viewport photographic hero, then the teppanyaki
-  menu section, an about section (`#beyond`), a dish feature, reservations (`#reserve`),
-  and a closing footer nav. Every section below the hero is on the peach.
+- **`index.html`** — the homepage. Full-viewport photographic hero, then the wok section,
+  a sharing section (`#beyond`), the Peking duck feature, reservations (`#reserve`), and a
+  closing footer nav. Every section below the hero is on the ivory.
 
-  **The hero has a PORTRAIT crop of its own as of 2026-08-25**, keyed on aspect ratio
-  rather than width, because the aspect is what does the cropping. Desktop is untouched.
-  Three things are load-bearing:
+  **The hero has a PORTRAIT crop of its own**, keyed on aspect ratio rather than width,
+  because the aspect is what does the cropping. Desktop is untouched. Load-bearing:
+
+  **THE FRAME WAS WIDENED 2026-08-27, 1.874:1 → 1.60:1 (1717x1073).** The hero read as
+  too tightly cropped, and the zoom was compounding in THREE places at once — which is
+  why no single change fixed it: the bake threw away 20% of the source HEIGHT to make a
+  letterbox, CSS `cover` threw away another ~17% of the WIDTH on a 1.6:1 desktop box, and
+  the drift ran 1.03 → 1.065 on top. A reader saw ~78% of the photograph. **1.60:1 is
+  chosen rather than the source's native 1.50:1 for two reasons**: it matches a 1440x900
+  viewport exactly, so `cover` crops nothing there, and the full frame clips the chef's
+  forehead, which reads as a mistake. The crop's slack is taken entirely off the TOP
+  (`ay=1.0`), which is where that head crop is.
 
   - **On a portrait viewport the vertical half of `object-position` does NOTHING.**
-    `cover` scales this 1.874:1 frame to the short axis, which is the height, so the
-    frame shows 97.1% of its own height at every portrait size and only the x steers.
-    The old rule said `44% 56%` and the 56 had never had any effect — it read as a
-    decision for months. The visible slice is a quarter of the source width (23.9% at
-    390x844), so *which* quarter is the whole design.
+    `cover` scales this 1.60:1 frame to the short axis, which is the height, so the
+    frame shows ~97% of its own height at every portrait size and only the x steers.
+    The rule once said `44% 56%` and the 56 had never had any effect — it read as a
+    decision for months. The visible slice is 27.7% of the source width at 390x844
+    (23.9% before the widening), so *which* slice is still the whole design.
   - **A percentage anchor is aspect-stable, which is why one value serves every phone
-    and the tablet.** At `54.5%` the window's centre moves 53.4% → 53.6% as the slice
-    narrows from 38.8% (768x1024) to 20% (a foldable); a taller phone tightens around
-    the same composition instead of sliding off it. Do not add per-device values.
-  - **The wordmark sits at `top: 68%` on a phone — lower-middle, on the counter's own
-    shadow under the chef.** Judge type over a photograph on the **worst 12px tile**
-    under it, never on the mean: the mean is what says a wordmark lying across a row of
-    lit cups is comfortable at 10:1. Floors across every portrait size from 320x568 to
-    430x932 are 4.6 / 6.8 / 8.5 (name needs 3:1 at 40px, tagline 4.5:1, icons 3:1), and
-    they hold at both ends of the 42s drift — the crop is still moving while a reader
-    looks at it, so a position solved at 1.03 alone is solved for half the animation.
-  - **The bed under the block was re-CENTRED, not deepened, and that is the general
-    lesson.** Every hot tile in this composition is at the type's right end where the
-    lit cups are; moving the radial's peak from 42% to 48% of its box lifted the name's
-    floor 3.7 → 4.6:1 for 0.10 of extra alpha. Reach for the geometry before the depth
-    — at the 0.86 this once carried, the bed reads as a smudge laid over the photograph.
-  - **The block sat at 76%, down in the chairs, for one revision, because the tool was
-    measuring with the bed switched off.** Hiding `.hero__brand` to sample what is under
-    the type takes its `::before` with it, so every position reported as if it had no
-    bed and the whole 56–68% band looked unavailable at 2.7–3.6:1. When a measurement
+    and the tablet.** Do not add per-device values.
+  - **THE CROP IS A BALANCE, NOT A MAXIMUM, because the flame is both the photograph and
+    the contrast problem.** Re-solved to `50%` on 2026-08-26 for the new frame. Pushed
+    left far enough to be comfortable (20–44%) the phone gets a dark kitchen with a wok in
+    it and no fire at all; pushed right (the old 54.5%) the flame lands ON the wordmark and
+    the name measures 2.27:1 against a 3:1 floor. At 50% the flame is fully in frame and
+    every floor clears.
+  - **The wordmark sits at `top: 68%` on a phone.** Judge type over a photograph on the
+    **worst 12px tile** under it, never on the mean: the mean under the name at the old
+    crop was 17.4:1 while its worst tile was 2.27:1. Re-measured after the widening, at
+    SCALE=1.045 (the drift's far end, the worst case): **9.35 / 5.90 / 11.55** (name
+    needs 3:1, tagline 4.5:1, icons 3:1). **The wider frame IMPROVED two of the three
+    margins** against the 4.80 / 6.56 / 8.07 it replaces, because the flame is now a
+    smaller share of what a phone can see — widening a frame is a contrast move as well
+    as a composition one. 54% and 58% both fail now (tagline 5.13 and 3.70). The crop is
+    still moving while a reader looks at it, so a position solved at one zoom is solved
+    for half the animation.
+  - **`shoot-hero-mobile.mjs` candidates MUST carry their unit.** `50%`, never `50` —
+    a bare number is invalid CSS, the page's own rule governs instead, and every row of
+    the sweep comes back byte-identical. That is the same signature as the two-bed-
+    declarations trap below, and it is not the tool being broken. The tool also pins the
+    zoom itself (`SCALE`, default 1.03) rather than reading the page's 1.012, so its
+    readings are conservative by that difference.
+  - **The bed under the block: reach for the GEOMETRY before the depth.** Every hot tile
+    is at the type's right end, so the peak sits right of centre — moving it 48% → 54% is
+    the first move and the cheap one. But geometry alone was not enough for a frame with an
+    open flame in it: a flame is 250 of 255 and it moves, where the old frame's worst
+    feature was a row of lit cups. The phone bed went 0.44 → **0.64**, which is where the
+    floors come back to what this design has always held. 0.70 and 0.76 both clear by more
+    and were not taken: past ~0.7 the bed stops being a shadow and becomes a scrim, and at
+    0.86 it reads as a smudge laid over the photograph.
+  - **`EXTRA_CSS` on `shoot-hero-mobile.mjs` is how a bed is solved.** A crop and the bed
+    serving it have to be measured in one run or the numbers are not comparable. Editing
+    the page between runs works too, but note there are TWO bed declarations — the base
+    one and a phone override inside `@media (max-width: 640px) and (max-aspect-ratio: 4/5)`
+    — and below 640px it is the override that governs. Editing only the base one produces
+    a sweep where every candidate reports identical numbers.
+  - **The block sat at 76% for one revision because the tool was measuring with the bed
+    switched off.** Hiding `.hero__brand` to sample what is under the type takes its
+    `::before` with it, so every position reported as if it had no bed. When a measurement
     rules out most of the design space, check the instrument before accepting it.
-- **`menu.html`** — the menu page, built 2026-08-11. An editorial composition matched to
+- **`menu.html`** — the menu page. An editorial composition matched to
   `assets/img/menu isnpo.jpeg` (four portrait photographs floating around a heading
   centred on the viewport), then the carte, then the reservation section and the closing
   wordmark footer.
 
-  The opening composition gained a **3D entrance** on 2026-08-17 — the eyebrow, the two
+  **The carte is Li's REAL menu** — 84 dishes with real KSh prices across ten courses,
+  read off the published menu on 2026-08-26. Nothing on the page is invented, which
+  reverses what it used to be. Prices move; re-read before launch.
+
+  **The PRELOAD goes on `menu-duck`, and which frame carries it is MEASURED.** It sat on
+  `lis-hero` — `index.html`'s hero, carried across with the policy — where it is the
+  *smallest* of the four frames, 151px on a phone against `menu-seafood`'s 189. So the
+  page spent its one high-priority fetch on a frame that is not the LCP. Chrome reports
+  the LCP element here as **`menu-duck`**: not the largest by area, because the entrance
+  runs two seconds and LCP lands on whichever frame reaches full opacity first with real
+  area. **Re-measure with a throttled profile before moving it — the answer is not the
+  one geometry predicts.**
+
+  **This page's LCP is gated by its own entrance, not by bytes.** It sits at ~1.7–2.3s on
+  a throttled phone and barely moved when the preload was corrected, because the frames
+  are still fading in. Do not reach for byte reductions to move this number, and do not
+  shorten the choreography to chase it.
+
+  **The four opening frames get DEDICATED files (`menu-duck`, `menu-dimsum`,
+  `menu-seafood`, plus the hero), not marquee tiles.** Three of them reused a gallery tile
+  at first, which is what the design they replace did — but the tiles are 560px tall,
+  built for a marquee, and these frames paint into a 3:4 portrait slot needing up to 683
+  device px. `dish4-dimsum` topped out at 445 and was genuinely soft. The dedicated files
+  cost ~100KB on a mobile load and ~550ms of LCP on a throttled profile; the composition
+  is the first thing on the page and the LCP element, so it is worth it.
+
+  **Do not diagnose that with `naturalWidth`.** It is density-corrected once an `<img>`
+  has a srcset, so `paintedWidth * dpr / naturalWidth` reports ~3x on frames that are
+  perfectly served. Compare the CHOSEN RUNG'S REAL WIDTH ON DISK against the device
+  pixels the layout asks for. That false reading is what prompted the change; the change
+  was right anyway, but for one frame out of three.
+
+  The opening composition has a **3D entrance** — the eyebrow, the two
   display lines and the four frames arriving out of depth over about two seconds, on the
   house `.js` / `.is-in` + IntersectionObserver contract. It changes nothing about the
   layout: **every rest state is a true `transform: none`**, verified at 1440x900,
@@ -94,38 +173,44 @@ for each is in that file, beside the declaration it belongs to.
   - **The overshoot is not `y2`.** The peak of a `cubic-bezier(x1,y1,x2,y2)` sits around
     t=0.8 and well below y2: y2=1.12 peaks at 1.026 and y2=1.20 at 1.055. Solve it
     against the travel it drives rather than picking y2 by eye.
-- **`about.html`** — the about page, complete as of 2026-08-14. Seven sections, then the
-  transplanted reserve and ending blocks. The first four were built 2026-08-11/12 and
-  alternate dark photograph and peach so the page reads close / claim / wide / record;
+- **`about.html`** — the about page. Seven sections, then the transplanted reserve and
+  ending blocks. The first four alternate dark photograph and ivory so the page reads
+  close / claim / wide / record;
   the next two open out into pinned sequences and the seventh closes it:
   1. the **opening**, a full-viewport photograph matched to `assets/img/about inspo.jpeg`;
   2. the **statement** ("BOLD, UNIQUE, / AND / UNMATCHED / CULINARY / CRAFTSMANSHIP"),
      matched to `assets/img/abouttt page.jpeg`;
   3. the **plate**, one full-bleed photograph and nothing on it — no eyebrow, no caption,
      no scrim — with a scroll parallax;
-  4. the **figures**, four numbers on the peach with a count-up. This one is **76svh, not
+  4. the **figures**, four numbers on the ivory with a count-up. This one is **76svh, not
      100** — four numerals are ~150px of ink and a full viewport read unfinished rather
-     than generous.
+     than generous. **All four are now SOURCED** (2 restaurants, 150+ dishes, 30 ways
+     with seafood, 6 nights a week), counted off Li's own published menu and its
+     listings. The set they replace was invented outright and two of them — a seat count
+     and a course count — were claims a guest could turn up and check.
   5. the **chapters**, built 2026-08-13 and matched to `assets/img/scroll through for
-     about.png`. A pinned four-part scroll on the peach: a 3:4 photograph on the left, a
+     about.png`. A pinned four-part scroll on the ivory: a 3:4 photograph on the left, a
      text column, and a roman-numeral track whose height is **the photograph's height
      exactly** — that is the reference's alignment rule, not a coincidence. Spec at
      `docs/superpowers/specs/2026-08-13-about-chapters-design.md`; read it before
      touching the motion.
 
   6. the **experience**, built 2026-08-13 and matched to `assets/img/about line
-     scroll through.png`. A second pinned scroll (261svh) on the peach: an editorial
+     scroll through.png`. A second pinned scroll (261svh) on the ivory: an editorial
      masthead, then three 3:4 photographs at staggered heights with one continuous
      gold line drawn through all of them. Spec at
      `docs/superpowers/specs/2026-08-13-about-experience-design.md`.
 
-  7. the **ichie**, built 2026-08-14 and designed from scratch — no reference. The
-     page's closing beat: 一期一会, "one time, one meeting". A single screen on the
-     peach, **not pinned** (two pins back to back is already the limit), with two
+  7. the **reunion** (`.reunion`, renamed from `.ichie` with the rebrand), designed from
+     scratch — no reference. The page's closing beat: 团圆 *tuányúan*, the reunion
+     dinner, and by extension any table with everyone at it. A single screen on the
+     ivory, **not pinned** (two pins back to back is already the limit), with two
      photographic plates in one `perspective` box at opposite Z drifting at opposite
      rates off the shared `track()` loop. The 5% size difference between the plates
      is perspective doing its job, not a layout error. Its front plate is **the only
      landscape frame on the site** — that is what stops the pair reading as a pair.
+     The section carries NO service claim, deliberately: the version it replaces made
+     two, and both needed checking.
      Spec at `docs/superpowers/specs/2026-08-14-about-ichie-and-ending-design.md`.
 
   The page is now complete: ichie is followed by the transplanted reserve and ending
@@ -204,15 +289,15 @@ for each is in that file, beside the declaration it belongs to.
 - **`contact.html`** — the contact page, begun 2026-08-17 and **completed the same
   day**. **Seven sections**: a full-viewport photographic hero, then `.touch`
   ("GET IN TOUCH", an editorial two-column enquiry form), `.details` (PHONE and
-  EMAIL), the two location bands, the FAQ, and the transplanted reserve and
-  ending blocks. Everything below the hero is on the peach.
+  EMAIL), the two location bands, the FAQ (now EIGHT questions), and the transplanted reserve and
+  ending blocks. Everything below the hero is on the ivory.
 
   **The page is no longer a dead end, and that reverses a decision made earlier
   the same day.** It was built deliberately without a reserve block or a footer,
   so the topbar was the only way out; the locations work added both. Three
   consequences, none of them oversights:
 
-  - `:root` gained `--cream` — **not as a colour**, but as the hinge the peach
+  - `:root` gained `--cream` — **not as a colour**, but as the hinge the ivory
     adaptation block turns. `contact.html` now carries the site's **third**
     adaptation block; keep all three in step.
   - **`.details` is no longer the page's ending but keeps its closing gradient
@@ -358,7 +443,7 @@ for each is in that file, beside the declaration it belongs to.
 
   Its `:root` carries only the tokens it uses, and it **gained eight on
   2026-08-17**: `--ground`, `--menu-ink`, `--menu-body`, `--menu-accent`,
-  `--misono-indigo`, `--ease-settle`, `--ease-pop` — and later `--cream` with
+  `--li-red`, `--ease-settle`, `--ease-pop` — and later `--cream` with
   the transplant. The two eases are the instructive ones — they are declared in
   **`menu.html`'s** `:root` and read like site-wide tokens, and the first draft
   of the spec specified them without carrying them across. Used undefined they
@@ -382,12 +467,24 @@ for each is in that file, beside the declaration it belongs to.
     the painted rect against the content's, do not look at it.
   - **A field's underline is a UI component boundary, not decoration.** It is
     the only thing identifying where the control is, so WCAG 1.4.11 puts a 3:1
-    floor on it. `--res-hair` measures **1.74:1** and is documented
-    decorative-only; the rule takes `--res-gold` at 3.26:1. `.details` is
-    checked against **`#F5E5DB`** — the foot of its own closing gradient, which
-    is the binding ground on this page, not the flat peach. `--res-gold` clears
-    there by 0.17 and `--menu-accent` by 0.16; deepen that tail and both must
-    be re-derived.
+    floor on it. `--res-hair` measures **1.62:1** and is documented
+    decorative-only; the rule takes `--res-gold`, which clears at **3.75:1** on
+    the ivory. `.details` dropped its closing gradient in the 2026-08-18
+    rebuild, so `--ground` is the binding ground here — there is no tail left
+    to check against.
+  - **`.details` NAMES ITS TWO CELLS Reservations and Email**, and carries the
+    Nairobi line only. Li's two branches have two different numbers; each is on
+    its own location card below, where there is room for it. Cramming both into
+    a two-cell block is what makes a site claim one number reaches both.
+  - **THE EMAIL IS 45 CHARACTERS AND THAT IS A LAYOUT CONSTRAINT.**
+    `reservations@lischineserestaurantnairobi.co.ke` against the 26-character
+    address `.details__value`'s size was solved for. At 1440 it still leaves
+    516px of slack so desktop is untouched — but on a 390px phone it ran 94px
+    past the content box, and the base rule's `white-space: nowrap` turned that
+    into horizontal scroll for the whole document. The 639px block now wraps it
+    (`overflow-wrap: anywhere`, since an email has no space and this domain has
+    no hyphen) and drops it to 2.25tu. `verify-touch.mjs` reports it as
+    `email-slack`; watch that number if the address ever changes.
   - **`.touch` and `.details` ARE ONE COMPOSITION ON ONE GRID**, rebuilt
     2026-08-18. Treat them as a single design object; editing either alone is
     what produced every problem the rebuild fixed.
@@ -575,11 +672,11 @@ so the sprite is gone from `menu.html` and the dangling reference from `about.ht
 reservation block now reaches outside itself for nothing — its clip paths are declared in
 its own markup — and that is a property worth keeping.
 
-**Both files carry a peach adaptation block at the foot of the `<style>`, and they say
-the same things.** The copies are never touched to get onto the peach: they take their
+**Both files carry a ground adaptation block at the foot of the `<style>`, and they say
+the same things.** The copies are never touched to get onto the ivory: they take their
 ground from `var(--cream)`, and the block re-points that one property at `--ground`.
 Four things do not follow from it and are handled item by item — `--menu-body` and
-`--menu-accent` (below AA on peach at their cream values), `--res-gold` (fails 3:1),
+`--menu-accent` (below AA on ivory at their cream values), `--res-gold` (fails 3:1),
 the ending gradient's hardcoded tail, and, on `index.html` only, the dish hairlines.
 Each block also records that the closing wordmark's alpha correctly needs **no** change,
 because it looks like it should. **Put any future ground adaptation in those blocks,
@@ -589,30 +686,47 @@ Entries into `menu.html` from the homepage: both "Explore Menu" CTAs and the foo
 "Menu" link. Keep them pointed there.
 
 ### Design tokens
-Established in `index.html` and reused. Do not invent alternatives to these:
+Established in `index.html` and reused. Do not invent alternatives to these.
+**All re-derived against the ivory on 2026-08-26** — none was carried across from the
+peach, which is the standing rule.
 
 | token | value | ratio on the ground | note |
 |---|---|---|---|
-| `--ground` | `#F7E8DF` | — | the site's ground, both pages, every section |
-| `--ink` | `#0B0806` | — | behind the hero photograph only |
-| `--menu-ink` | `#2F1B19` | 13.6:1 | display type on the ground |
-| `--menu-body` | `#63504A` | 6.3:1 | body |
-| `--menu-accent` | `#99551C` | 4.8:1 | accent — eyebrows, rules, links |
-| `--res-gold` | `#AC7634` | 3.26:1 | non-text boundary, the WhatsApp button |
-| `--res-hair` | `#D4AD7E` | — | decorative only, no minimum applies |
-| `--misono-indigo` | `#3A5280` | — | the one measured brand value, from the logo photo |
-| `--ember` | `#C47026` | — | **declared but READ NOWHERE** — see below |
+| `--ground` | `#F6EEE1` | — | warm ivory. Every section, every page |
+| `--ink` | `#0B0806` | — | behind the two full-viewport photographs only |
+| `--menu-ink` | `#241A14` | 14.79:1 | display type |
+| `--menu-body` | `#6A574A` | 5.93:1 | body |
+| `--menu-accent` | `#A3221C` | 6.51:1 | the deep red — eyebrows, rules, links |
+| `--li-red` | `#A3221C` | 6.51:1 | same value, the FILL/focus role. White on it is 7.49:1 |
+| `--brand-red` | `#CD393E` | 4.29:1 | the measured logo red. **Device only — never type** |
+| `--res-gold` | `#9C7230` | 3.75:1 | non-text boundary |
+| `--res-hair` | `#D9B98A` | 1.62:1 | decorative only, no minimum applies |
 
-A token that is used but not defined **fails silently, and it has now happened twice on
-the same page in the same week.** `--menu-accent` was missing from `about.html`'s `:root`
+**THE ONE RULE THE WHOLE RE-SKIN TURNS ON: red is a LIGHT-ground colour here.**
+`--menu-accent` measures 6.51:1 on the ivory and **2.67:1 on `--ink`**. Anything that has
+to be read on a dark section takes gold or ivory instead. Reaching for the accent on a
+photograph is the mistake this palette makes available.
+
+`--brand-red` #CD393E is the red measured off the official `logo.jpg`. It clears the 3:1
+non-text floor and fails AA for body text. It colours the mark and nothing else.
+
+**The old token NAMES were kept as the values moved**, because there are ~1,400 `var()`
+call sites across four pages and renaming all of them to move a palette is how a rebrand
+breaks a layout. `--menu-*` and `--res-*` therefore no longer describe a menu or a
+reservation — they are the site's ink / body / accent / boundary / hairline roles.
+`--misono-indigo` is the one that *was* renamed, to `--li-red`, because it carried the
+old brand's name; it is the focus ring and the location pill's fill.
+
+A token that is used but not defined **fails silently, and it has happened twice on the
+same page in the same week.** `--menu-accent` was missing from `about.html`'s `:root`
 until the chapters section: every `var(--menu-accent)` was an invalid declaration, so type
 fell back to inherited ink and a rule that took the accent as its `background` did not
 draw at all. Then `--res-gold` was missing when the experience section became the first
-thing on the page to need a non-text boundary: the drawn line took it as `stroke` and the
-marks as `fill`, so the path and the rings inherited `stroke: none` and did not draw at
-all, while the dots fell back to SVG's default fill and came out **black** on the peach.
-Nothing errored and nothing logged either time. When a page starts using a token role it
-has not used before, check `:root` actually carries it.
+thing on the page to need a non-text boundary: the path and the rings inherited
+`stroke: none` and did not draw, while the dots fell back to SVG's default fill and came
+out **black** on the ground. Nothing errored and nothing logged either time. When a page
+starts using a token role it has not used before, check `:root` actually carries it.
+`verify-locale.mjs` now checks every `var()` in `contact.html` against `:root`.
 
 **The same class of failure, in a third form: `perspective` is inherited by nobody.** It
 applies to an element's **direct children** and stops, so a `translateZ` on a grandchild
@@ -622,143 +736,76 @@ and it does not look broken either; it looks like a decision. If a depth transfo
 projecting, check where the property is declared against where the transformed element
 actually sits in the tree before touching any numbers.
 
-`--ember` is **dead as of the 2026-08-17 audit**: `grep -c 'var(--ember)' *.html` returns
-zero across the whole site. It is declared in `index.html` and `about.html` and read by
-nothing. This file used to instruct that a reserve/ending transplant needed it — that was
-wrong, and `menu.html` had been disproving it for days. Do not add it to a `:root` on the
-strength of a note; check whether a token is actually read first. Left in place rather
-than deleted, since removing a declared-but-unused token is not worth a regression risk
-on four pages, but **do not treat it as a live token**.
+`--ember` was declared in two files and read by nothing on the site. **It was deleted
+with the rebrand**; `grep -c 'var(--ember)' *.html` had returned zero for weeks. Do not
+reintroduce a token on the strength of a note — check whether it is actually read.
 
-`--cream #FCF8F5` is **superseded and appears nowhere on any page as a colour.** The token still
-exists because it is the name the section CSS uses for "my ground", and re-pointing that
-one property is what moves a section onto the peach without editing it. Do not reach for
-it as a colour, and do not delete it either — it is the hinge both adaptation blocks turn.
+`--cream #FCF8F5` **appears nowhere on any page as a colour.** The token exists because it
+is the name the transplanted section CSS uses for "my ground", and re-pointing that one
+property is what moves those sections onto the ivory without editing them. Do not reach
+for it as a colour, and do not delete it — it is the hinge all three adaptation blocks turn.
 
 Type is **Cormorant Garamond** (display, 300/400) with **Jost** (utility, 300/400).
-Never pair anything else without being asked.
+Never pair anything else without being asked. `contact.html` also sets four glyphs of
+Simplified Chinese; **that stack is SC-first on purpose** — the Japanese faces it used to
+name all carry 联系我们, so nothing would have looked broken, but several of those
+characters have different regional glyph forms and a Chinese restaurant setting Chinese in
+Japanese shapes is an error only the people it matters to would notice.
 
-Contrast is re-derived per ground, not carried across. `--menu-ink` is the only one that
-survived the move to peach untouched — it clears 13.6:1 and had the room. The other
-three were re-derived: at their cream values they measure 5.66, 4.47 and 2.81 on the
-peach, so two fail AA and one fails the 3:1 it was chosen for. If the ground changes
-again, re-derive rather than carry; the peach blocks in both files show the arithmetic.
+### Still to confirm with the client
+Everything on this site is **researched from public sources, not client-confirmed.** The
+sources are listed in the rebrand spec. In priority order:
 
-### Still placeholder, pending real content
-Street address, phone, email, social links, **the entire carte on `menu.html`** (every
-dish, note and price is invented), and the reservation link.
+- **The two phone numbers and the email.** +254 746 815 106 (Nairobi, on the official
+  site) and +254 799 402101 (Mombasa, on its TripAdvisor listing);
+  reservations@lischineserestaurantnairobi.co.ke. Each branch carries its own number on
+  its own location card, which is why `.details` presents one number labelled
+  Reservations rather than implying one line reaches both.
+- **Whether the Nairobi number takes WhatsApp.** The reserve CTA on all four pages says
+  "Opens WhatsApp" and links `wa.me/254746815106`. The number is real; WhatsApp on it is
+  not verified, and if it is wrong the primary booking CTA is a dead end.
+- **The opening hours.** Both branches Tue–Sun from 11:00, closed Mondays; Nairobi to
+  22:30, Mombasa to 21:00. **The shared reserve block says only "Tuesday – Sunday /
+  Closed Mondays"** — it is byte-copied to four pages and cannot assert one branch's
+  closing time as the house's. The exact times live in the location bands and the FAQ.
+  **Those two must stay in step**; it is the same claim twice on one page and that pair
+  has drifted before.
+- **The private dining answer.** Mombasa's two rooms at 12–15 covers are in its listing.
+  Nairobi's private events are on Li's own site but no room or capacity is published, so
+  the FAQ says "takes enquiries" and stops. **Do not make it more confident.**
+- **The dietary answer.** Vegetarian breadth is countable off the real carte and is
+  stated plainly. **Halal, vegan and gluten-free are NOT confirmed for either branch**,
+  the answer says so in bold, and allergies go to a phone call. That is the honest
+  position, not a hedge — do not soften it.
+- **The prices.** Real as of 2026-08-26, but a menu moves. Re-read before launch.
 
-**`contact.html`'s enquiry form does not submit, by decision rather than
-oversight.** There is no backend on this site; `mailto:`, WhatsApp and a
-third-party form endpoint were all offered on 2026-08-17 and design-only was
-chosen. A handler cancels the submit event for one reason — a form with no
-action reloads the page and throws away everything a guest typed. **There is
-deliberately no success state**, because telling someone their message was sent
-when nothing was sent is worse than a button that visibly does nothing. To wire
-it up: give the `<form>` an action and delete that handler. Nothing else changes.
+**`contact.html`'s enquiry form does not submit, by decision rather than oversight.**
+There is no backend; `mailto:`, WhatsApp and a third-party endpoint were all offered and
+design-only was chosen. A handler cancels the submit event for one reason — a form with
+no action reloads the page and throws away everything a guest typed. **There is
+deliberately no success state**, because telling someone their message was sent when
+nothing was sent is worse than a button that visibly does nothing. To wire it up: give
+the `<form>` an action and delete that handler.
 
-**`contact.html`'s locations and FAQ are researched, not invented — but every
-claim in them still needs confirming.** All of it comes from public listings
-(`misono.co.ke`, EatOut, Foursquare, WanderBoat) on 2026-08-17:
+**Every photograph on the site is a placeholder and is flagged as one in the markup.**
+Li's own imagery is not available at usable resolution or licence. The frames are Pexels,
+matched dish by dish to dishes that are actually on Li's carte, and graded to the site's
+existing bands. Each one's markup comment names the single property a replacement has to
+have. The two location photographs matter most: a location band implies the picture IS
+the place, and neither is — Mombasa is the waterfront rather than Links Road in Nyali,
+Nairobi is Uhuru Park and the CBD, ~10km south of Gigiri.
 
-- **Mombasa is NYALI, not Shanzu — CONFIRMED 2026-08-20.** The original brief
-  said Shanzu; every listing found says Links Road, Nyali, a different suburb
-  roughly 6km south, and the client confirmed Nyali is correct. The heading,
-  copy and both marker cards on `contact.html` are built on it, as is the FAQ's
-  first answer. Settled — do not re-open it on the strength of the old brief.
-- **The founding dates**, 1995 Nairobi and 2006 Mombasa. The Nairobi copy
-  deliberately says "The first Misono opened in 1995. Today it sits at…" rather
-  than joining them: Foursquare places an earlier Misono in Woodley Estate, so
-  the founding date and the current address cannot be asserted as one
-  continuous fact. **Do not "improve" that into one fluent sentence** — the
-  fluent version asserts a continuity nothing supports.
-- **The card landmarks** — the Java House opposite, Nyali City Mall, The Green
-  House, Adams Arcade. **No card carries a distance or a drive time**, and none
-  should be added without a source: the reference's cards read "12 min drive ·
-  8 km", not one such figure is verifiable, and this is the page whose whole job
-  is telling people where the restaurant is.
-- **Two FAQ answers are load-bearing and must not be made more confident.**
-  Q6 (dietary): vegetarian selections are confirmed, including on the boats;
-  **halal, vegan and gluten-free are NOT, for either branch**, and the answer
-  sends allergies to a phone call on purpose. Q5 (private dining) names
-  **Nairobi and only Nairobi** — that room is confirmed; Mombasa's is not.
-- **The FAQ's hours must stay in step with the reservation block.** They are the
-  same claim made twice on the same page, and that claim contradicts the client.
+**The logo is a reconstruction.** The only artwork obtainable is a 150x150 JPEG on an
+opaque white square. See `brand_assets/README.md` for how the mark was rebuilt and why
+the wordmark is set in Cormorant rather than in the logo's own lettering. **Ask the
+client for vector artwork.**
 
-**`contact.html`'s two contact facts are new and unverified**, supplied from
-public listings on 2026-08-17: `+254 722 511229` (the Nairobi listing) and
-`restaurantmisono@gmail.com` (the Mombasa one). Confirm both alongside the
-invented `wa.me` number and the opening hours. **A second Mombasa number,
-`+254 722 530204`, appears in listings and is not yet used anywhere** — with two
-branches now named on the page, one number for both is a claim worth revisiting. **One claim to check in
-particular:** the reservation block on the other three pages says "Nairobi &
-Mombasa", and this page presents one number and one address as reaching both —
-a claim the site has not made anywhere before.
-
-**`contact.html`'s hero photograph** (`assets/img/contact-hero.jpg`, Pexels 19300593) is
-a placeholder and is flagged as one in that file's markup, for two reasons. Pexels
-supplies **no model release**, and an identifiable person on a restaurant's contact page
-reads as that restaurant's staff — a claim the photograph cannot support. It also reads
-Pan-Asian rather than distinctly Japanese: a rattan pendant, a painted mural, a
-dark-uniformed waiter, no counter and no teppan. It was chosen over frames that *were*
-unambiguously Japanese because those could not carry the heading. The composition depends
-on exactly one property of whatever replaces it — **a lit subject OFF centre, leaving the
-middle calm** — and on nothing else about the file.
-
-**The reservation section's two facts are new and unverified**, and because that block is
-copied to three pages they appear on the whole site at once:
-
-- **Opening hours — "Monday – Sunday / 12:00 – 23:00", CONFIRMED by the client
-  2026-08-20.** One schedule for both branches. This **reverses** the 2026-08-17 change,
-  when the site briefly carried "Nairobi 12:00–21:30 / Mombasa 12:00–21:00" taken from
-  public listings on the reasoning that a listing is more likely to be current than a
-  phrase remembered from conversation.
-
-  **That reasoning was wrong, and it is the lesson worth keeping.** Asked directly, the
-  client confirmed the hours they had given on 2026-08-15. The listings are stale, not
-  the brief. When a public source disagrees with the person who owns the restaurant, ask
-  them — do not quietly prefer the source and ship a fact you know they would dispute.
-
-  Keep it in step with the FAQ's hours answer on `contact.html`; that is the same claim
-  made twice on one page and the two have already drifted apart once.
-
-  Two shape constraints, both learned by measuring: the value must stay **two lines**
-  (the copy column is an aspect-locked 48.1u of measured ink verified to fit one screen
-  from 1000x700 to 2560x1440, and a third line changes that height), and it must not
-  wrap. Both current lines are shorter than the branch lines they replaced, so the fit
-  can only have improved.
-- **"Nairobi & Mombasa, Kenya".** Also supplied 2026-08-15, and it **supersedes the old
-  "city unconfirmed, Nairobi assumed"** — but it now asserts *two* locations, which
-  nothing else on the site does and which changes what "the counter" means on
-  `about.html`. Confirm before launch.
-
-Both sit beside the invented `wa.me` number `+254 700 000 000` in the section's own
-comment, so all three get swapped in one pass.
-
-Gone from the site with the 2026-08-15 rebuild, and therefore no longer pending: counter
-& table seating, parties up to eight, dinner Tuesday–Sunday, a reply within the hour.
-
-On `about.html` specifically, four things are written rather than supplied:
-
-- **The whole of the ichie section.** Written copy. No numbers in it, but two service
-  claims a guest could hold the restaurant to: that the fish is cut *after* you are
-  seated, and that the Teppan is taken back to bare steel between courses. Confirm both.
-
-- **The whole of the chapters section.** Every word of the four chapters is written copy.
-  No number appears in it on purpose, so there is nothing new to fact-check — but it
-  leans on **the counter** twice in chapter IV ("seated facing the work", "conversation
-  runs across the counter"), which stands or falls with the same unverified claim the
-  statement paragraph makes below.
-
-- **The statement paragraph.** The heading is the client's own five lines; the paragraph
-  under it ("At Misono, tradition is not kept behind glass…") is written copy. It claims
-  a counter and a nightly service — check both before it ships.
-- **All four figures**, which are invented outright: 14 years in practice, 50+ signature
-  preparations, 12 seats at the counter, 9 courses each evening. The last two are the
-  load-bearing ones — seat count and course count are checkable claims a guest will hold
-  the restaurant to, so get the real numbers before this page goes anywhere near
-  production. The brief's own "100% Japanese-inspired" and "5-star" were dropped on
-  purpose; the reasoning is at `.figures` in that file.
+**Written rather than sourced, and all of it about Chinese cooking in general rather
+than about Li's specifically:** the four chapters and the experience cards on
+`about.html`, the `Tuányúan` closing section, the four parts of the Peking duck on
+`index.html`, and the section copy throughout. None of it makes a service claim a guest
+could turn up and check — that was the specific failure of the copy it replaced, which
+asserted a seat count, a course count, a nightly service and a founding year.
 
 ### Specs
 Design decisions are written up in `docs/superpowers/specs/`. Read the relevant one
@@ -766,9 +813,20 @@ before changing a page that has one — it records what was measured and why, wh
 not recoverable from the CSS alone.
 
 ## Performance
-Optimised 2026-08-24. The site was carrying 1.4–2.9MB per page and taking 7–14.6s to
-finish loading on a throttled phone; it now carries 0.27–0.65MB and finishes in
-1.5–3.4s, with **no change to any layout, any photograph's grade, or any animation**.
+Optimised 2026-08-24, re-audited 2026-09-01. The site was carrying 1.4–2.9MB per page and
+taking 7–14.6s to finish loading on a throttled phone; it now carries 0.18–0.43MB and
+finishes in 1.5–3.4s, with **no change to any layout, any photograph's grade, or any
+animation**.
+
+**The 2026-09-01 pass took another 392KB off the eight page/profile pairs** — and did it
+while *adding* 7KB of icons to every page and replacing five stale photographs with the
+correct, heavier ones. Nearly all of it was one page: `contact.html` went **816K → 427K**
+on desktop and 421K → 327K on mobile, because the ladder had no rung for a non-retina
+desktop. `about.html` went the other way, +35K, and that is the price of serving the
+right photograph rather than the Misono one it had been serving. Verified after: no
+element moved anywhere across all eight page/viewport pairs, `dist` renders pixel-identical
+to source, and scrolling holds a 16.7ms median with **zero tasks over 50ms** on every page
+at 4x CPU throttle.
 Both of those are asserted by tooling rather than by eye — see the verification tools
 below, and run them after touching anything here.
 
@@ -796,6 +854,42 @@ node apply-responsive-markup.mjs    # wire <picture> into the four pages
 **refreshes the candidate lists in place** rather than wrapping again, so a re-bake at a
 different ladder is a one-command update.
 
+**THAT TRAP HAD ALREADY FIRED, AND THE SITE SHIPPED WRONG PHOTOGRAPHS FOR DAYS.**
+Audited 2026-09-01: of the 24 derivative files whose width happened to survive the
+rebrand, **18 were still the Misono photograph** — `reserve-interior` (the reservation
+block, i.e. ALL FOUR PAGES), `contact-hero`, `about-plate`, `about-ch2-hand` and
+`about-ex3-room`. The `<img src>` JPEG fallback was correctly Li's; every browser that
+takes AVIF or WebP — which is every current browser — got the old restaurant's picture.
+
+**Nothing detected it, and three separate checks each had a reason not to.** The rungs'
+dimensions matched, so a geometry check passed. Both photographs were graded to the same
+band, so mean luma agreed to within 0.7 of 255 and no grading check fired. And
+`compare-photos.mjs` measures a rung against **its own source**, which for a stale file
+means measuring the old photograph against the new one and reporting it as a quality
+number rather than as a wrong image. What finds it is PSNR between the SHIPPED rung and
+the CURRENT source: a re-encode scores 40dB and up, a different photograph scores 8–12.
+
+The fix is a clean re-bake, not a repair — `rm -rf assets/img/r` then
+`node bake-responsive.mjs --force`. **After any source is re-cropped or replaced, delete
+the directory rather than trusting `--force`**, and re-run
+`apply-responsive-markup.mjs` after, since deleting rungs changes the ladder.
+
+**`bake-responsive.mjs` DOES NOT NOTICE A CHANGED SOURCE AT THE SAME WIDTH, and the
+failure is silent.** It keys on the output filename, which is `stem-width`, so when
+`lis-hero.jpg` was re-cropped 1.874:1 → 1.60:1 on 2026-08-27 at the same 1717 width, the
+run wrote only the two rungs whose widths were *new* (1210, 1450) and left five carrying
+the old geometry. Nothing errored; the report said every variant met its PSNR floor,
+because every variant it actually encoded did. The page then served a 1.874:1 rung to a
+box expecting 1.60:1 on most viewports. **`ls -la assets/img/r/` and read the
+timestamps**, or check a rung's real aspect with `ffprobe`, before believing a re-bake —
+and `rm assets/img/r/<stem>-*` first when a source has been recropped. `--force` does the
+same job for every image at once (~36s for the whole site).
+
+**Deleting rungs changes the ladder, so `apply-responsive-markup.mjs` MUST run after.**
+The widths are demand-derived, and the widened hero's demand produced 1210/1450 where the
+old one produced 1020/1270. The markup and the `<link rel=preload imagesrcset>` both still
+pointed at the deleted widths until the wiring pass was re-run.
+
 Seven things here are load-bearing:
 
 - **`picture { display: contents }` is required, not cosmetic.** Several of these images
@@ -807,14 +901,31 @@ Seven things here are load-bearing:
   width/height attributes.** The attributes only supply a ratio until the image loads. A
   rung whose height was rounded to an even number is a fraction of a percent off, and in
   a row of 27 marquee tiles those fractions summed to 4.6px — `.beyond__track` went 6299
-  to 6303.6 at 1440. Nothing looked wrong. The nine tile ratios and the ichie front
-  plate are therefore **pinned in CSS**, which also means the layout no longer depends on
-  which rung was chosen. Those are the only two places on the site where a bitmap ratio
-  can reach layout; everything else is `width:100%; height:100%; object-fit: cover` in a
-  sized box.
-- **`sizes` is PER PAGE.** `hero-omakase` is a full-viewport hero on `index.html` and a
+  to 6303.6 at 1440. Nothing looked wrong. The nine tile ratios and **both** reunion
+  plates are therefore **pinned in CSS**, which also means the layout no longer depends on
+  which rung was chosen. Everything else is `width:100%; height:100%; object-fit: cover`
+  in a sized box.
+
+  **The reunion BACK plate was missed until 2026-09-01, on reasoning that was true of
+  only one layout.** It was left unpinned because it is `height: 100%` in a sized box —
+  correct on desktop, where `.reunion__plate--back` carries `aspect-ratio: 3 / 4`, but
+  below that breakpoint the plate has no height of its own and the image drives it. A
+  ladder that gained a 350px rung rounded 1466x1100 to 466 rather than 466.7 and moved
+  the whole reserve block up 0.7px on a phone — 43 elements, which is what
+  `compare-layout.mjs` is for. **When a rule is justified by "it is in a sized box",
+  check every breakpoint's box.**
+- **`sizes` is PER PAGE.** `lis-hero` is a full-viewport hero on `index.html` and a
   15vw framed photograph on `menu.html`. One merged value made `menu.html` fetch — and
-  preload — the 1717px rung to paint a frame a fifth that wide.
+  preload — the 1717px rung to paint a frame a fifth that wide. **That fix was silently
+  defeated for days and was only caught on 2026-08-27.** `apply-responsive-markup.mjs`
+  reads its hint from **`img-manifest.json`**, not from `img-sizes.json`, and
+  `bake-responsive.mjs` was not carrying `sizesByPage` into the manifest — so
+  `sizesFor()` fell through to the merged `sizes` on **every** run of the pipeline, and
+  `menu.html` was handed index's `101.4vw`, preloading a 1210px rung at
+  `fetchpriority="high"` to paint a 150px frame. The field is carried now. **When a
+  per-page value looks wrong, check the manifest rather than `img-sizes.json`** — the
+  measuring tool had it right the whole time. Verify by reading `currentSrc` off the
+  real page at a real dpr, not by reading the srcset.
 - **The LADDER is the union of every page's demand, not the merged maximum per
   viewport.** A rung only helps if it sits just above a real request. The plate is 1271
   device px on `index.html` and 295 on `menu.html`; a ladder built from merged maxima had
@@ -824,13 +935,52 @@ Seven things here are load-bearing:
   reads true dimensions from disk with ffprobe for exactly this reason. Read off the DOM
   after the responsive pass, the hero measured 371px and the plate measured 0, and every
   ladder silently collapsed to nothing.
-- **`chirashi-plate` is WebP-only and gets the WHOLE ladder.** It is the one alpha cutout
+- **`duck-plate` is WebP-only and gets the WHOLE ladder.** It is the one alpha cutout
   on the site; ffmpeg cannot carry an alpha channel into AVIF here (libsvtav1 has no gray
   encoder for the aux stream) and **the failure is silent** — the encode succeeds and
   returns a fully opaque image, verified 30.4% transparent in, 0.0% out. Every other
   image gets only the two ends of its WebP ladder, because WebP is a fallback tier there;
   for this one WebP *is* the ladder, and thinning it left every device above 340px
   fetching the 1122 rung.
+- **The ladder is thinned by GAP, not by position** (changed 2026-09-01). The old rule
+  spliced rungs out of the middle until five remained, which is right only when an
+  image's demand is narrow. `lis-hero` is asked for at 101.4vw on `index.html` and
+  15.2vw on `menu.html` — a 6.1x span — and middle-thinning removed exactly the rungs
+  `menu.html` needed, leaving `[280, 350, 1210, 1450, 1717]`: a **3.46x hole** where
+  every other ladder on the site sits between 1.2 and 2.1. A 390px phone fetched the
+  1210 rung, 36KB, to paint a 450px frame, at `fetchpriority=high` on that page's LCP
+  path. The rule now drops whichever rung leaves the smallest hole, keeps both ends, and
+  stops early rather than opening a gap wider than 1.60; five is the target, seven the
+  ceiling. **Rungs cost disk and bake time, not reader bytes** — a reader still
+  downloads exactly one.
+- **A rung that a WIDER rung beats on bytes is pruned.** The CRF search runs per rung
+  against that rung's own reference, so neighbours settle on different points of a coarse
+  grid: `menu-seafood` came out 152K at 710 and **145K at 900**. Such a rung is strictly
+  dominated — the wider file is sharper AND smaller — so a phone picking it by `sizes`
+  downloads more to see less. Pruning only ever moves a request UP the ladder, and every
+  surviving rung has already cleared the same PSNR floor. Eight were pruned on the first
+  run. The bake prints them under `PRUNED`; **delete the orphaned files afterwards**, or
+  they sit in `assets/img/r` referenced by nothing.
+- **`measure-img-sizes.mjs` takes the WIDEST each image is ever painted, sampled through
+  the scroll** (changed 2026-09-01). `getBoundingClientRect` includes transform scale and
+  this site animates, so one reading at the end of a scroll caught whatever the
+  choreography was doing: the three menu frames, the turning duck plate and the
+  parallaxed contact hero each reported a different width every run and the ladders
+  churned by up to 40px with nothing in the design changed. **Measuring at rest
+  (`prefers-reduced-motion`) is repeatable and wrong in the other direction** —
+  `about-opening` rests at 1440 and is painted at 1499 while the parallax runs, so a
+  rest-derived ladder put its nearest rung at 1500 against a request of 1500.5 and the
+  page fetched the 1880. A max is stable *and* is the quantity that matters, since
+  under-serving the peak is what makes a photograph soft. It caught the duck plate's real
+  peak, 89.8vw → 96.9vw.
+- **Desktop demand is sampled at dpr 1 as well as at retina.** Every desktop row in the
+  viewport table assumed a retina panel, but a 1080p or 1440p external monitor is the
+  commonest desktop configuration there is — and it is what `perf.mjs`'s own desktop
+  profile emulates. Without it the locale bands' nearest rung sat at 1220 against a real
+  request of 1228, and a 1440 desktop fetched the 1570 rung: **422KB to paint 1228
+  pixels.** It goes into `devAll` only, so `sizes` — derived from `vw`, which is
+  dpr-independent — is untouched and the transplanted reserve block stays byte-identical.
+  This single change took `contact.html` from 816K to 427K on desktop.
 - **AVIF is encoded 10-bit (`yuv420p10le`) from 8-bit sources on purpose.** It costs
   almost nothing and it is what keeps the near-black fields from banding — `contact-hero`
   is 47% shadow. 4:2:0 is correct rather than a compromise: the sources are already 4:2:0
@@ -912,17 +1062,57 @@ One trap in the copy list: **decode percent-encoding LAST**. The grain filters r
 themselves as `url("%23n")` inside an inline SVG data URI, and decoding before the
 fragment test turns a same-document reference into a request for a file called `#n`.
 
+### Two tooling traps found during the 2026-08-26 rebrand
+Both were silent, both cost time, and both are fixed in the tools:
+
+- **`apply-responsive-markup.mjs` tested for the STRING `<picture>`, not the element.**
+  Every page's CSS carries two comments that mention `<picture>` by name, so on pages
+  unwrapped back to bare `<img>` it took the "already wrapped" branch, found nothing to
+  refresh, and printed `refreshed 0 <picture> candidate lists` — which reads exactly like
+  a successful no-op. The guard now requires `<picture>` followed IMMEDIATELY by `<source`
+  or `<img`; a looser "…`<img>` somewhere after it" test still matched, because the prose
+  in the very next comment block contains both.
+- **`page.screenshot()` returns a `Uint8Array`, and `Uint8Array.toString('base64')`
+  ignores its argument** and returns the bytes as a comma-separated decimal list. Every
+  pixel-scanning tool built its data URL that way, so the URL was silently malformed and
+  the only symptom was an `EncodingError` from `img.decode()` several frames later. Eight
+  tools were wrapped in `Buffer.from(...)`. `Buffer.isBuffer()` on the result is the quick
+  check if it recurs.
+
 ### Verification — run these after touching anything above
 ```bash
 node compare-layout.mjs --save   # snapshot every classed element's rect, BEFORE a change
 node compare-layout.mjs          # ...then diff the live site against that snapshot
 node compare-photos.mjs    # each rung vs its original, at four real device profiles
+node verify-rungs.mjs      # every rung IS its own source photograph (see below)
 node verify-dist.mjs       # dist vs source: CSS rule counts, geometry, painted pixels
 node perf.mjs after        # bytes, LCP, FCP, CLS, TBT — desktop and throttled mobile
 node perf-scroll.mjs       # frame cost while scrolling, at 4x CPU throttle
 node verify-touch.mjs      # the contact page's own checks, unchanged and still passing
 node verify-locale.mjs     # the location bands' own checks, unchanged and still passing
 ```
+**`verify-rungs.mjs` is the guard against the stale-derivative bug**, and it is the one
+check here that found a live fault rather than confirming its absence. It compares each
+shipped rung's luma against its CURRENT source downscaled to that rung's size: a
+re-encode of the same photograph scores 40dB and up, a different photograph scores 8–12,
+and there is no middle ground to tune against. Exit 1 and the fix line if any fail.
+`--quick` does the widest AVIF and WebP per image. Two things it encodes, both of which
+produced confident false positives first:
+
+- **The alpha cutout is compared over opaque pixels only, and the mask is ERODED.**
+  `duck-plate` reported 21dB — the signature of a wrong photograph — on files baked from
+  that very source minutes earlier. The bake resizes through Chrome's canvas and this
+  check through swscale, and on a hard-edged cutout those two disagree along the rim by
+  far more than compression does. Only the 1122 rung passed, which is the source's own
+  width and so resampled by neither: **a failure that spares exactly the un-resampled
+  rung is a resampler mismatch, not a stale file.**
+- **`yuva420p` is what WebP reports**, and it neither ends in `a` nor starts with one of
+  the packed RGBA names. A format test that missed it left the gate silently inactive.
+
+**Negative-test it after changing it.** Restore a known-old derivative over a current one
+and confirm it reports STALE — a checker of this kind that has only ever printed green is
+indistinguishable from one that cannot fail.
+
 `verify-dist.mjs` needs both servers:
 
 ```bash
@@ -991,180 +1181,174 @@ the fix and failed identically — check the `Cloning ... (Commit: xxxxxxx)` lin
 log against `git rev-parse --short origin/main` before concluding the fix did not work.
 
 ## `_archive/`
-The whole previous site, moved rather than deleted because this project has no git
-history. Contains the old `index.html`, `assets/site.js`, every baked image and video,
-both `bake-*.sh` scripts, the old design spec, and `CLAUDE.md.original` (the full
-previous ruleset, including the reasoning behind every decision that was made).
+The whole previous site — **and, since 2026-08-26, all of Misono's photography and bake
+scripts.** Moved rather than deleted. Contains the old `index.html`, `assets/site.js`,
+every baked image and video, the old design spec, `CLAUDE.md.original`, and:
 
-It also holds `chirashi-plate-rimfit.webp`, the superseded plate cutout — see below.
+- `_archive/misono-photography/` — 35 originals: the nine dish photographs that were the
+  previous restaurant's own material, the client-supplied hero and counter masters, the
+  chirashi cutout, and every teppanyaki/sushi frame. **They belong to a different
+  restaurant and must not reach this site.**
+- `_archive/misono-bakes/` — the five superseded `bake-*.py` scripts and the old mon SVGs.
 
 **Do not read it for direction and do not restore from it** unless the user asks. It is
-kept only so nothing is unrecoverable. It is also in a served directory, but `node build.mjs` derives its copy list from the
-markup, so `_archive/` can no longer reach a deploy by accident. Delete it once the new
-design is settled.
+kept only so nothing is unrecoverable. `node build.mjs` derives its copy list from the
+markup, so `_archive/` cannot reach a deploy by accident.
 
 ## Assets on hand
-- `brand_assets/misono logo.jpeg` — the real logo, but a **photo of printed material**:
-  angled, soft, on opaque paper. It cannot be dropped into a page as-is; it needs
-  redrawing or a clean file from the client.
-- `brand_assets/misono-mark.svg` and `misono-mark-mono.svg` — the mon **traced from that
-  photo** by an earlier session. Both are reconstructions: verify against real artwork
-  before shipping. The mono version is transparent and drawn to take its colour from CSS.
-- `assets/img/food2-9.jpeg`, `foodinspo1.jpeg` — nine photographs of the restaurant's own
-  dishes. Real Misono material and effectively irreplaceable, so keep them. They are
-  ungraded phone snapshots shot under mixed light (some tungsten, some window-cool, some
-  amber), so they need correcting per-frame before use, not one shared curve.
-- `assets/img/chirashi-plate.webp` — the turning dish on the homepage. An alpha cutout,
-  re-baked 2026-08-11 from `assets/img/foodfood.png`; the previous bake is in `_archive/`.
-  Two things to know before touching it: its silhouette is cut at the **bowl**, and the
-  bowl's centre is the **file's** centre, which is what lets it rotate without orbiting.
+- `brand_assets/lis-logo-official-150.jpg` — **the real logo, and the only artwork there
+  is: 150x150, JPEG, opaque white square.** Measured red **#CD393E**, black **#1B191A**.
+  At that size it cannot be a hero wordmark and cannot sit on a photograph.
+- `brand_assets/lis-mark.svg` — the mark **redrawn** from it and inlined into all four
+  pages. Ring and chopsticks are measured geometry; the `Li's` wedges are least-squares
+  fits of the source edges (residual 0.17 units) rather than a pixel trace, which shipped
+  visible staircase artefacts. **A reconstruction — verify against official artwork.**
+  Full method in `brand_assets/README.md`.
+- **The site icon set, baked by `bake-favicons.mjs`** (2026-09-01). Seven files wired
+  into all four pages, and **two different drawings rather than one file scaled**:
+
+  - **The small mark** — `assets/favicon.svg`, `favicon-16.png`, `favicon-32.png` — is
+    the full mark reduced to its two structural elements, the red ring and the crossed
+    chopsticks, with the lettering dropped. At 16px the full mark collapses into a red
+    blob with dark streaks through it: the ring's stroke lands at 1.1px and the `Li's`
+    wedges at well under a pixel. The small drawing thickens the ring to 13/100 and
+    pulls it right so the two elements never merge.
+  - **The chopsticks stay LEFT of the ring's centre, as they are in the real mark.**
+    Centred, they read as a **prohibition sign** — a circle with a line through it —
+    which is the one thing this icon must not look like. That was tried and rejected.
+  - **The large mark** — `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` —
+    is the full artwork, lettering and all, **inset to 78%**. iOS and Android mask these
+    to a rounded shape or a circle and the mark's ring spans 92% of its viewBox, so
+    uninset it loses its edges to the mask.
+  - **Both sit on an OPAQUE ivory ground.** The chopsticks are `#1B191A`; on a
+    transparent icon they vanish against a dark browser tab. The ground is what keeps
+    every element in the colour role the palette documents.
+  - `assets/site.webmanifest` carries the 192 and 512 tiles. **A manifest names its
+    icons in JSON, which `build.mjs`'s HTML attribute scanner cannot see** — left alone,
+    those two tiles were the one part of the set that never reached `dist/`, and nothing
+    reported it, because the manifest copies fine and every page renders. `build.mjs`
+    now parses the manifest and follows them.
+  - **An XML comment may not contain a double hyphen**: written the obvious way the SVG
+    stops being well-formed and the browser shows a broken image with a clean 200 on the
+    wire and nothing in the console. `favicon.svg` therefore carries no comments — the
+    reasoning lives in `bake-favicons.mjs` instead.
+- No brand style guide exists. If one arrives, its values win over anything derived.
+
+**Every photograph is a Pexels placeholder baked by `bake-lis-photography.py`**, which
+carries the source id, crop, grade and target band for all 27 frames in one table, plus
+the reproduce command. The `.dish` cutout has its own script, `bake-duck-plate.py`.
+Each frame's markup comment names the single property a replacement must have.
+
+- `assets/img/duck-plate.webp` — the turning plate on the homepage, an alpha cutout of a
+  Peking duck pancake. **Three things decide whether the file works, and all three are
+  about the fact that it TURNS:** the plate's centre must be the file's centre or it
+  orbits; the plate is an ellipse in the source (ry/rx 0.9410, the camera ~20° off
+  vertical) and is scaled circular or it wobbles once per revolution; and the silhouette
+  comes from a flood of the GROUND inward from the border, not a threshold on the plate,
+  so no pale surface is left baked onto the rim. **The white plate centre reads as ground
+  to any brightness test** — it survives only because the rim encloses it and the border
+  flood cannot reach it. Do not replace the flood with a threshold.
+- `assets/img/gallery/dish1..9-*.jpg` — the nine marquee tiles. **Their WIDTHS are the
+  nine the row has always had** (856, 671, 510, 445, 563, 564, 637, 450, 306, all 560
+  tall), so `.beyond__track` keeps its measured width and the marquee's percentage
+  translate is untouched. A replacement must keep its slot's width.
+- `assets/img/menu-{duck,dimsum,seafood}.jpg` — 900x1200, dedicated to `menu.html`'s
+  opening frames. See that page's note for why they are not marquee tiles.
+- `assets/img/locale-{mombasa,nairobi}.jpg` — the two location photographs, **kept from
+  the previous build** because they are generic city frames rather than restaurant ones.
+  They are a fourth grading band, 108–118: the other bands all grade something lit inside
+  a dark building, and a daylight aerial forced to 90 does not read as moody, it reads as
+  drained. The band has a hard floor from the composition — the marker cards are
+  near-white, so `bake-contact-locations.py` reports the CARD ZONES separately (Mombasa
+  151/86, Nairobi 165/54); a card on a sky above ~170 has a 1.4:1 edge and dissolves.
 - `assets/img/r/` — the AVIF and WebP derivatives, ~200 files, all generated. **Never
   edit or hand-add anything here**; it is rebuilt wholesale by `bake-responsive.mjs` and
   its filenames are the contract the srcsets and the immutable cache headers rely on.
-- `assets/fonts/*.woff2` — Cormorant Garamond (variable 300–400, plus italic 400) and
-  Jost (variable 300–400), Google's own latin subsets, self-hosted. Re-fetch them the way
-  they were fetched: puppeteer navigating to `fonts.googleapis.com` and `fetch()`ing the
-  file URLs from page context — a direct navigation to a `.woff2` aborts.
-- `assets/favicon.svg` — the mon, flattened from `brand_assets/misono-mark-mono.svg` with
-  no `<use>` and no `currentColor`, since a tab icon inherits no CSS context. **An XML
-  comment may not contain a double hyphen**: written the obvious way, the file stops being
-  well-formed, and the browser shows a broken-image icon with a clean 200 on the wire and
-  nothing in the console.
-- No brand style guide exists. If one arrives, its values win over anything derived.
-
-- `assets/img/about-plate.jpg` — the client-supplied counter shot on `about.html`'s plate
-  section, delivered as `about alonepage.png` (1536x1024) and re-encoded to JPEG at q85
-  (181K, checked against q80/q90 for 8-bit banding in its near-black field — none visible
-  at any of the three). No crop or retouch, unlike the asset it replaced: this frame has no
-  person in it. `object-position: 50% 58%` is deliberate, not centred — see `.plate__img`
-  in that file for what a short, wide viewport does to a centred crop of this photograph.
-  A stock photo (Pexels 9424910) held this slot until 2026-08-12 and needed both a chef's
-  surgical mask and a health placard edited out; it and its bake script (`bake-about-room.mjs`)
-  are gone now that a real asset exists. If sourcing a room shot again ever becomes
-  necessary, the technique for both problems — the AVIF workaround below, and row-by-row
-  interpolation for retouching a flat panel without leaving a seam — is worth rebuilding
-  from first principles rather than hunting for it in history.
-
-- `assets/img/about-ic{1,2}-*.jpg` — the two closing-section photographs (235KB the
-  pair). Pexels 16388600 / 30682878, baked by `bake-about-ichie.py`. **Graded to 80 and
-  64 — the chapters' band, not the experience section's** — because both are lit
-  subjects in dark rooms. The 16-point spread runs the opposite way to the usual rule
-  (a tight macro normally sits *above* a wide interior): here the macro's ground is a
-  dark lacquered counter and the interior's is lit timber. `about-ic2-brush.jpg` is
-  **4:3, the only landscape frame on the site**, and that is deliberate — it is what
-  stops the two plates reading as a pair instead of as two depth planes.
-
-- `assets/img/about-ex{1..3}-*.jpg` — the three experience photographs, 1100x1467 each
-  (~650KB the set). Pexels 38539264 / 38773918 / 37996941, baked by
-  `bake-about-experience.py`. **This set is graded to 90-108 mean, not the chapters'
-  62-84, on purpose** — two of the three are lit rooms rather than lit subjects, the
-  crudo's ground is a white plate that goes grey if pushed to 78, and three dark frames
-  already sit above it on the same page. If a fourth section needs photographs, decide
-  which band it belongs to before grading, not after.
-
-- `assets/img/about-ch{1..4}-*.jpg` — the four chapter photographs, 1100x1466 each
-  (~733KB the set). Pexels 36131817 / 30682797 / 9424913 / 36338002, cropped from 2:3 to
-  3:4 and graded per frame. Nothing already on the site was reused, because every good
-  photograph in `assets/img/` is already on screen somewhere else.
-
-- `assets/img/contact-hero.jpg` — `contact.html`'s hero, 2000x1333 (476KB, in line with
-  the site's other heroes at 434-586KB; the higher quality is kept deliberately because
-  the frame is 47% shadow, which is where 8-bit banding lives). Pexels 19300593, baked by
-  `bake-contact-hero.py`. **Graded to mean 60 and carrying no baked vignette at all** —
-  the only bake here that does not, because its one light source is the pendant in the
-  top-left corner and a baked vignette puts the lamp out. **It is a placeholder**: see
-  the pending-content section below.
-
-- `assets/img/locale-{mombasa,nairobi}.jpg` — the two location photographs, 2000x1125
-  each (~1.1MB the pair), baked by `bake-contact-locations.py`. Pexels 13418220 / 9833516.
-  **Both are placeholders and are flagged as such in the markup**, and on this section
-  that matters more than elsewhere: a location band implies the picture *is* the place,
-  and neither is. The Mombasa frame is the waterfront rather than Links Road; the Nairobi
-  frame is Uhuru Park and the CBD, roughly 5km from Adams Arcade.
-
-  **They are a fourth grading band, 108–118**, decided before grading rather than after.
-  The three existing bands (62–84 chapters, 90–108 experience, 64–80 ichie) all grade
-  something *lit inside a dark building*. These are open-air daylight frames of a whole
-  district, and forced down to 90 a daylight aerial does not read as moody, it reads as
-  drained. The band also has a hard floor from the composition: the marker cards are
-  near-white, so the bake reports the **card zones** separately (Mombasa 151/86, Nairobi
-  165/54) — a card on a sky above ~170 has a 1.4:1 edge and dissolves.
-
-  Whichever frames replace them need **one property and no others: legible structure with
-  at least two calm areas large enough to seat a card.**
+- `assets/fonts/*.woff2` — Cormorant Garamond and Jost, variable 300–400, Google's own
+  latin subsets, self-hosted. Re-fetch them the way they were fetched: puppeteer
+  navigating to `fonts.googleapis.com` and `fetch()`ing the file URLs from page context —
+  a direct navigation to a `.woff2` aborts.
+- The reference comps in `assets/img/` (`heroinspo.png`, `map inspo.png`, `menu
+  isnpo.jpeg`, `scroll through for about.png`, `about line scroll through.png`,
+  `inspooooo.png` and the rest) are **kept**. The architecture they document is the
+  architecture the site still has. `build.mjs` keeps all 35MB of them out of the deploy.
 
 ### Baking images
-`bake-chirashi-plate.py` + `bake-png-to-webp.mjs` in the project root, with the exact
-reproduce command in the Python file's docstring. `bake-about-chapters.py`,
-`bake-about-experience.py`, `bake-about-ichie.py`, `bake-contact-hero.py` and
-`bake-contact-locations.py`, all with `bake-png-to-jpeg.mjs` + `fetch-pexels.mjs`, are
-the same arrangement for the chapter, experience, closing, contact and location frames,
-reproduce commands likewise in the docstrings.
+`bake-lis-photography.py` covers every frame; `bake-duck-plate.py` the one cutout. Both
+take `bake-png-to-jpeg.mjs` / `bake-png-to-webp.mjs` and `fetch-pexels.mjs`, with the
+reproduce command in each docstring. `bake-contact-locations.py` still bakes the two
+location frames.
+
+**THE BAND IS CHOSEN BEFORE GRADING, NOT AFTER**, and the bands are:
+
+    hero            44-57     dark rooms with type over them
+    reserve         64        a laid table behind the gourd clip
+    about opening   71
+    about plate     37        full bleed, nothing on it, allowed to be black
+    chapters      62-84       lit subject in a dark room
+    experience   90-108       lit rooms and white plates
+    reunion       64-96
+    contact hero    60        no baked vignette
+    locale       108-118      open-air daylight
+    gallery tiles  ~112       a marquee on a light ground, must stay appetising
+
+**Grade the character by eye; SOLVE the level.** Frames from different photographers
+arrive at different exposures — the chapter set measured 49, 60, 69 and 99 of 255 and
+each looked right alone. The bake sets contrast, saturation, warmth and vignette by eye
+but **bisects a gamma per frame** until its mean lands on the target. Gamma rather than a
+gain, because a gain clips and these frames have their room in the shadows.
+
+**A frame that cannot reach its band does not belong in it.** `about-ic1-duck` is a
+bright studio overhead on a pale ground; solving it to the reunion band's 80 pinned the
+gamma at its 3.2 ceiling, still missed, and what it did reach was crushed and edge-lit —
+corner 103 against centre 44, the vignette inverted. It aims 96 instead, and the reason
+is written beside it.
+
+**Two frames bake no vignette or a corrected cast, and both are deliberate:**
+- `contact-hero` bakes **no vignette at all** — its only light source is a pendant in the
+  corner and a baked vignette puts the lamp out. **And it desaturates BEFORE it warms:**
+  the room's brick carries a flat green-teal cast across most of the frame, and warmth
+  pushed at full saturation left the green and turned the lamps orange. Saturation comes
+  most of the way out first so the field goes neutral, then the warmth is pushed hard and
+  the lamps carry the colour alone.
+- `lis-hero` aims 52 rather than the 44 the frame it replaced measured, because it has an
+  open flame in it. Solving the whole-frame mean to 44 with a 250/255 flame in shot spends
+  the entire budget on the flame and crushes the room to black — which is where the
+  wordmark sits. The bake reports the wordmark band separately for exactly this reason.
 
 **A near-white element laid OVER a photograph is a grading constraint, not a CSS one.**
-The location bands were the first thing on the site to do it, and the fix belongs in the
-bake: `bake-contact-locations.py` reports the mean luminance of the exact zones the cards
-land in, and deepens the vignette until they hold. Reaching for a scrim in CSS instead
-would have put a grey wash over a photograph the section exists to show.
-
-**Pexels is thin on dark, cinematic Japanese counters with a calm centre.** Sweeps for
-"omakase sushi counter", "sushi counter chef", "sushi bar counter interior", "teppanyaki
-restaurant" and "elegant restaurant interior wood counter" returned food macros or
-daylight-flat rooms almost exclusively; what finally worked came from "moody dark
-restaurant interior". Budget for that before spending an hour on the literal terms.
+The fix belongs in the bake — deepen the vignette until the card zone holds. Reaching for
+a scrim in CSS puts a grey wash over a photograph the section exists to show.
 
 **Judge a hero candidate by rendering the real heading over it at full size, not from a
 contact sheet.** Thumbnails cannot answer the only question that matters — whether the
-centre is calm enough to set type in — and they actively mislead: the strongest-looking
-thumbnail in the contact sweep was a washi lantern that turned out to be a 240/255 object
-sitting exactly where the heading goes, which no scrim can fix without destroying the
-photograph.
+area under the type is calm enough — and they actively mislead. Two of the strongest
+thumbnails in the Li's sweep turned out to be Japanese izakaya interiors, which is the
+one thing this site must not carry.
 
-**Desaturate before you warm, when the problem is a large flat cool field.** The
-experience section's room frame has a green-grey plaster wall across most of it. Pushing
-warmth at full saturation left the wall cold and turned the timber red — the fix is to
-take saturation most of the way out first so the wall becomes neutral, *then* push the
-warmth hard and let the one strongly coloured thing left carry the frame.
+**Pexels is thin on premium Chinese interiors.** Sweeps for "chinese restaurant
+interior", "asian fine dining interior" and "luxury restaurant interior" returned neon
+street food, red-lantern kitsch, and a great deal of Japanese. What worked: "moody dark
+restaurant interior", "chef wok restaurant kitchen", "dim sum restaurant interior" and
+"round dining table restaurant". Budget for that before spending an hour on literal terms.
 
-**Level a frame against the frames it shares a composition with, then against the band
-its subject belongs to — in that order.** Three sections on `about.html` now sit on
-three different bands (62-84, 90-108, 64-80) and each is right for what it holds. The
-rule that a tight macro outranks a wide interior is about what is *lit*, not about how
-close the lens is: the closing section inverts it because its macro's ground is a dark
-counter and its interior's is lit timber.
-
-**Grade the character by eye; solve the level.** Four stock frames from four
-photographers arrive at four exposures — cropped and given only their artistic grade,
-the chapter set measured 49, 60, 69 and 99 of 255, and each one looked right on its own.
-`bake-about-chapters.py` sets contrast, saturation, warmth and vignette by eye but
-bisects a **gamma per frame** until its mean luminance lands on a target. Aim for a band
-rather than a single value: a wide night interior forced to the same mean as a lit macro
-of one nigiri has been pushed somewhere it does not want to go.
+**A cutout baked against one ground is not ground-independent.** The previous plate was
+fitted to the wrong boundary and carried up to 52px of the pale surface it stood on as
+opaque pixels — invisible on cream, a light crescent on a warm ground, and because the
+plate turns, it orbited. Check any cutout against the ground it will actually sit on, and
+measure the edge rather than trusting it.
 
 **Pexels serves AVIF to Chrome**, whatever the `.jpeg` in the URL says, because the CDN
 honours the Accept header — so a download lands as `ISO Media, AVIF Image` and has to go
-through `sips -s format jpeg` before anything else will touch it. Pexels also blocks curl,
-and `images.pexels.com` blocks cross-origin fetch from `pexels.com`; the way that works is
+through `sips -s format jpeg` before anything else will touch it. Pexels also blocks
+curl, and `images.pexels.com` blocks cross-origin fetch from `pexels.com`; what works is
 puppeteer navigating straight to the image URL and taking `response.buffer()`.
 
 There is no `cwebp` and no ImageMagick on this machine, and `sips` reads webp but cannot
-write it — so the webp encode goes through the Chrome that puppeteer already ships. Reuse
-`bake-png-to-webp.mjs` for any other webp; it must be run from the project root, since it
-resolves puppeteer from `node_modules/`. The same canvas-through-puppeteer approach is the
-better tool for any PNG a client supplies that needs to ship as JPEG: `sips -s format jpeg`
-works, but a canvas re-encode at the same nominal quality ran about half the file size on
-`about-plate.jpg` — the difference is the encoder, not the setting.
-
-**A cutout baked against one ground is not ground-independent.** The plate's first bake
-fitted its rim rather than its bowl and left up to 52px of the pale surface the bowl
-stands on baked in as opaque pixels. On the cream that was invisible. On the peach it
-read as a light crescent, and because the plate turns, it orbited. Check any cutout
-against the ground it will actually sit on, and measure the edge rather than trusting it.
-
-**Known and not fixed:** the dish spec has the plate at 40.38% of the viewport, and
-because that first fit took in the pale surface it has only ever rendered at ~38.2%.
-Correcting it grows the plate ~32px at 1440 — a composition change, so it is being
-left until asked for.
+write it — so the webp encode goes through the Chrome puppeteer already ships. Reuse
+`bake-png-to-webp.mjs`, run from the project root. The same canvas-through-puppeteer
+approach is the better tool for any PNG that has to ship as JPEG: `sips -s format jpeg`
+works, but a canvas re-encode at the same nominal quality runs about half the file size.
 
 ## Always Do First
 - **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.

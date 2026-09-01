@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Misono \u2014 Japanese omakase restaurant website",
+  "description": "Li's Chinese Restaurant \u2014 Nairobi & Mombasa",
   "scripts": {
     "dev": "node serve.mjs",
     "build": "node build.mjs",

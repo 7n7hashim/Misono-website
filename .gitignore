@@ -13,3 +13,8 @@ temporary screenshots/*.png
 *.log
 .vercel
 .env*
+
+# Not part of this site. The filename says so, and it is 2.2MB: it belongs to
+# the bracelet export project, not to Li's. Untracked rather than deleted —
+# remove this line if it is ever actually wanted here.
+assets/img/bracelet(nothing to do with web).png

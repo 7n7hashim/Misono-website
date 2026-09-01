@@ -3,12 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Misono — The Menu</title>
+<title>Li&rsquo;s — The Menu</title>
 <link rel="preload" as="image" type="image/avif"
-      imagesrcset="assets/img/r/hero-omakase-1717-280.avif 280w, assets/img/r/hero-omakase-1717-350.avif 350w, assets/img/r/hero-omakase-1717-1010.avif 1010w, assets/img/r/hero-omakase-1717-1270.avif 1270w, assets/img/r/hero-omakase-1717-1717.avif 1717w"
-      imagesizes="(max-width: 900px) 40.2vw, 15.1vw" fetchpriority="high">
+      imagesrcset="assets/img/r/menu-duck-290.avif 290w, assets/img/r/menu-duck-360.avif 360w, assets/img/r/menu-duck-430.avif 430w, assets/img/r/menu-duck-520.avif 520w, assets/img/r/menu-duck-700.avif 700w"
+      imagesizes="(max-width: 900px) 41.2vw, 15.5vw" fetchpriority="high">
+<!-- Site icon. Two drawings, not one file scaled: the SVG and the two small
+     PNGs carry the mark reduced to the ring and the chopsticks, because the
+     full mark with its lettering turns to mush below ~48px; the touch icon
+     and the manifest's tiles carry the full artwork, inset 78% so a rounded
+     or circular platform mask does not cut the ring. See bake-favicons.mjs. -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<meta name="description" content="Exceptional flavors. The Misono carte — omakase, sushi and sashimi, teppanyaki.">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<meta name="theme-color" content="#F6EEE1">
+<meta name="description" content="The Li’s carte — Peking duck, dim sum, seafood and the wok. Nairobi and Mombasa.">
 
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-normal-300-400.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jost-normal-300-400.woff2">
@@ -71,7 +81,7 @@
   picture { display: contents; }
 
   /* =====================================================================
-     Misono — menu page
+     Li's — menu page
 
      Geometry is measured off `assets/img/menu isnpo.jpeg` and carried
      across as a share of one scale unit, never in pixels: the reference is
@@ -127,15 +137,19 @@
        The ink is unchanged and clears 13.6:1 on it. The other two are NOT:
        peach is darker than cream, which cost both of them contrast, so each
        is re-derived against this ground rather than carried over. */
-    --ground:      #F7E8DF;  /* peach — every section on this page          */
+    --ground:      #F6EEE1;  /* peach — every section on this page          */
     --cream:       #FCF8F5;  /* the homepage's ground. Kept only so the      */
                              /* transplanted CSS has a defined fallback; it  */
                              /* is overridden to --ground where it is used.  */
-    --menu-ink:    #2F1B19;  /* 13.6:1 on the peach                         */
-    --menu-body:   #63504A;  /*  6.3:1 — the cream #6B5750 falls to 5.66    */
-    --menu-accent: #99551C;  /*  4.8:1 — the cream #9A5C26 falls to 4.47    */
-    --misono-indigo: #3A5280;
-    --hairline:    rgba(47, 27, 25, 0.18);
+    --menu-ink:    #241A14;  /* 14.79:1 on the ground                       */
+    --menu-body:   #6A574A;  /*  5.93:1                                     */
+    --menu-accent: #A3221C;  /*  6.51:1 — the deep red, from the logo hue   */
+    /* The measured logo red. A DEVICE colour: it draws the mark and
+       never sets type. --li-red is the same hue darkened to carry
+       text and fills — 6.51:1 on the ground, white on it 7.49:1. */
+    --brand-red: #CD393E;
+    --li-red:    #A3221C;
+    --hairline:    rgba(36, 26, 20, 0.18);
 
     /* The one scale unit the whole composition is built from. Pure vw
        overflows a wide-short window — 57.8vw of field height is 1110px at
@@ -364,7 +378,7 @@
        a darker ground swallows a shadow, and at the old opacities the frames
        had started to look pasted on rather than laid down. */
     box-shadow:
-      0 1px 2px rgba(47, 27, 25, 0.06),
+      0 1px 2px rgba(36, 26, 20, 0.06),
       0 6px 14px rgba(122, 72, 38, 0.09),
       0 22px 48px rgba(122, 72, 38, 0.12);
   }
@@ -378,29 +392,29 @@
   }
 
   /* Corrected per frame, not on one shared curve. These were shot under
-     different light — the counter is tungsten, the teppan is firelight, the
-     chirashi is daylight on white, the sashimi is direct flash — so one
+     different light — the wok is firelight, the duck is warm tungsten, the
+     dim sum is daylight on a pale ground, the prawns are direct flash — so one
      curve across all four leaves at least two of them wrong. */
   .frame--ul .frame__img { filter: contrast(1.03); }
   .frame--ur .frame__img { filter: saturate(0.88) contrast(1.04); }
 
-  /* The sashimi is the only frame shot on direct flash, and it arrives with
-     everything that implies: blown speculars, candy-bright cucumber, cool
-     cast, and a rim of white plate in the corner. Left as shot it is the one
-     amateur frame in a composition of four, which drags the whole page down.
+  /* The prawns are the brightest and by far the most saturated of the four:
+     chilli, peppers and a glaze, all of it hot orange. Left alone it is the
+     loudest thing on an ivory page and it pulls the eye straight off the
+     type, which is the one job this composition has.
 
-     Cropped hard into the nigiri and the ikura — the two things worth
-     looking at — so the cucumber ribbon and the plate rim fall outside the
-     frame. Then corrected: saturation well down, a whisper of sepia to pull
-     the flash's cool cast back toward the warmth of the other three, and
-     brightness off to seat the highlights. */
+     The crop is handled in the bake (bake-lis-photography.py, menu-seafood,
+     900x1200 at mean 100) rather than here. What is left for CSS is the
+     colour: saturation well down, a whisper of sepia to seat the orange
+     against the warmth of the other three, and brightness off to hold the
+     glaze's speculars. */
   .frame--lr .frame__img {
     filter: saturate(0.8) contrast(1.02) brightness(0.955) sepia(0.09);
     object-position: 58% 50%;
     transform: scale(1.38) translateY(-7%);
   }
 
-  /* The chirashi is the one frame that needs a crop as well as a curve. It
+  /* The dim sum is the one frame that needs a crop as well as a curve. It
      was shot on a white sweep, and object-fit alone leaves a band of that
      sweep inside the frame — on a cream ground the band reads as a pale
      rectangle rather than as a photograph, and the bowl stops being the
@@ -656,7 +670,7 @@
     white-space: nowrap;
   }
 
-  /* Only the omakase carries notes. Describing every dish turns a carte
+  /* Only some dishes carry notes. Describing every one of them turns a carte
      into a catalogue; the counter menu is the one where the guest is
      choosing a length of evening rather than a plate. */
   .dish__note {
@@ -783,8 +797,8 @@
        to marks that state nothing — the rule under the eyebrow, the ring around
        the photograph. Anything a guest reads or clicks takes --menu-accent
        (4.8:1) or --res-gold, which clears 3:1 as a non-text boundary. */
-    --res-hair: #D4AD7E;
-    --res-gold: #B8813F;
+    --res-hair: #D9B98A;
+    --res-gold: #9C7230;
 
     --res-eyebrow:  clamp(0.66rem, 2.85vw, 0.76rem);
     --res-title:    clamp(2.35rem, 11.9vw, 3.6rem);
@@ -1185,7 +1199,7 @@
 
     /* Vertically centred on the section's own axis rather than pinned to the
        comp's y-positions. The comp leaves its bottom 22.7% to a vertical
-       Japanese lockup and a contour texture, neither of which is being built;
+       a lockup and a contour texture, neither of which is being built;
        holding its offsets without them would leave a fifth of the section empty
        at the foot and read as an unfinished page.
 
@@ -1320,8 +1334,16 @@
        vertical presence. Reaching that ratio honestly would need caps
        1595px wide on a 1440px screen, so width is spent instead: the mark
        runs to ~92% of the viewport, which is as large as it can be and
-       still read as MISONO rather than as a cropped M and O. */
-    --end-mark:   clamp(4.4rem, 19.9vw, 20rem);
+       still read as a word rather than as a cropped first and last letter.
+       That 92% is the target --end-mark is solved against; see it above. */
+    /* RE-SOLVED 2026-08-26 for a four-glyph wordmark. The size above was
+       fitted so MISONO's six caps ran to ~92% of the viewport; LI'S set at
+       the same size measured 43.4%, which is not a smaller wordmark but a
+       different composition — the mark stopped being the closing gesture and
+       became a caption. Everything is scaled by 92/43.4 = 2.12, the clamp
+       ends included, so the cap at 2560 still bites at the same fraction it
+       always did. Re-solve again if the string ever changes length. */
+    --end-mark:   clamp(9.3rem, 42.2vw, 42.4rem);
     /* The last 15% of height comes from the block, not the size — see
        .ending__mark. */
     --end-stretch: 1.15;
@@ -1334,7 +1356,7 @@
        the total span and the even gaps are trustworthy. */
     --end-link:   max(10.5px, 0.76vw);
     --end-note:   max(9.5px, 0.72vw);
-    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the three links  */
+    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the five links   */
 
     position: relative;
     display: flex;
@@ -1386,7 +1408,7 @@
     line-height: 0.653;
     letter-spacing: 0.16em;
     white-space: nowrap;
-    color: rgba(47, 27, 25, 0.045);
+    color: rgba(36, 26, 20, 0.045);
     user-select: none;
     /* Once the mark is as wide as the screen allows, height is the only
        axis left. A 1.15 vertical scale thickens Cormorant's horizontal
@@ -1416,7 +1438,13 @@
     margin-top: clamp(8px, 0.68vw, 14px);
     display: flex;
     justify-content: center;
+    /* Five links, not the three this was fitted to. Unwrapped they measured
+       102.1% of a 390px viewport — an overflow, not a tight fit. Wrapping is
+       the right answer rather than shrinking the type: the links are already
+       at a 10.5px floor. */
+    flex-wrap: wrap;
     gap: var(--end-gap);
+    row-gap: clamp(10px, 1.2vw, 18px);
     padding-inline: 7.18%;   /* the inset the section gave up, kept here */
   }
 
@@ -1473,7 +1501,7 @@
   .ending__link:focus-visible::after { transform: scaleX(1); }
 
   .ending__link:focus-visible {
-    outline: 1px solid var(--misono-indigo);
+    outline: 1px solid var(--li-red);
     outline-offset: 4px;
     border-radius: 1px;
   }
@@ -1499,6 +1527,10 @@
      landing off the top edge of the viewport. */
   #menu-heading, #beyond, #reserve { scroll-margin-top: clamp(24px, 5vh, 64px); }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ending__link,
     .ending__link::after { transition-duration: 1ms; }
@@ -1506,14 +1538,17 @@
 
   /* Phones. The desktop ratio already runs the mark to ~92% of the
      viewport, so there is almost nothing left to give here — 20vw is the
-     same 92%, and anything past it starts cropping the M. The phone gets
+     same 92%, and anything past it starts cropping the first letter. The phone gets
      its height from the stretch instead, pushed a little harder because a
      390px screen has proportionally more empty cream to fill. The 72svh
      minimum goes: on a phone the closing frame is as tall as its contents
      and no taller. */
   @media (max-width: 639px) {
     .ending {
-      --end-mark: 20vw;
+      /* Scaled by the same 2.12 as the desktop clamp when the wordmark went
+         from six glyphs to four. 20vw held MISONO at 92% of a phone; it held
+         LI'S at 43.6%. */
+      --end-mark: 42.4vw;
       --end-stretch: 1.22;
       min-height: 0;
       padding-top: clamp(64px, 22vw, 108px);
@@ -1540,7 +1575,7 @@
     --cream: var(--ground);
   }
 
-  /* 1. The gold that bounds the WhatsApp button. index.html picked #B8813F
+  /* 1. The gold that bounds the WhatsApp button. index.html picked #9C7230
         precisely because it clears 3:1 as a non-text boundary — on cream it
         makes it by 0.18, at 3.18:1. The peach is darker, and that margin was
         not there to spend: it falls to 2.81:1 and fails. Darkened until it
@@ -1548,7 +1583,7 @@
         ever decorative here (the rule, the ring), so no minimum applies to
         it, and on the button's dark hover state it still reads at 7.8:1. */
   .reserve {
-    --res-gold: #AC7634;
+    --res-gold: #9C7230;
   }
 
   /* 2. The closing gradient's tail is a literal, so --cream cannot reach it.
@@ -1557,7 +1592,7 @@
         settles". Same step applied to the peach rather than a new value
         chosen by eye. Leaves the footer links at 6.2:1 at their dimmest. */
   .ending {
-    background: linear-gradient(180deg, var(--ground) 0%, #F5E5DB 100%);
+    background: linear-gradient(180deg, var(--ground) 0%, #F4EBDD 100%);
   }
 
   /* 3. The wordmark needed NO change, which is worth recording because it
@@ -1582,86 +1617,93 @@
 
       <div class="flavors__title">
         <p class="flavors__eyebrow">The Menu</p>
+        <!-- Two words, and the pair is load-bearing: the entrance was
+             measured against these line widths at 1440x900, 1280x800 and
+             390x844. "Flavours" carries the British spelling the rest of the
+             site uses; it is one glyph wider than the American form and
+             nothing else moved. -->
         <h1 class="flavors__display" id="flavors-title">
           <span>Exceptional</span>
-          <span>Flavors</span>
+          <span>Flavours</span>
         </h1>
       </div>
 
-      <!-- Upper-left. The counter — the room's own craftsmanship, and the
-           darkest warm mass of the four. It holds the top-left the way the
-           reference's chef portrait does. -->
+      <!-- Upper-left. The wok — the kitchen's own craft, and the darkest warm
+           mass of the four. It holds the top-left the way the reference's
+           chef portrait does. -->
       <figure class="frame frame--ul">
         <div class="frame__plate">
           <picture>
-            <source type="image/avif" sizes="(max-width: 900px) 40.2vw, 15.1vw"
-                    srcset="assets/img/r/hero-omakase-1717-280.avif 280w, assets/img/r/hero-omakase-1717-350.avif 350w, assets/img/r/hero-omakase-1717-1010.avif 1010w, assets/img/r/hero-omakase-1717-1270.avif 1270w, assets/img/r/hero-omakase-1717-1717.avif 1717w">
-            <source type="image/webp" sizes="(max-width: 900px) 40.2vw, 15.1vw"
-                    srcset="assets/img/r/hero-omakase-1717-280.webp 280w, assets/img/r/hero-omakase-1717-1717.webp 1717w">
+            <source type="image/avif" sizes="(max-width: 900px) 41.2vw, 15.5vw"
+                    srcset="assets/img/r/lis-hero-290.avif 290w, assets/img/r/lis-hero-360.avif 360w, assets/img/r/lis-hero-520.avif 520w, assets/img/r/lis-hero-700.avif 700w, assets/img/r/lis-hero-1040.avif 1040w, assets/img/r/lis-hero-1250.avif 1250w, assets/img/r/lis-hero-1717.avif 1717w">
+            <source type="image/webp" sizes="(max-width: 900px) 41.2vw, 15.5vw"
+                    srcset="assets/img/r/lis-hero-290.webp 290w, assets/img/r/lis-hero-1717.webp 1717w">
             <img class="frame__img"
-               src="assets/img/hero-omakase-1717.jpg"
-               alt="The omakase counter at Misono, a chef working behind the pass under low warm light."
+               src="assets/img/lis-hero.jpg"
+               alt="A cook working a wok over an open flame under low warm light."
                width="900" height="1200" loading="eager" decoding="sync" fetchpriority="high">
           </picture>
         </div>
-        <figcaption class="frame__caption">The Counter</figcaption>
+        <figcaption class="frame__caption">The Wok</figcaption>
       </figure>
 
-      <!-- Upper-right. Flame off the teppan. The second dark anchor: the two
-           upper frames carry the weight so the title can sit high between
-           them. Desaturated a touch — at full strength the orange is the
-           loudest thing on a cream page and it pulls the eye off the type. -->
+      <!-- Upper-right. The duck on its platter. The second dark anchor: the
+           two upper frames carry the weight so the title can sit high between
+           them. Warm rather than bright, so the lacquer reads without pulling
+           the eye off the type. -->
       <figure class="frame frame--ur">
         <div class="frame__plate">
           <picture>
-            <source type="image/avif" sizes="(max-width: 900px) 39.6vw, 14.9vw"
-                    srcset="assets/img/r/teppanyaki-flambe-270.avif 270w, assets/img/r/teppanyaki-flambe-340.avif 340w, assets/img/r/teppanyaki-flambe-410.avif 410w, assets/img/r/teppanyaki-flambe-500.avif 500w, assets/img/r/teppanyaki-flambe-670.avif 670w">
-            <source type="image/webp" sizes="(max-width: 900px) 39.6vw, 14.9vw"
-                    srcset="assets/img/r/teppanyaki-flambe-270.webp 270w, assets/img/r/teppanyaki-flambe-670.webp 670w">
+            <source type="image/avif" sizes="(max-width: 900px) 41.2vw, 15.5vw"
+                    srcset="assets/img/r/menu-duck-290.avif 290w, assets/img/r/menu-duck-360.avif 360w, assets/img/r/menu-duck-430.avif 430w, assets/img/r/menu-duck-520.avif 520w, assets/img/r/menu-duck-700.avif 700w">
+            <source type="image/webp" sizes="(max-width: 900px) 41.2vw, 15.5vw"
+                    srcset="assets/img/r/menu-duck-290.webp 290w, assets/img/r/menu-duck-700.webp 700w">
             <img class="frame__img"
-               src="assets/img/teppanyaki-flambe.jpg"
-               alt="Flame rising off the teppan as sauce hits searing wagyu."
+               src="assets/img/menu-duck.jpg"
+               alt="Sliced Peking duck on a platter with pancakes, cucumber and spring onion."
                width="900" height="1200" loading="eager" decoding="sync">
           </picture>
         </div>
-        <figcaption class="frame__caption">Teppanyaki</figcaption>
+        <figcaption class="frame__caption">Peking Duck</figcaption>
       </figure>
 
-      <!-- Lower-left. Chirashi in the black bowl, shot on a white ground.
-           Cropped tight so the bowl fills the frame and reads as a dark
-           graphic circle — left loose, the white ground dissolves into the
-           cream and the frame disappears. -->
+      <!-- Lower-left. Dim sum in a dark bowl, shot on a pale ground. Cropped
+           tight so the bowl fills the frame and reads as a dark graphic
+           circle — left loose, the pale ground dissolves into the page and
+           the frame disappears. -->
       <figure class="frame frame--ll">
         <div class="frame__plate">
           <picture>
-            <source type="image/webp" sizes="(max-width: 600px) 48.7vw, (max-width: 900px) 52.7vw, 18.4vw"
-                    srcset="assets/img/r/chirashi-plate-340.webp 340w, assets/img/r/chirashi-plate-420.webp 420w, assets/img/r/chirashi-plate-610.webp 610w, assets/img/r/chirashi-plate-820.webp 820w, assets/img/r/chirashi-plate-1122.webp 1122w">
+            <source type="image/avif" sizes="(max-width: 900px) 52.4vw, (max-width: 1800px) 21.8vw, 19.7vw"
+                    srcset="assets/img/r/menu-dimsum-270.avif 270w, assets/img/r/menu-dimsum-360.avif 360w, assets/img/r/menu-dimsum-450.avif 450w, assets/img/r/menu-dimsum-650.avif 650w, assets/img/r/menu-dimsum-890.avif 890w">
+            <source type="image/webp" sizes="(max-width: 900px) 52.4vw, (max-width: 1800px) 21.8vw, 19.7vw"
+                    srcset="assets/img/r/menu-dimsum-270.webp 270w, assets/img/r/menu-dimsum-890.webp 890w">
             <img class="frame__img"
-               src="assets/img/chirashi-plate.webp"
-               alt="Chirashi in a black lacquer bowl: salmon, tuna, avocado, cucumber and wasabi around a dish of soy."
+               src="assets/img/menu-dimsum.jpg"
+               alt="Steamed dumplings set in a dark bowl with a spoon of chilli oil alongside."
                width="900" height="1200" loading="eager" decoding="sync">
           </picture>
         </div>
-        <figcaption class="frame__caption">Chirashi</figcaption>
+        <figcaption class="frame__caption">Dim Sum</figcaption>
       </figure>
 
-      <!-- Lower-right. Salmon nigiri and ikura gunkan, close. The brightest
-           of the four, and shot on direct flash, so it takes the heaviest
-           correction of the set. -->
+      <!-- Lower-right. Chilli garlic prawns straight out of the wok, close.
+           The brightest of the four, and the only one carrying real colour,
+           so it takes the heaviest correction of the set. -->
       <figure class="frame frame--lr">
         <div class="frame__plate">
           <picture>
-            <source type="image/avif" sizes="(max-width: 600px) 51.6vw, (max-width: 900px) 57.3vw, 19.7vw"
-                    srcset="assets/img/r/gallery/food7-260.avif 260w, assets/img/r/gallery/food7-320.avif 320w, assets/img/r/gallery/food7-390.avif 390w, assets/img/r/gallery/food7-470.avif 470w, assets/img/r/gallery/food7-564.avif 564w">
-            <source type="image/webp" sizes="(max-width: 600px) 51.6vw, (max-width: 900px) 57.3vw, 19.7vw"
-                    srcset="assets/img/r/gallery/food7-260.webp 260w, assets/img/r/gallery/food7-564.webp 564w">
+            <source type="image/avif" sizes="(max-width: 900px) 56.9vw, (max-width: 1800px) 23.7vw, 21.4vw"
+                    srcset="assets/img/r/menu-seafood-250.avif 250w, assets/img/r/menu-seafood-390.avif 390w, assets/img/r/menu-seafood-490.avif 490w, assets/img/r/menu-seafood-900.avif 900w">
+            <source type="image/webp" sizes="(max-width: 900px) 56.9vw, (max-width: 1800px) 23.7vw, 21.4vw"
+                    srcset="assets/img/r/menu-seafood-250.webp 250w, assets/img/r/menu-seafood-900.webp 900w">
             <img class="frame__img"
-               src="assets/img/gallery/food7.jpg"
-               alt="Salmon nigiri and ikura gunkan close up, cucumber and radish alongside."
+               src="assets/img/menu-seafood.jpg"
+               alt="Prawns tossed with chilli and peppers in a steel wok."
                width="900" height="1200" loading="eager" decoding="sync">
           </picture>
         </div>
-        <figcaption class="frame__caption">Sashimi</figcaption>
+        <figcaption class="frame__caption">Seafood</figcaption>
       </figure>
 
     </div>
@@ -1679,97 +1721,436 @@
     <div class="carte__inner">
 
       <header class="carte__head">
-        <p class="carte__eyebrow">Kitchen &amp; Counter</p>
+        <p class="carte__eyebrow">Wok &amp; Steamer</p>
         <h2 class="carte__title" id="carte-title">The Carte</h2>
+        <!-- REAL. Every dish and every price below is Li's own, read off the
+             official menu on 2026-08-26. Nothing here is invented — which
+             reverses what this page used to be, where all of it was. Prices
+             are a menu and will move: re-read the source before launch. -->
         <p class="carte__note">
-          The counter changes with the market, so the omakase is written the morning
-          it is served. Everything else below is on every night.
+          Cooked to order and meant for the middle of the table rather than for one
+          person. The duck is worth asking for when you book; everything else below
+          is on every night the doors are open.
         </p>
       </header>
 
       <div class="carte__grid">
 
-        <section class="course course--wide" aria-labelledby="course-omakase">
-          <h3 class="course__name" id="course-omakase">Omakase</h3>
+        <section class="course course--wide" aria-labelledby="course-signatures">
+          <h3 class="course__name" id="course-signatures">Signatures</h3>
           <div class="course__list">
             <div class="dish">
-              <p class="dish__name">Nine Courses</p>
-              <p class="dish__price">KES 12,500</p>
-              <p class="dish__note">Seasonal sashimi, two hot plates, eight pieces of nigiri and a dessert. About two hours.</p>
+              <p class="dish__name">Peking Duck</p>
+              <p class="dish__price">KSh 2,900 &middot; 4,900</p>
+              <p class="dish__note">Half or whole, carved and served with thin pancakes, cucumber and spring onion. Worth asking for when you book.</p>
             </div>
             <div class="dish">
-              <p class="dish__name">Fifteen Courses</p>
-              <p class="dish__price">KES 19,500</p>
-              <p class="dish__note">The full counter, cooked in front of you and paced to the room. Best taken early.</p>
+              <p class="dish__name">Li&rsquo;s Golden Squid</p>
+              <p class="dish__price">KSh 1,850</p>
+              <p class="dish__note">Salt and pepper squid, fried light and served with nothing on it.</p>
             </div>
             <div class="dish">
-              <p class="dish__name">Wagyu Omakase</p>
-              <p class="dish__price">KES 24,000</p>
-              <p class="dish__note">Fifteen courses built around A5, finished on the teppan. Two guests minimum.</p>
+              <p class="dish__name">Chilli Garlic Ginger Lobster</p>
+              <p class="dish__price">KSh 4,900</p>
+              <p class="dish__note">The largest thing on the carte, and the dish the coast kitchen made its name on.</p>
             </div>
             <div class="dish">
-              <p class="dish__name">Sake Pairing</p>
-              <p class="dish__price">KES 7,500</p>
-              <p class="dish__note">Five pours chosen against the menu on the night, poured as each course lands.</p>
+              <p class="dish__name">Li&rsquo;s Prawn Hot Pot</p>
+              <p class="dish__price">KSh 2,100</p>
+              <p class="dish__note">Brought to the table still going in the pot.</p>
             </div>
           </div>
         </section>
 
-        <section class="course" aria-labelledby="course-sushi">
-          <h3 class="course__name" id="course-sushi">Sushi &amp; Sashimi</h3>
+        <section class="course" aria-labelledby="course-starters">
+          <h3 class="course__name" id="course-starters">Starters &amp; Dim Sum</h3>
           <div class="course__list">
-            <div class="dish"><p class="dish__name">Otoro Nigiri</p><p class="dish__price">KES 2,400</p></div>
-            <div class="dish"><p class="dish__name">Salmon Nigiri</p><p class="dish__price">KES 950</p></div>
-            <div class="dish"><p class="dish__name">Yellowtail Sashimi</p><p class="dish__price">KES 1,850</p></div>
-            <div class="dish"><p class="dish__name">Ikura Gunkan</p><p class="dish__price">KES 1,200</p></div>
-            <div class="dish"><p class="dish__name">Chirashi Bowl</p><p class="dish__price">KES 3,600</p></div>
-            <div class="dish"><p class="dish__name">Sashimi Moriawase</p><p class="dish__price">KES 5,200</p></div>
+            <div class="dish">
+              <p class="dish__name">Chicken Dim Sum</p>
+              <p class="dish__price">KSh 1,450</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Prawns Dim Sum</p>
+              <p class="dish__price">KSh 2,100</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Dim Sum</p>
+              <p class="dish__price">KSh 1,200</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Li&rsquo;s Special Spring Rolls</p>
+              <p class="dish__price">KSh 210 &middot; 350</p>
+              <p class="dish__note">Chicken or beef; or with toppings.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Spring Rolls</p>
+              <p class="dish__price">KSh 160</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Salt &amp; Pepper Prawns</p>
+              <p class="dish__price">KSh 2,100</p>
+              <p class="dish__note">Ten pieces.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Prawns in Bread Crumbs</p>
+              <p class="dish__price">KSh 2,100</p>
+              <p class="dish__note">Ten pieces.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Special Wings Stuffed with Prawns</p>
+              <p class="dish__price">KSh 2,600</p>
+              <p class="dish__note">Eight pieces.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Spicy Chicken Lollipop</p>
+              <p class="dish__price">KSh 1,450</p>
+              <p class="dish__note">Ten pieces.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Li&rsquo;s Lamb Spare Ribs</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Li&rsquo;s Crispy Chicken</p>
+              <p class="dish__price">KSh 1,250</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Prawn Crackers</p>
+              <p class="dish__price">KSh 800</p>
+            </div>
           </div>
         </section>
 
-        <section class="course" aria-labelledby="course-teppan">
-          <h3 class="course__name" id="course-teppan">Teppanyaki</h3>
+        <section class="course" aria-labelledby="course-soups">
+          <h3 class="course__name" id="course-soups">Soups</h3>
           <div class="course__list">
-            <div class="dish"><p class="dish__name">Wagyu A5</p><p class="dish__price">KES 8,900</p></div>
-            <div class="dish"><p class="dish__name">Lobster Tail</p><p class="dish__price">KES 6,400</p></div>
-            <div class="dish"><p class="dish__name">Hokkaido Scallops</p><p class="dish__price">KES 3,800</p></div>
-            <div class="dish"><p class="dish__name">Black Cod</p><p class="dish__price">KES 4,200</p></div>
-            <div class="dish"><p class="dish__name">Garlic Rice</p><p class="dish__price">KES 1,100</p></div>
-            <div class="dish"><p class="dish__name">Market Vegetables</p><p class="dish__price">KES 1,400</p></div>
+            <div class="dish">
+              <p class="dish__name">Seafood Soup</p>
+              <p class="dish__price">KSh 950</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Crab Meat Soup</p>
+              <p class="dish__price">KSh 950</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Tom Yum Soup</p>
+              <p class="dish__price">KSh 950</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken Hot &amp; Sour Soup</p>
+              <p class="dish__price">KSh 750</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken Sweet Corn Soup</p>
+              <p class="dish__price">KSh 750</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken Wonton Soup</p>
+              <p class="dish__price">KSh 750</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Wonton Soup</p>
+              <p class="dish__price">KSh 650</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Hot &amp; Sour Soup</p>
+              <p class="dish__price">KSh 650</p>
+            </div>
           </div>
         </section>
 
-        <section class="course" aria-labelledby="course-small">
-          <h3 class="course__name" id="course-small">Small Plates</h3>
+        <section class="course" aria-labelledby="course-chicken">
+          <h3 class="course__name" id="course-chicken">From the Wok &mdash; Chicken</h3>
           <div class="course__list">
-            <div class="dish"><p class="dish__name">Edamame, Sea Salt</p><p class="dish__price">KES 700</p></div>
-            <div class="dish"><p class="dish__name">Agedashi Tofu</p><p class="dish__price">KES 1,150</p></div>
-            <div class="dish"><p class="dish__name">Pork Gyoza</p><p class="dish__price">KES 1,300</p></div>
-            <div class="dish"><p class="dish__name">Chicken Karaage</p><p class="dish__price">KES 1,450</p></div>
-            <div class="dish"><p class="dish__name">Miso Soup</p><p class="dish__price">KES 650</p></div>
+            <div class="dish">
+              <p class="dish__name">Kung Pao Chicken</p>
+              <p class="dish__price">KSh 1,500</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Cashew Nut Chicken</p>
+              <p class="dish__price">KSh 1,500</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Schezwan Chicken</p>
+              <p class="dish__price">KSh 1,500</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken Sizzler</p>
+              <p class="dish__price">KSh 1,700</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken Hot Pot</p>
+              <p class="dish__price">KSh 1,700</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chilli Garlic Chicken</p>
+              <p class="dish__price">KSh 1,400</p>
+              <p class="dish__note">Dry, or with sauce.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Lemon &amp; Ginger Chicken</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sesame Chicken</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken in Black Bean Sauce</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sweet &amp; Sour Chicken</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-beef">
+          <h3 class="course__name" id="course-beef">Beef &amp; Lamb</h3>
+          <div class="course__list">
+            <div class="dish">
+              <p class="dish__name">Sizzling Beef</p>
+              <p class="dish__price">KSh 1,700</p>
+              <p class="dish__note">Brought to the table on the iron, still going.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sizzling Lamb</p>
+              <p class="dish__price">KSh 1,700</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chilli Garlic Beef</p>
+              <p class="dish__price">KSh 1,550</p>
+              <p class="dish__note">Dry, or with sauce.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Beef in Oyster Sauce</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Beef with Broccoli</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Beef in Black Bean Sauce</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Dry Chilli Garlic Lamb</p>
+              <p class="dish__price">KSh 1,600</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Lamb in Black Bean Sauce</p>
+              <p class="dish__price">KSh 1,450</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Schezwan Lamb</p>
+              <p class="dish__price">KSh 1,450</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Lamb with Green Pepper</p>
+              <p class="dish__price">KSh 1,450</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-seafood">
+          <h3 class="course__name" id="course-seafood">Seafood</h3>
+          <div class="course__list">
+            <div class="dish">
+              <p class="dish__name">Chilli Garlic Crab</p>
+              <p class="dish__price">KSh 3,100</p>
+              <p class="dish__note">Whole.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chilli Garlic Crab Meat</p>
+              <p class="dish__price">KSh 3,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Crab with Spring Onion</p>
+              <p class="dish__price">KSh 3,100</p>
+              <p class="dish__note">Hong Kong style.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sizzling Prawns</p>
+              <p class="dish__price">KSh 2,200</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Dry Chilli Garlic Prawns</p>
+              <p class="dish__price">KSh 2,100</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Shanghai Style Prawns</p>
+              <p class="dish__price">KSh 2,100</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sweet &amp; Sour Prawns</p>
+              <p class="dish__price">KSh 2,100</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sizzling Squid</p>
+              <p class="dish__price">KSh 2,100</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Steamed Whole Fish</p>
+              <p class="dish__price">KSh 1,900</p>
+              <p class="dish__note">Light soya, or chilli.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Fried Whole Fish</p>
+              <p class="dish__price">KSh 1,900</p>
+              <p class="dish__note">Sweet and sour, light soya, or chilli.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Schezwan Spicy Fish</p>
+              <p class="dish__price">KSh 1,550</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-vegetables">
+          <h3 class="course__name" id="course-vegetables">Vegetables &amp; Tofu</h3>
+          <div class="course__list">
+            <div class="dish">
+              <p class="dish__name">Mapau Tofu</p>
+              <p class="dish__price">KSh 1,450</p>
+              <p class="dish__note">Pili-pili tofu.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Home Cooked Tofu</p>
+              <p class="dish__price">KSh 1,450</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Sizzling Mixed Vegetables</p>
+              <p class="dish__price">KSh 1,500</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Kung Pao Vegetables</p>
+              <p class="dish__price">KSh 1,500</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Manchurian</p>
+              <p class="dish__price">KSh 1,400</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Mixed Vegetable Hot Pot</p>
+              <p class="dish__price">KSh 1,450</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Schezwan Eggplant</p>
+              <p class="dish__price">KSh 1,250</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Garlic Broccoli</p>
+              <p class="dish__price">KSh 1,250</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Stir Fried Pak Choi</p>
+              <p class="dish__price">KSh 1,250</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chilli Garlic French Beans</p>
+              <p class="dish__price">KSh 1,250</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="course" aria-labelledby="course-rice">
+          <h3 class="course__name" id="course-rice">Rice &amp; Noodles</h3>
+          <div class="course__list">
+            <div class="dish">
+              <p class="dish__name">Special Fried Rice</p>
+              <p class="dish__price">KSh 1,050</p>
+              <p class="dish__note">Prawns, chicken, or both.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Fried Rice with Cashew Nuts</p>
+              <p class="dish__price">KSh 995</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Fried Rice</p>
+              <p class="dish__price">KSh 850</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Steamed Rice</p>
+              <p class="dish__price">KSh 800</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chicken Fried Noodles</p>
+              <p class="dish__price">KSh 995</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Chilli Garlic Noodles</p>
+              <p class="dish__price">KSh 850</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Singapore Noodles</p>
+              <p class="dish__price">KSh 850</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Vegetable Fried Noodles</p>
+              <p class="dish__price">KSh 850</p>
+            </div>
           </div>
         </section>
 
         <section class="course" aria-labelledby="course-dessert">
           <h3 class="course__name" id="course-dessert">Dessert</h3>
           <div class="course__list">
-            <div class="dish"><p class="dish__name">Matcha Mochi</p><p class="dish__price">KES 950</p></div>
-            <div class="dish"><p class="dish__name">Yuzu Sorbet</p><p class="dish__price">KES 850</p></div>
-            <div class="dish"><p class="dish__name">Black Sesame Custard</p><p class="dish__price">KES 1,050</p></div>
-            <div class="dish"><p class="dish__name">Hojicha Ice Cream</p><p class="dish__price">KES 800</p></div>
+            <div class="dish">
+              <p class="dish__name">Date Pancake</p>
+              <p class="dish__price">KSh 650</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Banana Fritters</p>
+              <p class="dish__price">KSh 650</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Lychee</p>
+              <p class="dish__price">KSh 650</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Ice Cream</p>
+              <p class="dish__price">KSh 650</p>
+              <p class="dish__note">Two scoops.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Fruit Salad</p>
+              <p class="dish__price">KSh 650</p>
+            </div>
           </div>
         </section>
 
-        <!-- Wide, because six courses in two columns leaves the last one
-             alone on the left with a hole beside it. Running the drinks
-             across the foot closes the block. -->
-        <section class="course course--wide" aria-labelledby="course-sake">
-          <h3 class="course__name" id="course-sake">Sake &amp; Whisky</h3>
+        <section class="course" aria-labelledby="course-drinks">
+          <h3 class="course__name" id="course-drinks">Tea, Wine &amp; Cocktails</h3>
           <div class="course__list">
-            <div class="dish"><p class="dish__name">Junmai Daiginjo, glass</p><p class="dish__price">KES 1,800</p></div>
-            <div class="dish"><p class="dish__name">Nigori, glass</p><p class="dish__price">KES 1,400</p></div>
-            <div class="dish"><p class="dish__name">Sake Flight, three</p><p class="dish__price">KES 3,200</p></div>
-            <div class="dish"><p class="dish__name">Japanese Whisky, measure</p><p class="dish__price">KES 2,600</p></div>
+            <div class="dish">
+              <p class="dish__name">Chinese Tea</p>
+              <p class="dish__price">KSh 350</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Li&rsquo;s Mojito</p>
+              <p class="dish__price">KSh 900</p>
+              <p class="dish__note">The barman&rsquo;s choice.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Li&rsquo;s Special Cocktail</p>
+              <p class="dish__price">KSh 900</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Dawa</p>
+              <p class="dish__price">KSh 800</p>
+              <p class="dish__note">With, or without.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">House Wine</p>
+              <p class="dish__price">KSh 850 &middot; 3,500</p>
+              <p class="dish__note">By the glass, or the bottle.</p>
+            </div>
+            <div class="dish">
+              <p class="dish__name">Tusker</p>
+              <p class="dish__price">KSh 400</p>
+            </div>
           </div>
         </section>
 
@@ -1821,15 +2202,15 @@
       </svg>
       <div class="reserve__frame">
         <picture>
-          <source type="image/avif" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
-                  srcset="assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
-          <source type="image/webp" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
-                  srcset="assets/img/r/reserve-interior-1150.webp 1150w, assets/img/r/reserve-interior-1400.webp 1400w">
+          <source type="image/avif" sizes="(max-width: 1000px) 100.9vw, 62.6vw"
+                  srcset="assets/img/r/reserve-interior-640.avif 640w, assets/img/r/reserve-interior-770.avif 770w, assets/img/r/reserve-interior-920.avif 920w, assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
+          <source type="image/webp" sizes="(max-width: 1000px) 100.9vw, 62.6vw"
+                  srcset="assets/img/r/reserve-interior-640.webp 640w, assets/img/r/reserve-interior-1400.webp 1400w">
           <img class="reserve__img" src="assets/img/reserve-interior.jpg"
              width="1400" height="1576"
-             alt="A dim Japanese dining room: dark wood tables set with ceramic
-                  dishes and vermilion lacquer cups, two small glass pendants
-                  lit warm above a counter, shoji screens behind." loading="lazy" decoding="async" fetchpriority="low">
+             alt="A warm, low-lit dining room: dark timber, a long run of small
+                  pendant lights, tables laid and waiting along one side."
+             loading="lazy" decoding="async" fetchpriority="low">
         </picture>
       </div>
     </figure>
@@ -1841,12 +2222,12 @@
 
       <hr class="reserve__rule" aria-hidden="true">
 
-      <p class="reserve__body">A counter, a season, and a chef who decides the
-        order. Tell us when you would like to sit and how many are coming &mdash;
-        the evening is arranged from there.</p>
+      <p class="reserve__body">A round table, a duck that wants ordering ahead, and
+        a kitchen that would rather know you are coming. Tell us when, and how many
+        &mdash; the rest is arranged from there.</p>
 
       <a class="reserve__cta"
-         href="https://wa.me/254700000000?text=Hello%20Misono%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
+         href="https://wa.me/254746815106?text=Hello%20Li%E2%80%99s%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ABranch%20(Nairobi%20or%20Mombasa)%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
          target="_blank" rel="noopener">
         <span class="reserve__ctalbl">Reserve now</span>
         <svg class="reserve__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
@@ -1863,25 +2244,26 @@
             <path d="M12 7.1V12l3.4 2"/>
           </svg>
           <span class="reserve__metalbl">Opening hours</span>
-          <!-- CONFIRMED BY THE CLIENT 2026-08-20, and this reverses the
-               2026-08-17 change. Between 17 and 20 August the site carried
-               "Nairobi 12:00-21:30 / Mombasa 12:00-21:00", taken from public
-               listings (misono.co.ke, EatOut, Foursquare) because those were
-               judged more likely to be current than a phrase remembered from
-               conversation. That judgement was wrong: asked directly, the
-               client confirmed the hours they gave on 2026-08-15 — one
-               schedule for both branches, noon to 11pm, every day.
+          <!-- RESEARCHED 2026-08-26 from Li's own site and the Mombasa
+               listing, and NOT YET CONFIRMED BY THE CLIENT. Both branches are
+               closed Mondays and open Tuesday to Sunday from 11:00; they close
+               at DIFFERENT times — Nairobi 22:30, Mombasa 21:00.
 
-               The listings are therefore stale, not the brief. Worth
-               remembering the next time a public source disagrees with the
-               person who owns the restaurant.
+               This block is byte-copied to four pages, so it cannot carry a
+               closing time without asserting one branch's hours as the whole
+               house's. "Closed Mondays" is true of both, which is why it is
+               what stands here; the exact times live in the location bands and
+               the FAQ on contact.html, where they are allowed to differ.
+
+               Keep it in step with that FAQ answer. It is the same claim made
+               twice on one page and the pair has drifted apart before.
 
                Two lines, not three. The copy column is an aspect-locked block
                of 48.1u of measured ink, verified to fit one screen from
                1000x700 to 2560x1440; a third line changes that height and the
-               fit has to be re-solved. Both lines here are shorter than the
-               branch lines they replace, so the fit can only improve. -->
-          <span class="reserve__metaval">Monday &ndash; Sunday<br>12:00 &ndash; 23:00</span>
+               fit has to be re-solved. Both lines here are no longer than the
+               ones they replace, so the fit can only improve. -->
+          <span class="reserve__metaval">Tuesday &ndash; Sunday<br>Closed Mondays</span>
         </li>
         <li class="reserve__metaitem">
           <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -1896,25 +2278,26 @@
 
   </section>
 
-<!-- ========================================================= ending ==== -->
+<!-- ================================================== ending ==== -->
 <footer class="ending">
   <!-- Decorative repeat of the hero's h1. Hidden from assistive tech so the
        brand name is not announced twice on the way out. -->
-  <p class="ending__mark" aria-hidden="true">MISONO</p>
+  <p class="ending__mark" aria-hidden="true">LI&rsquo;S</p>
 
-  <!-- All three now point at real pages, which is what the placeholder note
-       that used to sit above this block was waiting for. Contact went to
-       #reserve until 2026-08-17 — that was the site's only link INTO the
-       reservation block, so the booking CTA is now reached by scrolling
-       rather than by navigating. Noted in CLAUDE.md; it is a consequence of
-       the link change, not an oversight. -->
+  <!-- Five links, not three. Locations and Reservations were added on
+       2026-08-26: both are places a reader actually wants to reach from the
+       foot of any page, and neither had a route that was not a scroll.
+       #reserve resolves on the page the reader is already on, because all
+       four carry the block. -->
   <nav class="ending__nav" aria-label="Footer">
     <a class="ending__link" href="menu.html" aria-current="page">Menu</a>
     <a class="ending__link" href="about.html">About</a>
     <a class="ending__link" href="contact.html">Contact</a>
+    <a class="ending__link" href="contact.html#locations">Locations</a>
+    <a class="ending__link" href="#reserve">Reservations</a>
   </nav>
 
-  <p class="ending__note">&copy; 2026 Misono</p>
+  <p class="ending__note">&copy; 2026 Li&rsquo;s Chinese Restaurant</p>
 </footer>
 
 <script>

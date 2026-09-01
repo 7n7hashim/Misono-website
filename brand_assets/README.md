@@ -1,52 +1,57 @@
-# brand_assets
+# Li's Chinese Restaurant — brand assets
 
-## What's here
+## What is real
 
-`misono logo.jpeg` — a **photograph of the printed logo** (831×702), shot at an angle,
-soft focus, on paper. It is a usable colour and shape reference. It is **not** a usable
-web asset: the paper background is opaque, so it cannot be placed straight onto a
-coloured or dark ground without a cream rectangle coming with it.
+- **`lis-logo-official-150.jpg`** — the actual logo, downloaded from
+  `lischineserestaurantnairobi.co.ke/logo.jpg` on 2026-08-26. It is the ONLY
+  artwork obtainable: **150x150, JPEG, on an opaque white square**. Measured
+  brand colours are red **#CD393E** and black **#1B191A**, and those are the
+  values `--brand-red` and the mark's ink are taken from.
 
-`misono-mark.svg` / `misono-mark-mono.svg` — the four-petal mon, **traced by hand from
-that photo**. The first sits on a navy ground; the second is a single-colour version on a
-transparent ground, so its colour can be driven from CSS rather than baked in.
+  At 150px it cannot be a hero wordmark and it cannot sit on a photograph.
+  **Ask the client for vector artwork.**
 
-> **These are reconstructions, not the original artwork.** They were matched against the
-> photo across several passes and are close, but the source was blurry and skewed. Check
-> them against real artwork before anything ships publicly.
+## What is a reconstruction
 
-## One measured fact about the logo
+- **`lis-mark.svg`** — the mark redrawn from that JPEG, and inlined into all
+  four pages. **VERIFY IT AGAINST OFFICIAL ARTWORK BEFORE LAUNCH.**
 
-The photo is underexposed — its paper reads `#B4BBB1`. White-balancing that to `#FEFEFE`
-puts the printed navy at roughly **`#3A5280`**.
+  How it was made, because the method decides whether it is faithful:
 
-This is a measurement, not a brand spec, and not a recommendation to build on. It is
-recorded only so nobody has to re-derive it. A real style guide overrides it outright.
+  - **Ring.** The red pixels form an annulus at r 65–75.7px about (75,75) in
+    the source. In a 100-unit box: `cx=50 cy=50 r=46.2 stroke-width=7.1`.
+  - **Chopsticks.** Two tapered bars, handles at the top, tips at the bottom.
+    A runs x=2.25 at the top to x≈26.6 at the bottom (slope 0.217), width
+    5.3→2.4. B is near-vertical at x≈22.7, width 6→1.8. They cross at
+    **y≈88**, low in the ring, which is what the source does.
+  - **The `Li's` lettering is FITTED, NOT TRACED.** A Moore-boundary trace of
+    the 150px glyphs produced visible staircase artefacts and would have
+    shipped worse than either alternative. The letterforms are straight-edged
+    wedges, so their edges were **least-squares fitted** instead: the L stem's
+    left edge is `x = 0.0836y + 34.47` and its right `x = -0.0813y + 43.54`,
+    residual **0.17 units**. The edges really are straight, which is why
+    fitting beats tracing. The `s` is the one genuinely curved glyph and is a
+    blurred trace with two Chaikin passes.
 
-## Still needed
+  Everything takes `currentColor`, so one file works white on a photograph
+  and two-tone on the ivory.
 
-| File | Why it's needed |
-|---|---|
-| `logo.svg` (or a transparent PNG) | The full lockup, including the wordmark's actual typeface. No typeface here is the real one. **Do not recolour, distort or redraw the supplied logo.** |
-| Real artwork for the mon | To replace the trace above. |
-| `palette.txt` / style guide | Exact brand hex values. Everything currently known is the single approximate reading above. |
-| Real Misono footage and stills | There is none in the project. |
+- **`../assets/favicon.svg`** — the same mark, flattened: no `<use>`, no
+  `currentColor`, since a tab icon inherits no CSS context. **An XML comment
+  may not contain a double hyphen** — written the obvious way the file stops
+  being well-formed and the browser shows a broken-image icon with a clean
+  200 on the wire and nothing in the console. This file carries no comments
+  at all.
 
-## Notes for whoever sources stock
+## The wordmark
 
-- **Pexels** ([license](https://www.pexels.com/license/)) permits commercial use with no
-  attribution. It was the source used previously and is a safe default.
-- **Mixkit is not an option for this site.** Its free 720p downloads are Restricted
-  License — personal use only. Commercial use needs a paid Envato subscription.
-- Free-licence sushi footage almost universally shows food-service gloves or a bright
-  white board; that is a property of the genre, not of any particular search. Real
-  bare-handed itamae footage would have to be commissioned.
+`LI'S` is set in Cormorant Garamond, not in the logo's own lettering. A 150px
+raster cannot supply a 120px wordmark, and a typographic lockup is the honest
+answer. Size and tracking are solved together — see `.hero__name` in
+`index.html`; four glyphs enlarged on their own get big before they get wide.
 
-## After adding real logo artwork
+## Superseded
 
-1. Sample the actual hex values from it and replace the approximate navy above.
-2. Replace `misono-mark.svg` and `misono-mark-mono.svg` with the real artwork and delete
-   the provenance warnings.
-3. Update this file so it stops describing an approximation nobody needs any more.
-
-Filenames with spaces must be URL-encoded when referenced from HTML (`my%20logo.svg`).
+Misono's artwork (`misono logo.jpeg`, `misono-mark.svg`,
+`misono-mark-mono.svg`) is in `_archive/misono-bakes/`. It belongs to a
+different restaurant and must not reach this site.

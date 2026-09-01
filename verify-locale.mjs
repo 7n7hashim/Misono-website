@@ -112,6 +112,13 @@ console.log('CAP HEIGHT — target 2.70% of viewport width\n');
          So the window is [first ink column, +1.15em], which contains `M` or
          `N` and at most a sliver of the following x-height letter. Neither
          reaches above the cap, so the extent over that window IS the cap. */
+      /* Buffer.from() around the screenshot is NOT decoration. puppeteer
+         returns a Uint8Array from page.screenshot(), and Uint8Array's
+         toString() ignores its argument and returns the bytes as a
+         comma-separated decimal list — "137,80,78,71,..." — so the data URL
+         is silently malformed and the only symptom is an EncodingError from
+         img.decode() several frames later. Buffer.isBuffer() on the result
+         is the quick check. */
       const ink = await page.evaluate(async (dataUrl, fs) => {
         const img = new Image(); img.src = dataUrl; await img.decode();
         const c = document.createElement('canvas');
@@ -120,7 +127,7 @@ console.log('CAP HEIGHT — target 2.70% of viewport width\n');
         const d = g.getImageData(0, 0, c.width, c.height).data;
         const isInk = (x, y) => {
           const i = (y * c.width + x) * 4;
-          // ground F7E8DF (247,232,223) vs ink 2F1B19 (47,27,25)
+          // ground F6EEE1 (246,238,225) vs ink 241A14 (36,26,20)
           return d[i] < 170 && d[i + 1] < 150;
         };
         let firstCol = -1;
@@ -133,7 +140,7 @@ console.log('CAP HEIGHT — target 2.70% of viewport width\n');
           for (let x = firstCol; x <= lastCol; x++)
             if (isInk(x, y)) { if (top < 0) top = y; bot = y; break; }
         return { top, bot, firstCol, lastCol };
-      }, 'data:image/png;base64,' + png.toString('base64'), box.fs);
+      }, 'data:image/png;base64,' + Buffer.from(png).toString('base64'), box.fs);
 
       /* Cross-check through the font's own metrics. actualBoundingBoxAscent
          of a single capital IS the cap height, measured by the same engine
@@ -241,7 +248,7 @@ console.log('\nSEAM — .details ground against .locale ground\n');
       out.push([d[i], d[i + 1], d[i + 2]]);
     }
     return out;
-  }, 'data:image/png;base64,' + png.toString('base64'));
+  }, 'data:image/png;base64,' + Buffer.from(png).toString('base64'));
 
   let maxStep = 0, at = -1;
   for (let i = 1; i < rows.length; i++) {

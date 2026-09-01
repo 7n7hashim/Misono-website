@@ -1,0 +1,180 @@
+[
+  {
+    "path": "/",
+    "profile": "desktop",
+    "total": 343278,
+    "count": 17,
+    "byKind": {
+      "other": 13131,
+      "img:avif": 241346,
+      "font": 88801
+    },
+    "loadMs": 70,
+    "lcp": 0,
+    "lcpEl": "",
+    "cls": 0,
+    "fcp": 144,
+    "longTasks": 0,
+    "tbt": 0,
+    "ttfb": 3,
+    "domContentLoaded": 49
+  },
+  {
+    "path": "/menu.html",
+    "profile": "desktop",
+    "total": 218545,
+    "count": 9,
+    "byKind": {
+      "other": 10706,
+      "img:avif": 142957,
+      "font": 64882
+    },
+    "loadMs": 55,
+    "lcp": 132,
+    "lcpEl": "frame__img",
+    "cls": 0,
+    "fcp": 100,
+    "longTasks": 0,
+    "tbt": 0,
+    "ttfb": 2,
+    "domContentLoaded": 44,
+    "lcpAll": [
+      "132 frame__img"
+    ]
+  },
+  {
+    "path": "/about.html",
+    "profile": "desktop",
+    "total": 250858,
+    "count": 9,
+    "byKind": {
+      "other": 17668,
+      "img:avif": 144389,
+      "font": 88801
+    },
+    "loadMs": 67,
+    "lcp": 0,
+    "lcpEl": "",
+    "cls": 0,
+    "fcp": 132,
+    "longTasks": 0,
+    "tbt": 0,
+    "ttfb": 3,
+    "domContentLoaded": 65
+  },
+  {
+    "path": "/contact.html",
+    "profile": "desktop",
+    "total": 851352,
+    "count": 8,
+    "byKind": {
+      "other": 15146,
+      "img:avif": 771324,
+      "font": 64882
+    },
+    "loadMs": 72,
+    "lcp": 0,
+    "lcpEl": "",
+    "cls": 0,
+    "fcp": 148,
+    "longTasks": 0,
+    "tbt": 0,
+    "ttfb": 3,
+    "domContentLoaded": 66
+  },
+  {
+    "path": "/",
+    "profile": "mobile",
+    "total": 592597,
+    "count": 17,
+    "byKind": {
+      "other": 13131,
+      "img:avif": 490665,
+      "font": 88801
+    },
+    "loadMs": 3219,
+    "lcp": 1092,
+    "lcpEl": "hero__name",
+    "cls": 0.0059,
+    "fcp": 424,
+    "longTasks": 0,
+    "tbt": 0,
+    "ttfb": 3,
+    "domContentLoaded": 279,
+    "lcpAll": [
+      "1092 hero__name"
+    ]
+  },
+  {
+    "path": "/menu.html",
+    "profile": "mobile",
+    "total": 409574,
+    "count": 9,
+    "byKind": {
+      "other": 10706,
+      "img:avif": 333986,
+      "font": 64882
+    },
+    "loadMs": 2304,
+    "lcp": 2368,
+    "lcpEl": "frame__img",
+    "cls": 0.0083,
+    "fcp": 400,
+    "longTasks": 0,
+    "tbt": 0,
+    "ttfb": 7,
+    "domContentLoaded": 220,
+    "lcpAll": [
+      "432 SPAN",
+      "1216 frame__img",
+      "1832 frame__img",
+      "2368 frame__img"
+    ]
+  },
+  {
+    "path": "/about.html",
+    "profile": "mobile",
+    "total": 229947,
+    "count": 9,
+    "byKind": {
+      "other": 17668,
+      "img:avif": 123478,
+      "font": 88801
+    },
+    "loadMs": 1389,
+    "lcp": 1000,
+    "lcpEl": "opening__title",
+    "cls": 0.0006,
+    "fcp": 416,
+    "longTasks": 1,
+    "tbt": 24,
+    "ttfb": 2,
+    "domContentLoaded": 348,
+    "lcpAll": [
+      "1000 opening__title"
+    ]
+  },
+  {
+    "path": "/contact.html",
+    "profile": "mobile",
+    "total": 329487,
+    "count": 8,
+    "byKind": {
+      "other": 15146,
+      "img:avif": 249459,
+      "font": 64882
+    },
+    "loadMs": 1899,
+    "lcp": 932,
+    "lcpEl": "topbar__link",
+    "cls": 0,
+    "fcp": 416,
+    "longTasks": 1,
+    "tbt": 34,
+    "ttfb": 3,
+    "domContentLoaded": 355,
+    "lcpAll": [
+      "932 topbar__link"
+    ]
+  }
+]

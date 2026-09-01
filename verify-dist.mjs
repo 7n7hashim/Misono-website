@@ -76,7 +76,7 @@ async function pixels(browser, a, b) {
       if (m > maxd) maxd = m;
     }
     return { pctDiff: (diff / (p1.length / 4)) * 100, maxd, box: diff ? [minX, minY, maxX, maxY] : null, size: [A.width, A.height] };
-  }, a.toString('base64'), b.toString('base64'));
+  }, Buffer.from(a).toString('base64'), Buffer.from(b).toString('base64'));
   await p.close();
   return r;
 }

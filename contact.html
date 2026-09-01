@@ -3,12 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Misono — We’re at Your Service</title>
+<title>Li&rsquo;s — We Are at Your Service</title>
 <link rel="preload" as="image" type="image/avif"
-      imagesrcset="assets/img/r/contact-hero-1040.avif 1040w, assets/img/r/contact-hero-1270.avif 1270w, assets/img/r/contact-hero-1520.avif 1520w, assets/img/r/contact-hero-2000.avif 2000w"
-      imagesizes="105.7vw" fetchpriority="high">
+      imagesrcset="assets/img/r/contact-hero-1090.avif 1090w, assets/img/r/contact-hero-1310.avif 1310w, assets/img/r/contact-hero-1570.avif 1570w, assets/img/r/contact-hero-2000.avif 2000w"
+      imagesizes="106.7vw" fetchpriority="high">
+<!-- Site icon. Two drawings, not one file scaled: the SVG and the two small
+     PNGs carry the mark reduced to the ring and the chopsticks, because the
+     full mark with its lettering turns to mush below ~48px; the touch icon
+     and the manifest's tiles carry the full artwork, inset 78% so a rounded
+     or circular platform mask does not cut the ring. See bake-favicons.mjs. -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<meta name="description" content="Misono. Reach the counter.">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<meta name="theme-color" content="#F6EEE1">
+<meta name="description" content="Contact Li’s Chinese Restaurant — Gigiri Nairobi and Nyali Mombasa. Reservations, private dining and enquiries.">
 
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-normal-300-400.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jost-normal-300-400.woff2">
@@ -68,7 +78,7 @@
   picture { display: contents; }
 
   /* ---------------------------------------------------------------------
-     Misono — contact, opening hero.
+     Li's — contact, opening hero.
 
      This section continues about.html's opening: same layer stack
      (media / warm / wash / bed / grain / lift), same topbar, same entrance
@@ -80,7 +90,7 @@
      Measured on the two delivered files:
 
                             whole   top-left 10%   centre 10%
-       about-craft.jpg       71.1        26.7         117.5
+       about-opening.jpg       71.1        26.7         117.5
        contact-hero source   49.5       116.3          41.2
 
      The lit thing here is the pendant, and it sits in a CORNER; the middle of
@@ -131,13 +141,13 @@
     /* The site's ground. Both sections below the hero sit on it, because a
        photograph is the only reason to leave it and neither has one. `body`
        stays on --ink; see the note there. */
-    --ground:      #F7E8DF;
+    --ground:      #F6EEE1;
 
     /* Re-derived on the peach rather than carried, and re-derived a second
-       time against #F5E5DB — the foot of .details' closing gradient, which
+       time against #F4EBDD — the foot of .details' closing gradient, which
        is the BINDING ground on this page, not the flat peach:
 
-                        on #F7E8DF   on #F5E5DB   needs
+                        on #F6EEE1   on #F4EBDD   needs
          --menu-ink        13.60        13.25      4.5
          --menu-body        6.32         6.16      4.5
          --menu-accent      4.78         4.66      4.5
@@ -147,9 +157,9 @@
        Neither of the two that matter has room to spend: --res-gold clears
        3:1 at the foot by 0.17 and --menu-accent clears 4.5 by 0.16. Deepen
        that gradient's tail and BOTH must be re-derived. */
-    --menu-ink:    #2F1B19;
-    --menu-body:   #63504A;
-    --menu-accent: #99551C;
+    --menu-ink:    #241A14;
+    --menu-body:   #6A574A;
+    --menu-accent: #A3221C;
 
     /* NOT A COLOUR, and it must not be used as one. It is the name the
        transplanted reserve and ending blocks use for "my ground", and
@@ -166,17 +176,21 @@
 
     /* Focus rings on the peach. The topbar above spells its own ring out in
        rgba() because it sits on a photograph and predates this block. */
-    --misono-indigo: #3A5280;
+    /* The measured logo red. A DEVICE colour: it draws the mark and
+       never sets type. --li-red is the same hue darkened to carry
+       text and fills — 6.51:1 on the ground, white on it 7.49:1. */
+    --brand-red: #CD393E;
+    --li-red:    #A3221C;
 
     /* Non-text boundary only, at 3.26:1 on the peach. Here it is a 1px rule
        on a photograph, which is exactly the role the token is scoped to. */
-    --res-gold:  #AC7634;
+    --res-gold:  #9C7230;
 
     /* Decorative on the peach, and this page is the first thing on the site
        to set TYPE in it — a new role for the token, so it is measured rather
        than assumed. Against the painted bed under the eyebrow it clears AA;
        the reading is at the foot of this file. */
-    --res-hair:  #D4AD7E;
+    --res-hair:  #D9B98A;
 
     /* 2.4% of about.html's reference width, at both ends. Carried, not
        re-derived: it is the same bar on the same kind of frame. */
@@ -853,40 +867,49 @@
     bottom: 9%;
   }
 
-  /* NO JAPANESE WEBFONT IS LOADED ON THIS SITE, deliberately: loading a CJK
-     face for six decorative glyphs is not a trade worth making. These render
-     in whatever the visitor's OS supplies — Hiragino on Apple, Yu Gothic on
-     Windows, Noto on Android, and tofu on a Linux box with no CJK fonts at
-     all. about.html's ichie section already ships 一期一会 under exactly this
-     exposure, so it is an existing risk rather than a new one, and at this
-     alpha a tofu fallback is close to invisible either way. */
+  /* NO CJK WEBFONT IS LOADED ON THIS SITE, deliberately: loading a CJK face
+     for four decorative glyphs is not a trade worth making. These render in
+     whatever the visitor's OS supplies — Songti or PingFang on Apple, YaHei
+     or SimSun on Windows, Noto on Android, and tofu on a Linux box with no
+     CJK fonts at all. At this alpha a tofu fallback is close to invisible
+     either way.
+
+     THE STACK IS SIMPLIFIED-CHINESE FIRST, and that is not cosmetic. The
+     Japanese faces this used to name (Hiragino Mincho, Yu Mincho, Noto Serif
+     JP) all carry 联/系/我/们, so nothing would have looked broken — but the
+     Japanese regional forms of several of these characters differ from the
+     Chinese ones, and a Chinese restaurant setting Chinese in Japanese glyph
+     shapes is the kind of error only the people it matters to would notice.
+     The JP faces are kept at the tail as a last resort before serif. */
   .touch__kanji {
     display: block;
     margin: 0;
-    font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP",
-                 "Hiragino Sans", "Yu Gothic", "Noto Sans JP", serif;
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC",
+                 "PingFang SC", "Microsoft YaHei", "SimSun",
+                 "Noto Serif JP", serif;
     font-size: calc(var(--tu) * 9.5);
     font-weight: 300;
     line-height: 1;
     writing-mode: vertical-rl;
     text-orientation: upright;
     letter-spacing: 0.06em;
-    /* NOWRAP IS LOAD-BEARING, not tidiness. Six glyphs at this size are
+    /* NOWRAP IS LOAD-BEARING, not tidiness. Glyphs at this size can be
        taller than the window, so vertical-rl breaks them into a SECOND
        column — and rl means that column lands to the LEFT, so the phrase
-       reads out of order: おいわ / せ合問 instead of お問い合わせ. It looks like
-       a decorative texture rather than like broken type, which is exactly
-       why it survived the first build. */
+       reads out of order: 我们 / 联系 instead of 联系我们. It looks like a
+       decorative texture rather than like broken type, which is exactly why
+       it survived the first build. Four glyphs clear the window at every
+       size tested, so this is a guard rather than a fix — keep it. */
     white-space: nowrap;
     /* The ending wordmark's alpha, and for the same reason: present and
        almost not there. Measured there as a +9 luminance delta, which is
        within a few points of the same on this ground. */
-    color: rgba(47, 27, 25, 0.042);
+    color: rgba(36, 26, 20, 0.042);
     user-select: none;
     transform: translate3d(0, calc((var(--drift) - 0.5) * -7svh), -260px);
   }
 
-  /* The mon, from brand_assets/misono-mark-mono.svg — drawn to take its
+  /* The mark, from brand_assets/lis-mark.svg — drawn to take its
      colour from CSS, which is what makes this possible at all.
 
      IT IS A RECONSTRUCTION, traced from a photograph of printed material by
@@ -902,7 +925,7 @@
     display: block;
     width: calc(var(--tu) * 16);
     height: auto;
-    color: rgba(47, 27, 25, 0.05);
+    color: rgba(36, 26, 20, 0.05);
     transform: translate3d(0, calc((var(--drift) - 0.5) * 11svh), -120px);
   }
 
@@ -1149,7 +1172,7 @@
      rule already answers "which field am I in" for everyone else. Drawn
      outside the field so it never sits on the type. */
   .field__input:focus-visible + .field__rule {
-    outline: 1.5px solid var(--misono-indigo);
+    outline: 1.5px solid var(--li-red);
     outline-offset: 4px;
   }
 
@@ -1388,12 +1411,12 @@
 
        Two consequences, both good and both measured rather than assumed:
 
-         · CONTRAST IMPROVES. #F5E5DB was this page's binding ground, where
+         · CONTRAST IMPROVES. #F4EBDD was this page's binding ground, where
            --res-gold cleared 3:1 by only 0.17 and --menu-accent cleared 4.5
-           by 0.16. The binding ground is now --ground #F7E8DF, which is
+           by 0.16. The binding ground is now --ground #F6EEE1, which is
            lighter, so both gain: 3.26:1 and 4.80:1.
          · THE SEAM INTO .locale DISAPPEARS. It was a measured step of 4 per
-           channel; both sides are now #F7E8DF and it is 0.
+           channel; both sides are now #F6EEE1 and it is 0.
 
        THE GROUND MUST STILL BE DECLARED, and the first attempt at this did
        not. Dropping the gradient with nothing in its place falls through to
@@ -1540,8 +1563,15 @@
        504px and read sparse — about.html's figures problem, where the fix is
        always MORE INK rather than a shorter section. The section came down
        to 48svh as well, but the type did most of the work: two lines cannot
-       fill a screen, so they have to be worth looking at. Bounded by the
-       email, which is 26 characters and the widest thing here. */
+       fill a screen, so they have to be worth looking at.
+
+       BOUNDED BY THE EMAIL, which is the widest thing here. It was 26
+       characters when this size was solved and is now 45
+       (reservations@lischineserestaurantnairobi.co.ke). At 1440 that still
+       leaves 516px of slack, so desktop is untouched — but on a phone it
+       overflowed the viewport and put the whole page into horizontal
+       scroll. See the 639px block for the correction, and re-check
+       `email-slack` in verify-touch.mjs if the address ever changes. */
     font-size: calc(var(--tu) * 2.7);
     line-height: 1.2;
     letter-spacing: 0.01em;
@@ -1586,7 +1616,7 @@
   .details__value:active { transform: translateY(1px); }
 
   .details__value:focus-visible {
-    outline: 1.5px solid var(--misono-indigo);
+    outline: 1.5px solid var(--li-red);
     outline-offset: 6px;
     border-radius: 1px;
   }
@@ -1796,8 +1826,8 @@
        instead of pretending to a margin that is not there. */
     .touch__plane--kanji { right: -6%; }
     .touch__plane--mon   { left: -8%; bottom: 6%; }
-    .touch__kanji { color: rgba(47, 27, 25, 0.032); }
-    .touch__mon   { color: rgba(47, 27, 25, 0.038); }
+    .touch__kanji { color: rgba(36, 26, 20, 0.032); }
+    .touch__mon   { color: rgba(36, 26, 20, 0.038); }
   }
 
   @media (max-width: 639px) {
@@ -1806,11 +1836,28 @@
     .touch__form  { gap: clamp(28px, 7.5vw, 40px); }
     .touch__send  { width: 100%; }
 
-    /* The pair is already stacked at every width, and --tu's 8.6px floor
-       already lands the email at ~23px in 334px of content box, so neither
-       needs a phone-specific size. All this block does is let the section be
-       as tall as its contents instead of holding 48svh. */
+    /* The pair is already stacked at every width, so all this block used to
+       do was let the section be as tall as its contents instead of holding
+       48svh. It now also has to deal with the email.
+
+       AT 45 CHARACTERS THE EMAIL NO LONGER FITS A PHONE. --tu's 8.6px floor
+       lands it at ~23px, which was fine for the 26-character address this
+       was solved against and is 94px past the content box for Li's. The base
+       rule's `white-space: nowrap` then turned that overflow into horizontal
+       scroll for the entire document — verify-touch.mjs reports it as
+       `hscroll YES`.
+
+       Wrapping is the fix rather than shrinking alone: an address this long
+       set small enough to hold one line would be smaller than the body text
+       under it. `anywhere` rather than `break-word` because there is no
+       space in an email to break at, and the domain has no hyphens. */
     .details { min-height: 0; padding: clamp(64px, 18vw, 104px) 7.18%; }
+    .details__value {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      font-size: calc(var(--tu) * 2.25);
+      line-height: 1.3;
+    }
     .details__list { gap: clamp(26px, 7vw, 38px); }
     /* A phone has less width again, so the marks go further out and grow —
        a mark that is mostly off-screen reads as texture, where the same mark
@@ -1959,9 +2006,9 @@
        photograph reads as a hole cut in the ground rather than as a plate
        resting on it. */
     box-shadow:
-      0 2px 6px    rgba(47, 27, 25, 0.10),
-      0 18px 40px -14px rgba(47, 27, 25, 0.34),
-      0 44px 84px -32px rgba(47, 27, 25, 0.26);
+      0 2px 6px    rgba(36, 26, 20, 0.10),
+      0 18px 40px -14px rgba(36, 26, 20, 0.34),
+      0 44px 84px -32px rgba(36, 26, 20, 0.26);
   }
 
   /* Hung --lu-travel above its frame and grown by twice that, so the drift
@@ -2022,8 +2069,8 @@
     background: rgba(252, 248, 245, 0.94);
     border-radius: calc(var(--lu) * 0.68);
     box-shadow:
-      0 1px 2px rgba(47, 27, 25, 0.16),
-      0 10px 26px -10px rgba(47, 27, 25, 0.42);
+      0 1px 2px rgba(36, 26, 20, 0.16),
+      0 10px 26px -10px rgba(36, 26, 20, 0.42);
   }
 
   .locale__card-eyebrow {
@@ -2062,10 +2109,10 @@
     align-items: center;
     gap: calc(var(--lu) * 0.62);
     padding: calc(var(--lu) * 0.72) calc(var(--lu) * 1.15);
-    background: var(--misono-indigo);
+    background: var(--li-red);
     border-radius: 999px;
     box-shadow:
-      0 1px 2px rgba(47, 27, 25, 0.22),
+      0 1px 2px rgba(36, 26, 20, 0.22),
       0 12px 28px -10px rgba(11, 8, 6, 0.5);
     white-space: nowrap;
   }
@@ -2082,7 +2129,7 @@
     font-weight: 400;
     line-height: 1;
     letter-spacing: 0.12em;
-    /* 7.0:1 on --misono-indigo. */
+    /* 7.0:1 on --li-red. */
     color: #fff;
   }
 
@@ -2323,18 +2370,18 @@
 
   /* THE HAIRLINE IS INK, NOT GOLD, and that is the one colour decision in
      this block worth the sentence. --res-hair is the site's hairline and it
-     would be the obvious reach — but there are SEVEN of these stacked, and
-     seven gold rules read as an accent pattern rather than as separators.
+     would be the obvious reach — but there are EIGHT of these stacked, and
+     eight gold rules read as an accent pattern rather than as separators.
      A soft ink line at 0.13 disappears into the ground and lets the type do
      the dividing, which is what "thin separators" is actually asking for.
 
      Decorative either way: a separator carries no information the heading
      above it does not, so no contrast minimum applies. */
   .faq__item {
-    border-top: 1px solid rgba(47, 27, 25, 0.13);
+    border-top: 1px solid rgba(36, 26, 20, 0.13);
   }
   .faq__item:last-child {
-    border-bottom: 1px solid rgba(47, 27, 25, 0.13);
+    border-bottom: 1px solid rgba(36, 26, 20, 0.13);
   }
 
   .faq__q {
@@ -2500,8 +2547,8 @@
        to marks that state nothing — the rule under the eyebrow, the ring around
        the photograph. Anything a guest reads or clicks takes --menu-accent
        (4.8:1) or --res-gold, which clears 3:1 as a non-text boundary. */
-    --res-hair: #D4AD7E;
-    --res-gold: #B8813F;
+    --res-hair: #D9B98A;
+    --res-gold: #9C7230;
 
     --res-eyebrow:  clamp(0.66rem, 2.85vw, 0.76rem);
     --res-title:    clamp(2.35rem, 11.9vw, 3.6rem);
@@ -2902,7 +2949,7 @@
 
     /* Vertically centred on the section's own axis rather than pinned to the
        comp's y-positions. The comp leaves its bottom 22.7% to a vertical
-       Japanese lockup and a contour texture, neither of which is being built;
+       a lockup and a contour texture, neither of which is being built;
        holding its offsets without them would leave a fifth of the section empty
        at the foot and read as an unfinished page.
 
@@ -3037,8 +3084,16 @@
        vertical presence. Reaching that ratio honestly would need caps
        1595px wide on a 1440px screen, so width is spent instead: the mark
        runs to ~92% of the viewport, which is as large as it can be and
-       still read as MISONO rather than as a cropped M and O. */
-    --end-mark:   clamp(4.4rem, 19.9vw, 20rem);
+       still read as a word rather than as a cropped first and last letter.
+       That 92% is the target --end-mark is solved against; see it above. */
+    /* RE-SOLVED 2026-08-26 for a four-glyph wordmark. The size above was
+       fitted so MISONO's six caps ran to ~92% of the viewport; LI'S set at
+       the same size measured 43.4%, which is not a smaller wordmark but a
+       different composition — the mark stopped being the closing gesture and
+       became a caption. Everything is scaled by 92/43.4 = 2.12, the clamp
+       ends included, so the cap at 2560 still bites at the same fraction it
+       always did. Re-solve again if the string ever changes length. */
+    --end-mark:   clamp(9.3rem, 42.2vw, 42.4rem);
     /* The last 15% of height comes from the block, not the size — see
        .ending__mark. */
     --end-stretch: 1.15;
@@ -3051,7 +3106,7 @@
        the total span and the even gaps are trustworthy. */
     --end-link:   max(10.5px, 0.76vw);
     --end-note:   max(9.5px, 0.72vw);
-    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the three links  */
+    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the five links   */
 
     position: relative;
     display: flex;
@@ -3103,7 +3158,7 @@
     line-height: 0.653;
     letter-spacing: 0.16em;
     white-space: nowrap;
-    color: rgba(47, 27, 25, 0.045);
+    color: rgba(36, 26, 20, 0.045);
     user-select: none;
     /* Once the mark is as wide as the screen allows, height is the only
        axis left. A 1.15 vertical scale thickens Cormorant's horizontal
@@ -3133,7 +3188,13 @@
     margin-top: clamp(8px, 0.68vw, 14px);
     display: flex;
     justify-content: center;
+    /* Five links, not the three this was fitted to. Unwrapped they measured
+       102.1% of a 390px viewport — an overflow, not a tight fit. Wrapping is
+       the right answer rather than shrinking the type: the links are already
+       at a 10.5px floor. */
+    flex-wrap: wrap;
     gap: var(--end-gap);
+    row-gap: clamp(10px, 1.2vw, 18px);
     padding-inline: 7.18%;   /* the inset the section gave up, kept here */
   }
 
@@ -3190,7 +3251,7 @@
   .ending__link:focus-visible::after { transform: scaleX(1); }
 
   .ending__link:focus-visible {
-    outline: 1px solid var(--misono-indigo);
+    outline: 1px solid var(--li-red);
     outline-offset: 4px;
     border-radius: 1px;
   }
@@ -3227,14 +3288,17 @@
 
   /* Phones. The desktop ratio already runs the mark to ~92% of the
      viewport, so there is almost nothing left to give here — 20vw is the
-     same 92%, and anything past it starts cropping the M. The phone gets
+     same 92%, and anything past it starts cropping the first letter. The phone gets
      its height from the stretch instead, pushed a little harder because a
      390px screen has proportionally more empty cream to fill. The 72svh
      minimum goes: on a phone the closing frame is as tall as its contents
      and no taller. */
   @media (max-width: 639px) {
     .ending {
-      --end-mark: 20vw;
+      /* Scaled by the same 2.12 as the desktop clamp when the wordmark went
+         from six glyphs to four. 20vw held MISONO at 92% of a phone; it held
+         LI'S at 43.6%. */
+      --end-mark: 42.4vw;
       --end-stretch: 1.22;
       min-height: 0;
       padding-top: clamp(64px, 22vw, 108px);
@@ -3351,8 +3415,8 @@
        typed value  13.60:1
        body          6.32:1
        send border   3.26:1   (UI boundary)
-       details value 13.25:1  against #F5E5DB, the gradient's foot
-       details label  4.66:1  against #F5E5DB
+       details value 13.25:1  against #F4EBDD, the gradient's foot
+       details label  4.66:1  against #F4EBDD
 
      All four field rules paint rgb(172, 118, 52) at lum 124.7 — sampled
      from the render, because at four different y they read as two
@@ -3408,13 +3472,13 @@
      survives re-proportioning the columns and fails only if the two rows
      genuinely stop agreeing.
 
-     CONTRAST, re-derived after the closing gradient was removed. #F5E5DB
-     was this page's binding ground and it is now --ground #F7E8DF, which is
+     CONTRAST, re-derived after the closing gradient was removed. #F4EBDD
+     was this page's binding ground and it is now --ground #F6EEE1, which is
      lighter, so everything measured against it gained:
 
        field rule    3.26:1   (UI boundary, WCAG 1.4.11, needs 3)
        field label   4.78:1
-       details value 13.60:1  (was 13.25 against #F5E5DB)
+       details value 13.60:1  (was 13.25 against #F4EBDD)
        details label  4.80:1  (was 4.66)
 
      REDUCED MOTION: nothing is left transformed or faded, no inline --drift
@@ -3447,19 +3511,19 @@
     --cream: var(--ground);
   }
 
-  /* 1. The gold that bounds the WhatsApp button. index.html picked #B8813F
+  /* 1. The gold that bounds the WhatsApp button. index.html picked #9C7230
         precisely because it clears 3:1 as a non-text boundary — on cream it
         makes it by 0.18, at 3.18:1. The peach is darker, and that margin was
         not there to spend: it falls to 2.81:1 and fails. Darkened until it
         clears again with room, 3.26:1.
 
-        THIS OVERRIDE IS REQUIRED EVEN THOUGH :root ALREADY CARRIES #AC7634,
+        THIS OVERRIDE IS REQUIRED EVEN THOUGH :root ALREADY CARRIES #9C7230,
         which is the trap worth spelling out: the copied .reserve rule
-        declares --res-gold: #B8813F on ITSELF, and a declaration on the
+        declares --res-gold: #9C7230 on ITSELF, and a declaration on the
         element beats one on :root. Deleting this block because the token
         "is already correct globally" silently puts the cream value back. */
   .reserve {
-    --res-gold: #AC7634;
+    --res-gold: #9C7230;
   }
 
   /* 2. The closing gradient's tail is a literal, so --cream cannot reach it.
@@ -3468,7 +3532,7 @@
         settles". Same step applied to the peach rather than a new value
         chosen by eye. Leaves the footer links at 6.2:1 at their dimmest. */
   .ending {
-    background: linear-gradient(180deg, var(--ground) 0%, #F5E5DB 100%);
+    background: linear-gradient(180deg, var(--ground) 0%, #F4EBDD 100%);
   }
 
   /* 3. The wordmark needed NO change, which is worth recording because it
@@ -3490,25 +3554,33 @@
 <!-- ---------------------------------------------------------------- hero -->
 <section class="hero" aria-labelledby="contact-title">
   <!--
-    assets/img/contact-hero.jpg — Pexels 19300593 by Feyza Yildirim, baked by
-    bake-contact-hero.py (2000x1333, mean 60/255, no baked vignette; the
+    assets/img/contact-hero.jpg — Pexels 11923047, baked by
+    bake-lis-photography.py (2000x1333, mean 60/255, no baked vignette; the
     reproduce command is in that file's docstring).
 
-    PLACEHOLDER, and flagged as such: Pexels supplies no model release, and an
-    identifiable person on a restaurant's contact page reads as that
-    restaurant's staff. Swap for a client-supplied or licensed frame before
-    launch. The composition depends on one property of whatever replaces it —
-    a lit subject OFF centre, leaving the middle calm — not on this photograph.
+    THE GRADE HERE DESATURATES BEFORE IT WARMS, and that order is the whole
+    correction. The room's brick and banquettes carry a flat green-teal cast
+    across most of the frame; warmth pushed at full saturation left the green
+    where it was and turned the two pendants orange. Saturation comes most of
+    the way out first so the field goes neutral, then the warmth is pushed
+    hard and the lamps are left to carry the colour on their own.
+
+    PLACEHOLDER, and flagged as such. Swap for a client-supplied or licensed
+    frame before launch. The composition depends on one property of whatever
+    replaces it — a lit subject OFF centre, leaving the middle calm — and on
+    nothing else about this file. It carries no people, which is deliberate:
+    Pexels supplies no model release, and an identifiable person on a
+    restaurant's contact page reads as that restaurant's staff.
 
     alt is empty on purpose: the h1 below carries the meaning, and the frame is
     atmosphere. Same call as index.html's hero and about.html's opening.
   -->
   <div class="hero__media">
     <picture>
-      <source type="image/avif" sizes="105.7vw"
-              srcset="assets/img/r/contact-hero-1040.avif 1040w, assets/img/r/contact-hero-1270.avif 1270w, assets/img/r/contact-hero-1520.avif 1520w, assets/img/r/contact-hero-2000.avif 2000w">
-      <source type="image/webp" sizes="105.7vw"
-              srcset="assets/img/r/contact-hero-1040.webp 1040w, assets/img/r/contact-hero-2000.webp 2000w">
+      <source type="image/avif" sizes="106.7vw"
+              srcset="assets/img/r/contact-hero-1090.avif 1090w, assets/img/r/contact-hero-1310.avif 1310w, assets/img/r/contact-hero-1570.avif 1570w, assets/img/r/contact-hero-2000.avif 2000w">
+      <source type="image/webp" sizes="106.7vw"
+              srcset="assets/img/r/contact-hero-1090.webp 1090w, assets/img/r/contact-hero-2000.webp 2000w">
       <img class="hero__img" src="assets/img/contact-hero.jpg" alt=""
          fetchpriority="high" decoding="sync" width="2000" height="1333" loading="eager">
     </picture>
@@ -3521,7 +3593,7 @@
   <div class="hero__lift"></div>
 
   <header class="topbar">
-    <a class="topbar__brand" href="index.html">Misono</a>
+    <a class="topbar__brand" href="index.html">Li&rsquo;s</a>
 
     <nav class="topbar__nav" aria-label="Primary">
       <a class="topbar__link" href="menu.html">Menu</a>
@@ -3563,32 +3635,38 @@
        top of the composition. -->
   <div class="touch__deco" aria-hidden="true">
     <div class="touch__plane touch__plane--kanji">
-      <p class="touch__kanji" lang="ja">お問い合わせ</p>
+      <!-- 联系我们, "contact us". FOUR glyphs where the Japanese it replaces
+           had six, which matters: `vertical-rl` breaks a column that is
+           taller than the window into a SECOND column and puts it to the
+           LEFT, so the characters read out of order. Four is comfortably
+           inside one column at every size tested — but the nowrap below
+           stays, because the failure is silent: at whisper alpha a broken
+           column looks like decorative texture rather than like broken type,
+           which is how it survived a build once already. -->
+      <p class="touch__kanji" lang="zh-Hans">联系我们</p>
     </div>
 
     <div class="touch__plane touch__plane--mon">
-    <!-- brand_assets/misono-mark-mono.svg, inlined WITH its own defs. It is
-         a reconstruction traced from a photograph of the printed logo —
-         check it against real artwork before launch.
+    <!-- brand_assets/lis-mark.svg, inlined. Redrawn from the official
+         150x150 logo.jpg — ring and chopsticks are measured geometry, the
+         Li's wedges are least-squares fits of the source edges. It is a
+         RECONSTRUCTION: check it against real artwork before launch.
 
-         The defs travel with it on purpose: about.html used #mm-petal and
-         #mm-core without ever defining them and drew nothing at all. -->
-    <svg class="touch__mon" viewBox="0 0 100 100" focusable="false">
-      <defs>
-        <path id="mm-petal" d="M50 50 C55 44 68 25 50 11 C32 25 45 44 50 50 Z"/>
-        <path id="mm-core"  d="M50 50 C54.3 46 54.3 42 50 37.5 C45.7 42 45.7 46 50 50 Z"/>
-      </defs>
-      <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
-        <use href="#mm-petal"/>
-        <use href="#mm-petal" transform="rotate(90 50 50)"/>
-        <use href="#mm-petal" transform="rotate(180 50 50)"/>
-        <use href="#mm-petal" transform="rotate(270 50 50)"/>
-      </g>
+         No <defs> and no <use> here, unlike the mark this replaces: every
+         path is written out. That mark carried its defs with it because
+         about.html once referenced #mm-petal without defining it and drew
+         nothing at all; a self-contained mark cannot fail that way. -->
+    <svg class="touch__mon" viewBox="0 0 100 100" focusable="false" aria-hidden="true">
       <g fill="currentColor">
-        <use href="#mm-core"/>
-        <use href="#mm-core" transform="rotate(90 50 50)"/>
-        <use href="#mm-core" transform="rotate(180 50 50)"/>
-        <use href="#mm-core" transform="rotate(270 50 50)"/>
+        <path d="M-0.4,-6 L4.9,-6 L27.9,106 L25.4,106 Z"/>
+        <path d="M19.6,-6 L25.6,-6 L23.7,106 L21.9,106 Z"/>
+      </g>
+      <circle cx="50" cy="50" r="46.2" fill="none" stroke="currentColor" stroke-width="7.1"/>
+      <g fill="currentColor" transform="translate(52 50) scale(1.12) translate(-53.97 -33.9)">
+        <path d="M35.92,17.33 L42.13,17.33 L39.68,47.6 L38.44,47.6 Z"/>
+        <path d="M35.33,48.35 L53.89,46.85 L53.70,50.50 L35.40,49.25 Z"/>
+        <path d="M54.17,30.0 L60.10,30.0 L57.84,49.67 L56.53,49.67 Z"/>
+        <path d="M55.78,22.0 L57.0,22.11 L57.44,23.22 L59.78,25.56 L61.11,29.0 L59.56,28.44 L54.11,24.33 L54.11,22.89Z"/>
       </g>
     </svg>
     </div>
@@ -3604,9 +3682,9 @@
 
       <hr class="touch__rule" aria-hidden="true">
 
-      <p class="touch__body">A table, a private dinner, or a question about the
-        evening. Tell us what you have in mind, and we will take it from
-        there.</p>
+      <p class="touch__body">A table, a private room, a duck ordered ahead, or a
+        question about either branch. Tell us what you have in mind and which city
+        you are in, and we will take it from there.</p>
     </div>
 
     <form class="touch__form" novalidate>
@@ -3651,30 +3729,33 @@
 </section>
 
 <!-- ================================================ contact details ====
-     The page's ending — the closing wordmark and footer nav were declined,
-     so this block closes the page on its own gradient instead.
+     RESEARCHED 2026-08-26, NOT CONFIRMED BY THE CLIENT. Both come from Li's
+     own site: +254 746 815 106 is the Nairobi line it publishes, and
+     reservations@ is the address it gives for bookings. It also publishes
+     info@, orders@ and careers@ on the same domain.
 
-     UNVERIFIED. Both facts come from public listings, supplied in
-     conversation on 2026-08-17: the phone from the Nairobi listing, the
-     email from the Mombasa one. Confirm both before launch, alongside the
-     invented wa.me number and the opening hours in the reservation block on
-     the other three pages.
+     THE MOMBASA NUMBER IS DELIBERATELY NOT HERE. Li's Mombasa lists its own
+     line, +254 799 402101, and it is a different number. This block has two
+     cells and always has; the fix is not to cram two numbers into one, it is
+     that each branch carries its own number in its own location band below,
+     where there is a card to put it on. What stands here is the booking
+     route Li's itself presents.
 
-     ONE CLAIM TO CHECK IN PARTICULAR: that block says "Nairobi & Mombasa".
-     This page presents ONE number and ONE address as reaching both, which
-     is a claim the site has not made anywhere before.
+     That also settles the claim the previous version of this comment flagged.
+     The reservation block on all four pages says "Nairobi & Mombasa"; this
+     page no longer presents one number as reaching both.
      ==================================================================== -->
 <section class="details" aria-label="Contact details">
   <hr class="details__rule" aria-hidden="true">
 
   <ul class="details__list">
     <li class="details__item">
-      <span class="details__label">Phone</span>
-      <a class="details__value" href="tel:+254722511229">+254 722 511229</a>
+      <span class="details__label">Reservations</span>
+      <a class="details__value" href="tel:+254746815106">+254 746 815 106</a>
     </li>
     <li class="details__item">
       <span class="details__label">Email</span>
-      <a class="details__value" href="mailto:restaurantmisono@gmail.com">restaurantmisono@gmail.com</a>
+      <a class="details__value" href="mailto:reservations@lischineserestaurantnairobi.co.ke">reservations@lischineserestaurantnairobi.co.ke</a>
     </li>
   </ul>
 </section>
@@ -3685,8 +3766,8 @@
      BOTH PHOTOGRAPHS ARE PLACEHOLDERS, and on this section that matters more
      than it does elsewhere: a location band implies the picture IS the place.
      Neither is. locale-mombasa.jpg is the Mombasa waterfront rather than
-     Links Road; locale-nairobi.jpg is Uhuru Park and the CBD, roughly 5km
-     from Adams Arcade. Replace both with real frames before launch.
+     Links Road in Nyali; locale-nairobi.jpg is Uhuru Park and the CBD, ~10km
+     south of Gigiri. Replace both with real frames before launch.
 
      THE CARDS CARRY NO DISTANCES OR DRIVE TIMES. The reference's read
      "12 min drive · 8 km"; not one such figure is verifiable for either
@@ -3695,38 +3776,43 @@
      listing instead. If real figures arrive, they drop into the same third
      line without any other change.
 
-     CONFIRMED with the client 2026-08-20: Mombasa is NYALI, not Shanzu. The
-     original brief said Shanzu; every listing found said Links Road, Nyali —
-     a different suburb roughly 6km south — and Nyali is correct. The heading,
-     the copy and both marker cards below are built on it, as is the FAQ's
-     first answer. Settled; do not re-open it on the strength of the brief.
+     THE TWO ADDRESSES ARE RESEARCHED, 2026-08-26. Mombasa: Petrocity Plaza,
+     first floor, Links Road, Nyali, from its TripAdvisor listing. Nairobi:
+     Petrocity, Limuru Road, Gigiri (plus code QR74+JR2), from Li's own site.
+     Both branches happening to sit in a building called Petrocity looks like
+     a copy-paste error and is not one — check it before "fixing" it.
 
-     STILL UNVERIFIED, and needing confirmation with the client:
-       · the founding dates, 1995 Nairobi and 2006 Mombasa;
-       · whether the Nairobi restaurant has occupied The Green House
-         throughout. Foursquare places an earlier Misono in Woodley Estate,
-         which is why the copy below says "The first Misono opened in 1995.
-         Today it sits at…" rather than joining the two into one sentence.
-         The fluent version asserts a continuity nothing supports.
+     EACH BAND CARRIES ITS OWN BRANCH'S PHONE, on its second card. They are
+     different numbers: Mombasa +254 799 402101, Nairobi +254 746 815 106.
+     That is why .details above carries only one number and calls it
+     Reservations rather than presenting a single line as reaching both.
+
+     NO FOUNDING DATES ANYWHERE. Li's says Mombasa came first and publishes
+     no year for either room; the copy says "Li's began here" and stops. The
+     version this replaces asserted 1995 and 2006, which belonged to a
+     different restaurant. Do not reintroduce a year without a source.
      ==================================================================== -->
-<section class="locale locale--mombasa" aria-labelledby="locale-mombasa-title">
+<section class="locale locale--mombasa" id="locations" aria-labelledby="locale-mombasa-title">
   <div class="locale__head">
     <p class="locale__eyebrow">The Location</p>
     <h2 class="locale__title" id="locale-mombasa-title">Mombasa</h2>
-    <p class="locale__body">Misono came to the coast in 2006. The room sits on Links Road in
-      Nyali, opposite the Java House and a short walk from Nyali City Mall — a gong at the
-      door, kabuki screens on the walls, and teppanyaki tables where the cooking happens an
-      arm’s length away.</p>
+    <!-- NO FOUNDING YEAR. Li's says its first location was Mombasa and
+         publishes no date for it; the previous copy here asserted one because
+         the restaurant this page used to be for had given one. -->
+    <p class="locale__body">Li&rsquo;s began here. The room is on the first floor of
+      Petrocity Plaza on Links Road in Nyali, and the coast is the reason seafood is the
+      part of this carte with the most to say &mdash; prawns, crab, squid and whole fish,
+      cooked plainly enough to be judged on.</p>
   </div>
 
   <div class="locale__stage">
     <figure class="locale__frame">
-      <!-- PLACEHOLDER — the Mombasa waterfront, not Links Road. See above. -->
+      <!-- PLACEHOLDER — the Mombasa waterfront, not Links Road in Nyali. See above. -->
       <picture>
         <source type="image/avif" sizes="85.3vw"
-                srcset="assets/img/r/locale-mombasa-840.avif 840w, assets/img/r/locale-mombasa-1020.avif 1020w, assets/img/r/locale-mombasa-1220.avif 1220w, assets/img/r/locale-mombasa-1570.avif 1570w, assets/img/r/locale-mombasa-2000.avif 2000w">
+                srcset="assets/img/r/locale-mombasa-880.avif 880w, assets/img/r/locale-mombasa-1050.avif 1050w, assets/img/r/locale-mombasa-1260.avif 1260w, assets/img/r/locale-mombasa-1570.avif 1570w, assets/img/r/locale-mombasa-2000.avif 2000w">
         <source type="image/webp" sizes="85.3vw"
-                srcset="assets/img/r/locale-mombasa-840.webp 840w, assets/img/r/locale-mombasa-2000.webp 2000w">
+                srcset="assets/img/r/locale-mombasa-880.webp 880w, assets/img/r/locale-mombasa-2000.webp 2000w">
         <img class="locale__img" src="assets/img/locale-mombasa.jpg" width="2000" height="1125"
            alt="The Mombasa waterfront: white apartment buildings and palms on a green bluff above the water." loading="lazy" decoding="async" fetchpriority="low" data-warm=".locale--mombasa">
       </picture>
@@ -3743,7 +3829,7 @@
                     fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
               <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
             </svg>
-            <span class="locale__pill-label">Misono Mombasa</span>
+            <span class="locale__pill-label">Li&rsquo;s Mombasa</span>
           </div>
         </div>
 
@@ -3758,17 +3844,17 @@
     <div class="locale__marks-flow">
       <div class="locale__mark locale__mark--a">
         <div class="locale__card">
-          <p class="locale__card-eyebrow">Opposite</p>
-          <p class="locale__card-title">Nairobi Java House</p>
-          <p class="locale__card-note">across Links Road</p>
+          <p class="locale__card-eyebrow">The building</p>
+          <p class="locale__card-title">Petrocity Plaza</p>
+          <p class="locale__card-note">first floor, Links Road, Nyali</p>
         </div>
       </div>
 
       <div class="locale__mark locale__mark--b">
         <div class="locale__card">
-          <p class="locale__card-eyebrow">Landmark</p>
-          <p class="locale__card-title">Nyali City Mall</p>
-          <p class="locale__card-note">a short walk, on Links Road</p>
+          <p class="locale__card-eyebrow">Call this branch</p>
+          <p class="locale__card-title">+254 799 402101</p>
+          <p class="locale__card-note">Tuesday &ndash; Sunday, 11:00 &ndash; 21:00</p>
         </div>
       </div>
     </div>
@@ -3780,19 +3866,20 @@
   <div class="locale__head">
     <p class="locale__eyebrow">The Location</p>
     <h2 class="locale__title" id="locale-nairobi-title">Nairobi</h2>
-    <p class="locale__body">The first Misono opened in 1995. Today it sits at The Green House
-      on Ngong Road, by Adams Arcade: three teppanyaki tables on the lower floor, à la carte
-      upstairs, and a private room where the seating is low and the shoes come off.</p>
+    <p class="locale__body">The second room, and the one most people mean now. It sits at
+      Petrocity on Limuru Road in Gigiri and runs the carte the coast kitchen wrote &mdash;
+      the duck, the dim sum, the sizzling platters, and the drinks list that goes with
+      them.</p>
   </div>
 
   <div class="locale__stage">
     <figure class="locale__frame">
-      <!-- PLACEHOLDER — Uhuru Park and the CBD, not Adams Arcade. See above. -->
+      <!-- PLACEHOLDER — Uhuru Park and the CBD, not Gigiri, which is ~10km north. See above. -->
       <picture>
         <source type="image/avif" sizes="85.3vw"
-                srcset="assets/img/r/locale-nairobi-840.avif 840w, assets/img/r/locale-nairobi-1020.avif 1020w, assets/img/r/locale-nairobi-1220.avif 1220w, assets/img/r/locale-nairobi-1570.avif 1570w, assets/img/r/locale-nairobi-2000.avif 2000w">
+                srcset="assets/img/r/locale-nairobi-880.avif 880w, assets/img/r/locale-nairobi-1050.avif 1050w, assets/img/r/locale-nairobi-1260.avif 1260w, assets/img/r/locale-nairobi-1570.avif 1570w, assets/img/r/locale-nairobi-2000.avif 2000w">
         <source type="image/webp" sizes="85.3vw"
-                srcset="assets/img/r/locale-nairobi-840.webp 840w, assets/img/r/locale-nairobi-2000.webp 2000w">
+                srcset="assets/img/r/locale-nairobi-880.webp 880w, assets/img/r/locale-nairobi-2000.webp 2000w">
         <img class="locale__img" src="assets/img/locale-nairobi.jpg" width="2000" height="1125"
            alt="Nairobi seen over the trees and lake of Uhuru Park, with the city’s towers behind." loading="lazy" decoding="async" fetchpriority="low" data-warm=".locale--nairobi">
       </picture>
@@ -3803,7 +3890,7 @@
                     fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
               <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
             </svg>
-            <span class="locale__pill-label">Misono Nairobi</span>
+            <span class="locale__pill-label">Li&rsquo;s Nairobi</span>
           </div>
         </div>
 
@@ -3814,17 +3901,17 @@
     <div class="locale__marks-flow">
       <div class="locale__mark locale__mark--a">
         <div class="locale__card">
-          <p class="locale__card-eyebrow">The Building</p>
-          <p class="locale__card-title">The Green House</p>
-          <p class="locale__card-note">Ngong Road</p>
+          <p class="locale__card-eyebrow">The building</p>
+          <p class="locale__card-title">Petrocity, Gigiri</p>
+          <p class="locale__card-note">Limuru Road, Nairobi</p>
         </div>
       </div>
 
       <div class="locale__mark locale__mark--b">
         <div class="locale__card">
-          <p class="locale__card-eyebrow">Nearby</p>
-          <p class="locale__card-title">Adams Arcade</p>
-          <p class="locale__card-note">at the Ngong Road junction</p>
+          <p class="locale__card-eyebrow">Call this branch</p>
+          <p class="locale__card-title">+254 746 815 106</p>
+          <p class="locale__card-note">Tuesday &ndash; Sunday, 11:00 &ndash; 22:30</p>
         </div>
       </div>
     </div>
@@ -3832,34 +3919,33 @@
   </div>
 </section>
 
-<!-- ============================================================== faq ====
+<!-- ===================================================== the FAQ ====
      Spec: docs/superpowers/specs/2026-08-17-contact-locations-faq-design.md
 
-     <details>/<summary> rather than buttons and aria-expanded, for two
-     reasons: it gives real keyboard and screen-reader behaviour with no ARIA
-     to get wrong, and IT STILL OPENS WITH JAVASCRIPT OFF. The smooth open is
-     an enhancement layered on top by the handler at the foot of this file;
-     without it the answers still toggle, instantly.
+     EIGHT questions, all answered from research done 2026-08-26 against Li's
+     own site, its published menu and its Mombasa listing. Nothing here is
+     invented, and three answers are deliberately less confident than they
+     could be:
 
-     EVERY ANSWER TRACES TO A PUBLIC LISTING. Where nothing is verifiable the
-     answer says so and sends the reader to a phone call, rather than
-     inventing a policy — a made-up dietary or private-dining promise on a
-     restaurant's own FAQ is the kind of thing a guest arrives holding you to.
+       · DIETARY. The vegetarian breadth is real and countable off the carte
+         — a whole vegetable section, tofu and paneer several ways, vegetable
+         dim sum, spring rolls and soups. HALAL, VEGAN AND GLUTEN-FREE ARE
+         NOT CONFIRMED for either branch, and the answer says so in bold
+         rather than going quiet about it. Sending allergies to a phone call
+         is the honest position, not a hedge.
+       · PRIVATE DINING. Mombasa's two rooms at 12-15 covers are in its
+         listing. Nairobi's private events are on Li's own site, but no room
+         or capacity is published, so the answer says "takes enquiries" and
+         stops there.
+       · HOURS. Both branches close Mondays and open from 11:00; they close
+         at DIFFERENT times, 22:30 in Nairobi and 21:00 in Mombasa. This
+         answer carries both. The reservation block below carries only
+         "Tuesday - Sunday / Closed Mondays", because that block is copied to
+         four pages and cannot assert one branch's closing time as the
+         house's. THE TWO MUST STAY IN STEP: it is the same claim made twice
+         on one page and the pair has drifted apart before.
 
-     Two answers are load-bearing and must not be "improved" into confidence:
-
-       · DIETARY (Q6). Vegetarian selections are confirmed, including on the
-         sushi and sashimi boats. Halal, vegan and gluten-free are NOT, for
-         either branch. Sending allergies to a phone call is the honest
-         position here, not a hedge.
-       · PRIVATE DINING (Q5) names NAIROBI AND ONLY NAIROBI. The private room
-         is confirmed there. Mombasa's private dining is unverified, so this
-         answer does not mention it.
-
-     The hours in Q7 are the listed ones and they CONTRADICT what the client
-     said in conversation on 2026-08-15 ("lunch to 11pm"). That was raised and
-     the listed hours were chosen; confirm directly before launch. They must
-     stay in step with the reservation block below.
+     All of it is researched, not client-confirmed. Confirm before launch.
      ==================================================================== -->
 <section class="faq" aria-labelledby="faq-title">
   <div class="faq__inner">
@@ -3875,13 +3961,13 @@
 
       <details class="faq__item">
         <summary class="faq__q">
-          <span class="faq__q-text">Where is Misono located?</span>
+          <span class="faq__q-text">Where is Li&rsquo;s?</span>
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <p>There are two. Nairobi is at The Green House on Ngong Road, by Adams
-            Arcade. Mombasa is on Links Road in Nyali, opposite the Java House and
-            a short walk from Nyali City Mall.</p>
+          <p>There are two, and both are in Petrocity buildings. Mombasa is on the first
+            floor of Petrocity Plaza, Links Road, Nyali &mdash; that is the original.
+            Nairobi is at Petrocity on Limuru Road in Gigiri.</p>
         </div></div>
       </details>
 
@@ -3891,60 +3977,72 @@
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <p>Both restaurants take reservations, and they are worth making. The
-            teppanyaki tables and the private room are limited in number, and they
-            are the seats most people are coming for. Call the branch you would
-            like to visit.</p>
+          <p>Both branches take them, and they are worth making at the end of a week. If
+            you want the Peking duck, say so when you book: it is not a dish that can be
+            started when you sit down.</p>
         </div></div>
       </details>
 
       <details class="faq__item">
         <summary class="faq__q">
-          <span class="faq__q-text">What type of Japanese cuisine do you serve?</span>
+          <span class="faq__q-text">What kind of Chinese food do you serve?</span>
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <p>Sushi and sashimi, teppanyaki cooked at the table, and ramen. Misono
-            has been cooking Japanese food in Kenya since 1995, which is longer
-            than anywhere else in the country.</p>
+          <p>Chinese cooking with a strong Indo-Chinese streak &mdash; dim sum and spring
+            rolls to start, then the wok: chilli garlic, black bean, Schezwan, Kung Pao,
+            and the sizzling platters. Seafood is the part the kitchen is proudest of,
+            which is the coast showing.</p>
         </div></div>
       </details>
 
       <details class="faq__item">
         <summary class="faq__q">
-          <span class="faq__q-text">Do you offer teppanyaki?</span>
+          <span class="faq__q-text">Do you do Peking duck?</span>
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <p>Yes, at both. Nairobi has three teppanyaki tables on the lower floor,
-            each with its own chef cooking in front of you; Mombasa cooks at the
-            table too. Ask for a teppanyaki table when you book — the à la carte
-            room is a different experience.</p>
+          <p>Yes, half or whole, carved and served with thin pancakes, cucumber and spring
+            onion. It is the dish most people come for. Order it when you book rather than
+            when you arrive.</p>
         </div></div>
       </details>
 
       <details class="faq__item">
         <summary class="faq__q">
-          <span class="faq__q-text">Do you accommodate private dining?</span>
+          <span class="faq__q-text">Do you have vegetarian options?</span>
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <p>Nairobi has a private room laid out in the traditional way: low
-            seating, a well beneath the table, shoes left at the door. It is a
-            single room, so ask for it when you book rather than on the night.</p>
+          <p>A great many &mdash; a whole vegetable section, plus tofu and paneer done several
+            ways, vegetable dim sum, spring rolls and soups. <strong>Halal, vegan and
+            gluten-free are not something we can confirm here for either branch.</strong>
+            For an allergy or anything more specific, please call the branch: the kitchen
+            would rather tell you plainly what it can and cannot do than have you find out
+            at the table.</p>
         </div></div>
       </details>
 
       <details class="faq__item">
         <summary class="faq__q">
-          <span class="faq__q-text">Can you accommodate special dietary requests?</span>
+          <span class="faq__q-text">Can you host a private dinner?</span>
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <p>There are vegetarian selections on the menu, including on the sushi
-            and sashimi boats. For an allergy or anything more specific, please
-            call ahead — the kitchen would rather tell you plainly what it can and
-            cannot do than have you find out at the table.</p>
+          <p>Mombasa has two private rooms, each seating around twelve to fifteen. Nairobi
+            takes private-event enquiries too. Either way it is a conversation rather than
+            a booking form &mdash; call the branch, or use the form above.</p>
+        </div></div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span class="faq__q-text">Do you deliver, and can I take away?</span>
+          <span class="faq__sign" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__a"><div class="faq__a-inner">
+          <p>Yes to both. Takeaway from either branch, and delivery in Nairobi through Uber
+            Eats.</p>
         </div></div>
       </details>
 
@@ -3954,13 +4052,9 @@
           <span class="faq__sign" aria-hidden="true"></span>
         </summary>
         <div class="faq__a"><div class="faq__a-inner">
-          <!-- MUST MATCH THE RESERVATION BLOCK further down this page. It is
-               the same claim made twice on one page, and the two got out of
-               step once already. Confirmed by the client 2026-08-20: one
-               schedule for both branches. -->
-          <p>Both restaurants are open every day, from 12:00 to 23:00. We serve
-            straight through the afternoon, so a late lunch is as welcome as
-            dinner.</p>
+          <p>Both branches are closed on Mondays and open Tuesday to Sunday from 11:00.
+            They close at different times: Nairobi at 22:30, Mombasa at 21:00. We serve
+            straight through the afternoon, so a late lunch is as welcome as dinner.</p>
         </div></div>
       </details>
 
@@ -3997,15 +4091,15 @@
       </svg>
       <div class="reserve__frame">
         <picture>
-          <source type="image/avif" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
-                  srcset="assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
-          <source type="image/webp" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
-                  srcset="assets/img/r/reserve-interior-1150.webp 1150w, assets/img/r/reserve-interior-1400.webp 1400w">
+          <source type="image/avif" sizes="(max-width: 1000px) 100.9vw, 62.6vw"
+                  srcset="assets/img/r/reserve-interior-640.avif 640w, assets/img/r/reserve-interior-770.avif 770w, assets/img/r/reserve-interior-920.avif 920w, assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
+          <source type="image/webp" sizes="(max-width: 1000px) 100.9vw, 62.6vw"
+                  srcset="assets/img/r/reserve-interior-640.webp 640w, assets/img/r/reserve-interior-1400.webp 1400w">
           <img class="reserve__img" src="assets/img/reserve-interior.jpg"
              width="1400" height="1576"
-             alt="A dim Japanese dining room: dark wood tables set with ceramic
-                  dishes and vermilion lacquer cups, two small glass pendants
-                  lit warm above a counter, shoji screens behind." loading="lazy" decoding="async" fetchpriority="low">
+             alt="A warm, low-lit dining room: dark timber, a long run of small
+                  pendant lights, tables laid and waiting along one side."
+             loading="lazy" decoding="async" fetchpriority="low">
         </picture>
       </div>
     </figure>
@@ -4017,12 +4111,12 @@
 
       <hr class="reserve__rule" aria-hidden="true">
 
-      <p class="reserve__body">A counter, a season, and a chef who decides the
-        order. Tell us when you would like to sit and how many are coming &mdash;
-        the evening is arranged from there.</p>
+      <p class="reserve__body">A round table, a duck that wants ordering ahead, and
+        a kitchen that would rather know you are coming. Tell us when, and how many
+        &mdash; the rest is arranged from there.</p>
 
       <a class="reserve__cta"
-         href="https://wa.me/254700000000?text=Hello%20Misono%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
+         href="https://wa.me/254746815106?text=Hello%20Li%E2%80%99s%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ABranch%20(Nairobi%20or%20Mombasa)%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
          target="_blank" rel="noopener">
         <span class="reserve__ctalbl">Reserve now</span>
         <svg class="reserve__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
@@ -4039,25 +4133,26 @@
             <path d="M12 7.1V12l3.4 2"/>
           </svg>
           <span class="reserve__metalbl">Opening hours</span>
-          <!-- CONFIRMED BY THE CLIENT 2026-08-20, and this reverses the
-               2026-08-17 change. Between 17 and 20 August the site carried
-               "Nairobi 12:00-21:30 / Mombasa 12:00-21:00", taken from public
-               listings (misono.co.ke, EatOut, Foursquare) because those were
-               judged more likely to be current than a phrase remembered from
-               conversation. That judgement was wrong: asked directly, the
-               client confirmed the hours they gave on 2026-08-15 — one
-               schedule for both branches, noon to 11pm, every day.
+          <!-- RESEARCHED 2026-08-26 from Li's own site and the Mombasa
+               listing, and NOT YET CONFIRMED BY THE CLIENT. Both branches are
+               closed Mondays and open Tuesday to Sunday from 11:00; they close
+               at DIFFERENT times — Nairobi 22:30, Mombasa 21:00.
 
-               The listings are therefore stale, not the brief. Worth
-               remembering the next time a public source disagrees with the
-               person who owns the restaurant.
+               This block is byte-copied to four pages, so it cannot carry a
+               closing time without asserting one branch's hours as the whole
+               house's. "Closed Mondays" is true of both, which is why it is
+               what stands here; the exact times live in the location bands and
+               the FAQ on contact.html, where they are allowed to differ.
+
+               Keep it in step with that FAQ answer. It is the same claim made
+               twice on one page and the pair has drifted apart before.
 
                Two lines, not three. The copy column is an aspect-locked block
                of 48.1u of measured ink, verified to fit one screen from
                1000x700 to 2560x1440; a third line changes that height and the
-               fit has to be re-solved. Both lines here are shorter than the
-               branch lines they replace, so the fit can only improve. -->
-          <span class="reserve__metaval">Monday &ndash; Sunday<br>12:00 &ndash; 23:00</span>
+               fit has to be re-solved. Both lines here are no longer than the
+               ones they replace, so the fit can only improve. -->
+          <span class="reserve__metaval">Tuesday &ndash; Sunday<br>Closed Mondays</span>
         </li>
         <li class="reserve__metaitem">
           <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -4072,25 +4167,26 @@
 
   </section>
 
-<!-- ========================================================= ending ==== -->
+<!-- ================================================== ending ==== -->
 <footer class="ending">
   <!-- Decorative repeat of the hero's h1. Hidden from assistive tech so the
        brand name is not announced twice on the way out. -->
-  <p class="ending__mark" aria-hidden="true">MISONO</p>
+  <p class="ending__mark" aria-hidden="true">LI&rsquo;S</p>
 
-  <!-- All three now point at real pages, which is what the placeholder note
-       that used to sit above this block was waiting for. Contact went to
-       #reserve until 2026-08-17 — that was the site's only link INTO the
-       reservation block, so the booking CTA is now reached by scrolling
-       rather than by navigating. Noted in CLAUDE.md; it is a consequence of
-       the link change, not an oversight. -->
+  <!-- Five links, not three. Locations and Reservations were added on
+       2026-08-26: both are places a reader actually wants to reach from the
+       foot of any page, and neither had a route that was not a scroll.
+       #reserve resolves on the page the reader is already on, because all
+       four carry the block. -->
   <nav class="ending__nav" aria-label="Footer">
     <a class="ending__link" href="menu.html">Menu</a>
     <a class="ending__link" href="about.html">About</a>
     <a class="ending__link" href="contact.html" aria-current="page">Contact</a>
+    <a class="ending__link" href="contact.html#locations">Locations</a>
+    <a class="ending__link" href="#reserve">Reservations</a>
   </nav>
 
-  <p class="ending__note">&copy; 2026 Misono</p>
+  <p class="ending__note">&copy; 2026 Li&rsquo;s Chinese Restaurant</p>
 </footer>
 
 <script>

@@ -3,12 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Misono — A Commitment to Excellence</title>
+<title>Li&rsquo;s — A Commitment to Excellence</title>
 <link rel="preload" as="image" type="image/avif"
-      imagesrcset="assets/img/r/about-craft-1020.avif 1020w, assets/img/r/about-craft-1250.avif 1250w, assets/img/r/about-craft-1490.avif 1490w, assets/img/r/about-craft-1920.avif 1920w, assets/img/r/about-craft-2400.avif 2400w"
-      imagesizes="104.2vw" fetchpriority="high">
+      imagesrcset="assets/img/r/about-opening-1070.avif 1070w, assets/img/r/about-opening-1540.avif 1540w, assets/img/r/about-opening-1930.avif 1930w, assets/img/r/about-opening-2400.avif 2400w"
+      imagesizes="104.6vw" fetchpriority="high">
+<!-- Site icon. Two drawings, not one file scaled: the SVG and the two small
+     PNGs carry the mark reduced to the ring and the chopsticks, because the
+     full mark with its lettering turns to mush below ~48px; the touch icon
+     and the manifest's tiles carry the full artwork, inset 78% so a rounded
+     or circular platform mask does not cut the ring. See bake-favicons.mjs. -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<meta name="description" content="Misono. The practice behind the counter.">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<meta name="theme-color" content="#F6EEE1">
+<meta name="description" content="Li’s Chinese Restaurant. The kitchen behind the wok, in Nairobi and Mombasa.">
 
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-normal-300-400.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jost-normal-300-400.woff2">
@@ -71,17 +81,26 @@
      descendant, never as a direct child. */
   picture { display: contents; }
 
-  /* The one other image on the site whose layout can read the bitmap's own
-     ratio: the closing section's front plate is `height: auto` on mobile,
-     so a rung rounded to an even height made it 0.8px taller and pushed
+  /* The other images on the site whose layout can read the bitmap's own
+     ratio: the closing section's two plates are `height: auto` on mobile,
+     so a rung rounded to an even height made one 0.8px taller and pushed
      everything below it — the whole reserve block — down by the same. Pin
-     it to the file's ratio for the same reason the marquee tiles are
-     pinned. The back plate is `height: 100%` in a sized box and cannot
-     drift, so it is deliberately not listed. */
-  .ichie__plate--front .ichie__img { aspect-ratio: 1100 / 825; }
+     both to their files' ratios, for the same reason the marquee tiles are
+     pinned.
+
+     The back plate was left out of this on the grounds that it is
+     `height: 100%` in a sized box — true, but only of the DESKTOP layout,
+     where `.reunion__plate--back` carries `aspect-ratio: 3 / 4`. Below that
+     breakpoint the plate has no height of its own and the image drives it,
+     so it drifts exactly as the front one did: a ladder that gained a 350px
+     rung rounded 1466x1100 to 466 rather than 466.7 and moved the reserve
+     block up 0.7px on a phone. Pinning is what stops the layout depending
+     on which rung the browser happened to pick. */
+  .reunion__plate--front .reunion__img { aspect-ratio: 1100 / 825; }
+  .reunion__plate--back  .reunion__img { aspect-ratio: 1100 / 1466; }
 
   /* ---------------------------------------------------------------------
-     Misono — about, opening section.
+     Li's — about, opening section.
 
      Everything here is measured off `assets/img/about inspo.jpeg`, a 1320x625
      screen recording. The page viewport inside that recording runs x=2..1307
@@ -134,12 +153,16 @@
     /* Established in index.html. The peach ground tokens are not here yet —
        this section is a photograph, and the sections that sit on the peach
        have not been built. */
-    --misono-indigo: #3A5280;
+    /* The measured logo red. A DEVICE colour: it draws the mark and
+       never sets type. --li-red is the same hue darkened to carry
+       text and fills — 6.51:1 on the ground, white on it 7.49:1. */
+    --brand-red: #CD393E;
+    --li-red:    #A3221C;
     --ink:           #0B0806;
 
     /* The site's ground and its two inks on it, brought over from
        index.html's peach block unchanged — these are the values that
-       block re-derived against #F7E8DF, not the cream ones above them in
+       block re-derived against #F6EEE1, not the cream ones above them in
        that file. The statement section uses them; the opening above it is
        a photograph and does not.
 
@@ -149,11 +172,10 @@
        invalid declaration, so the eyebrow and the numerals fell back to
        inherited ink and the chapter label's leading rule had no background
        and did not draw at all. Nothing errored. */
-    --ground:      #F7E8DF;
-    --menu-ink:    #2F1B19;  /* 13.6:1 on the peach */
-    --menu-body:   #63504A;  /*  6.3:1 on the peach */
-    --menu-accent: #99551C;  /*  4.8:1 on the peach */
-    --ember:       #C47026;
+    --ground:      #F6EEE1;
+    --menu-ink:    #241A14;  /* 14.79:1 on the ground                       */
+    --menu-body:   #6A574A;  /*  5.93:1                                     */
+    --menu-accent: #A3221C;  /*  6.51:1 — the deep red, from the logo hue   */
 
     /* Superseded as a colour and still load-bearing as a name: the two
        transplanted blocks at the foot of this file take their ground from
@@ -172,7 +194,7 @@
        back to SVG's default fill and came out black on the peach. Nothing
        errored and nothing logged. Check :root actually carries a token
        before using it in a role this page has not used before. */
-    --res-gold:    #AC7634;  /*  3.26:1 — non-text boundary only */
+    --res-gold:    #9C7230;  /*  3.26:1 — non-text boundary only */
 
     /* 2.4% of the reference's width, at both ends. */
     --open-inset: clamp(20px, 2.4vw, 40px);
@@ -298,7 +320,7 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
     /* Peak and falloff are measured, not guessed, and the falloff is the
-       part that matters. The line's left half crosses the lit hinoki
+       part that matters. The line's left half crosses the lit timber
        counter, which the wash alone leaves at 163/255 — 2.6:1 under white,
        which fails even the 3:1 large text is held to. A bed narrow enough
        to be a halo only reached 0.26 alpha out at the "A", so it is wide
@@ -354,8 +376,8 @@
     gap: 20px;
   }
 
-  /* The reference sets a single letter and a full stop. Misono's equivalent
-     is the wordmark, at the reference's mark scale (~1.07% of width) rather
+  /* The reference sets a single letter and a full stop. Li's equivalent is
+     the wordmark, at the reference's mark scale (~1.07% of width) rather
      than the hero's — this is a bar, not a masthead. */
   .topbar__brand {
     position: relative;
@@ -606,7 +628,7 @@
   }
 
   /* =====================================================================
-     Misono — about, the statement.
+     Li's — about, the statement.
 
      Measured off `assets/img/abouttt page.jpeg`, a 1320x634 screen
      recording. The page viewport inside it runs x=2..1306 — the same
@@ -887,7 +909,7 @@
      The tails are literals for the same reason index.html's closing
      gradient is one: a token cannot be given an alpha here, and fading to
      the keyword `transparent` interpolates through rgba(0,0,0,0), which
-     on a ground this light drags a grey haze across both edges. #F7E8DF
+     on a ground this light drags a grey haze across both edges. #F6EEE1
      at zero alpha. If --stmt-ground moves, these move with it. */
   .statement__edges {
     position: absolute;
@@ -1125,7 +1147,7 @@
   }
 
   /* =====================================================================
-     Misono — about, the plate.
+     Li's — about, the plate.
 
      One photograph, full bleed, and nothing else on it. The brief for this
      section was that the photography does the work, so there is no
@@ -1141,7 +1163,7 @@
      and 0.36 at q90 — no step is visible at any of the three, so q85 was
      kept for the size (181K against 332K from a plain `sips` conversion at
      the same nominal quality; the difference is the encoder, not the
-     setting). No crop or retouch, unlike about-craft.jpg's source: this
+     setting). No crop or retouch, unlike about-opening.jpg's source: this
      frame has no person in it and needed neither.
 
      It is the room, deliberately. The opening section at the top of this
@@ -1162,7 +1184,7 @@
      50% was fine on a normal viewport, which is exactly why it went
      unnoticed until measured at the extreme.
 
-     Delivery is smaller than about-craft.jpg's source (1536 wide against
+     Delivery is smaller than about-opening.jpg's source (1536 wide against
      2400) because this one is client-supplied rather than baked to a
      target size. It still covers every viewport this section meets — cover
      scales up as readily as down — so the only cost is sharpness on a
@@ -1262,7 +1284,7 @@
   }
 
   /* =====================================================================
-     Misono — about, the figures.
+     Li's — about, the figures.
 
      Four numbers on the peach. No cards, no rules around anything, no
      eyebrow: the numbers are the content and the section is mostly the
@@ -1272,19 +1294,18 @@
      different dimension of the same restaurant, so that four of them read
      as a portrait instead of a dashboard:
 
-       14   how long          50+  what it knows
-       12   how many it sits   9   what an evening is
+       2    how many rooms    150+  how wide the carte is
+       30   what it is for    6     how often it opens
 
-     Two of the four the brief suggested were swapped, and both for the
-     same reason: "100% Japanese-inspired" and "5-star" are not
-     measurements, they are adjectives wearing numerals, and a percentage
-     that is always 100 or a rating that is always 5 tells a reader
-     nothing. Seats and courses are the two figures an omakase guest
-     actually wants, and being small is the luxury claim — twelve seats
-     says more about this restaurant than five stars does.
+     The rule the old set broke: a figure has to be a MEASUREMENT, not an
+     adjective wearing a numeral. The four that stood here (14 years, 50+
+     preparations, 12 seats, 9 courses) were invented outright, and two of
+     them — the seat count and the course count — were claims a guest could
+     turn up and check. These four are counted off Li's own published menu
+     and its listings; the arithmetic is in the markup beside them.
 
-     Every number here is invented and is recorded as placeholder in
-     CLAUDE.md.
+     "Ways with seafood" is here rather than a seat count on purpose. It is
+     the one number that says what this kitchen is actually for.
      ===================================================================== */
 
   .figures {
@@ -1345,7 +1366,7 @@
     top: calc(var(--fig-num) * 0.14);
     height: calc(var(--fig-num) * 0.76);
     width: 1px;
-    background: rgba(47, 27, 25, 0.16);
+    background: rgba(36, 26, 20, 0.16);
   }
 
   .figure__num {
@@ -1420,7 +1441,7 @@
       top: calc(var(--fig-num) * 0.14);
       height: calc(var(--fig-num) * 0.76);
       width: 1px;
-      background: rgba(47, 27, 25, 0.16);
+      background: rgba(36, 26, 20, 0.16);
     }
   }
 
@@ -1461,8 +1482,8 @@
        leading dash      49x1px       = 2.4%
 
      The reference's ink turned out to be this site's ink already: its
-     heading measures #2E1A0F against our --menu-ink #2F1B19, and its body
-     #624F3F against our --menu-body #63504A. Nothing was re-derived for
+     heading measures #2E1A0F against our --menu-ink #241A14, and its body
+     #624F3F against our --menu-body #6A574A. Nothing was re-derived for
      those two. Its ground is a sand #E7DABC and is not used — this section
      stays on --ground with the rest of the page.
 
@@ -1550,8 +1571,8 @@
 
     /* Same hairline the figures row uses, so the two sections rule at the
        same weight. */
-    --ch-hair:  rgba(47, 27, 25, 0.16);
-    --ch-hair-strong: rgba(47, 27, 25, 0.22);
+    --ch-hair:  rgba(36, 26, 20, 0.16);
+    --ch-hair-strong: rgba(36, 26, 20, 0.22);
   }
 
   /* Without the script this is four ordinary rows and the section is as
@@ -1640,8 +1661,8 @@
     /* Warm, low and wide, tinted with --ember rather than neutral black —
        a grey shadow on a peach ground reads as dirt. */
     box-shadow:
-      0 1px 2px rgba(47, 27, 25, 0.10),
-      0 10px 24px rgba(47, 27, 25, 0.10),
+      0 1px 2px rgba(36, 26, 20, 0.10),
+      0 10px 24px rgba(36, 26, 20, 0.10),
       0 30px 60px rgba(196, 112, 38, 0.13);
   }
 
@@ -2128,7 +2149,7 @@
      Colour: the reference's line is #F2B68D, which measures under 1.6:1 on
      this site's peach and simply disappears. --res-gold is the token for a
      non-text boundary and carries the same warmth at 3.26:1. Its badge is
-     a deep oxblood; --misono-indigo takes that slot instead — it is the one
+     a deep oxblood; --li-red takes that slot instead — it is the one
      measured brand value on this site and, until now, the only token that
      had never been given anything to do.
      ===================================================================== */
@@ -2159,7 +2180,7 @@
     --ex-body:  clamp(0.9rem, 3.7vw, 1rem);
     --ex-micro: var(--open-link);
 
-    --ex-hair: rgba(47, 27, 25, 0.16);
+    --ex-hair: rgba(36, 26, 20, 0.16);
   }
 
   /* ------------------------------------------------------------ masthead */
@@ -2248,8 +2269,8 @@
        absolute — a hairline at the frame's edge is a hairline at any size. */
     --sh: clamp(180px, 60vw, 340px);
     box-shadow:
-      0 1px 2px rgba(47, 27, 25, 0.10),
-      0 calc(var(--sh) * 0.034) calc(var(--sh) * 0.081) rgba(47, 27, 25, 0.10),
+      0 1px 2px rgba(36, 26, 20, 0.10),
+      0 calc(var(--sh) * 0.034) calc(var(--sh) * 0.081) rgba(36, 26, 20, 0.10),
       0 calc(var(--sh) * 0.102) calc(var(--sh) * 0.203) rgba(196, 112, 38, 0.13);
   }
 
@@ -2273,7 +2294,7 @@
     width: 15.1%;                   /* 45/298 */
     aspect-ratio: 1;
     border-radius: 50%;
-    background: var(--misono-indigo);
+    background: var(--li-red);
     color: #fff;                    /* 7.7:1 on the indigo */
     font-family: Jost, ui-sans-serif, system-ui, sans-serif;
     font-size: clamp(9px, 2.4vw, 12px);
@@ -2293,13 +2314,13 @@
     line-height: 1.15;
     /* The reference sets these titles at 0.655 em per character against the
        0.606 Cormorant gives at its natural fit, and 0.08em would close it —
-       but it cannot be closed here. Its titles are 14 and 16 characters and
-       these are 21, 22 and 21, so at 0.08em "JAPANESE CRAFTSMANSHIP" measures
-       292px inside a 290px block and takes a second line while the other two
-       stay on one. The caption's width is measured (1.39x its own card) and
-       is not the thing to give up, so the tracking is. 0.05em leaves 12px of
-       slack on the longest of the three, which is enough to survive the
-       fallback serif before Cormorant lands. */
+       but it was not closeable when this was solved. The titles then ran 21,
+       22 and 21 characters, and at 0.08em the longest measured 292px inside
+       a 290px block and took a second line while the other two stayed on
+       one. The current three are 10, 15 and 14, so that constraint no longer
+       binds — the tracking is LEFT at 0.05em anyway, because the number was
+       chosen against the fallback serif's wider metrics as much as against
+       Cormorant's, and reopening it would buy nothing. */
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--menu-ink);
@@ -2593,7 +2614,7 @@
   }
 
   /* =====================================================================
-     ICHIGO ICHIE — the closing section, and the page's last quiet beat.
+     TUANYUAN — the closing section, and the page's last quiet beat.
 
      No reference image; designed against the page it ends. Three things
      decided its form:
@@ -2629,7 +2650,7 @@
      sections that happen to follow each other.
      ===================================================================== */
 
-  .ichie {
+  .reunion {
     position: relative;
     background: var(--ground);
     color: var(--menu-ink);
@@ -2645,7 +2666,7 @@
     --ic-micro: var(--open-link);
   }
 
-  .ichie__eyebrow {
+  .reunion__eyebrow {
     margin: 0 0 clamp(0.7rem, 2.05vw, 1.4rem);
     font-family: Jost, ui-sans-serif, system-ui, sans-serif;
     font-size: var(--ic-micro);
@@ -2656,7 +2677,7 @@
     color: var(--menu-accent);      /* 4.8:1 on the peach */
   }
 
-  .ichie__title {
+  .reunion__title {
     margin: 0;
     font-family: 'Cormorant Garamond', 'Cormorant Fallback', Georgia, serif;
     font-weight: 300;
@@ -2668,15 +2689,15 @@
 
   /* A single hairline between the claim and its explanation. The figures row
      and the chapter track already rule at this weight. */
-  .ichie__rule {
+  .reunion__rule {
     width: clamp(48px, 14vw, 84px);
     height: 1px;
     margin: clamp(1.4rem, 5vw, 2.2rem) 0;
     border: 0;
-    background: rgba(47, 27, 25, 0.22);
+    background: rgba(36, 26, 20, 0.22);
   }
 
-  .ichie__body {
+  .reunion__body {
     margin: 0;
     max-width: 54ch;
     font-family: Jost, ui-sans-serif, system-ui, sans-serif;
@@ -2689,15 +2710,15 @@
   /* Mobile: text, then the two plates in a plain column. No perspective and
      no parallax — a 5% depth difference across a 350px phone is not a
      composition, it is a rendering artefact. */
-  .ichie__stage {
+  .reunion__stage {
     display: grid;
     gap: clamp(1.5rem, 6vw, 2.5rem);
     margin-top: clamp(2.5rem, 9vw, 4rem);
   }
 
-  .ichie__plate { margin: 0; position: relative; }
+  .reunion__plate { margin: 0; position: relative; }
 
-  .ichie__img {
+  .reunion__img {
     display: block;
     width: 100%;
     height: 100%;
@@ -2708,12 +2729,12 @@
        section's own plate width. */
     --sh: clamp(180px, 60vw, 340px);
     box-shadow:
-      0 1px 2px rgba(47, 27, 25, 0.10),
-      0 calc(var(--sh) * 0.034) calc(var(--sh) * 0.081) rgba(47, 27, 25, 0.10),
+      0 1px 2px rgba(36, 26, 20, 0.10),
+      0 calc(var(--sh) * 0.034) calc(var(--sh) * 0.081) rgba(36, 26, 20, 0.10),
       0 calc(var(--sh) * 0.102) calc(var(--sh) * 0.203) rgba(196, 112, 38, 0.13);
   }
 
-  .ichie__cap {
+  .reunion__cap {
     margin: clamp(0.7rem, 2.4vw, 1rem) 0 0;
     font-family: 'Cormorant Garamond', 'Cormorant Fallback', Georgia, serif;
     font-style: italic;
@@ -2726,7 +2747,7 @@
   /* ------------------------------------------------ the spread, 1080px+ */
 
   @media (min-width: 1080px) {
-    .ichie {
+    .reunion {
       padding: 0;
 
       /* The experience section's unit and inner width, on purpose. */
@@ -2737,7 +2758,7 @@
       --ic-body:  max(12.5px, calc(1.050 * var(--ic-u)));
     }
 
-    .ichie__inner {
+    .reunion__inner {
       width: var(--ic-w);
       margin-inline: auto;
       min-height: 100svh;
@@ -2752,11 +2773,11 @@
 
     /* The nearest plane, and the one that moves least. A text block that
        parallaxes as hard as a photograph reads as a slide, not as depth. */
-    .ichie__copy {
+    .reunion__copy {
       transform: translateY(calc(var(--cam) * 0.8 * var(--ic-u)));
     }
 
-    .ichie__stage {
+    .reunion__stage {
       display: block;
       position: relative;
       /* 743 x 630 at 1440, so the two plates and their overlap are all
@@ -2770,7 +2791,7 @@
       transform-style: preserve-3d;
     }
 
-    .ichie__plate {
+    .reunion__plate {
       position: absolute;
       /* No will-change, for the reason recorded at the foot of the statement
          section: promoting these makes Chrome rasterise once and stretch,
@@ -2783,7 +2804,7 @@
     /* Back: 340/743 of the stage, 3:4, set to the stage's right edge and its
        top. Further away, so it lags the scroll — positive --k, which adds
        downward travel as --cam runs -1 to +1 and reads as "did not keep up". */
-    .ichie__plate--back {
+    .reunion__plate--back {
       --z: -80px;
       --k: 3.2;
       left: 54.24%;                 /* 403/743 */
@@ -2796,7 +2817,7 @@
     /* Front: 440/743, 4:3, low and left, overlapping the back plate's
        lower-left corner by 97px of the stage's width. Nearer, so it leads —
        negative --k. */
-    .ichie__plate--front {
+    .reunion__plate--front {
       --z: 70px;
       --k: -2.2;
       left: 8.07%;                  /* 60/743 */
@@ -2806,9 +2827,9 @@
       z-index: 1;
     }
 
-    .ichie__plate--front .ichie__img { height: auto; }
+    .reunion__plate--front .reunion__img { height: auto; }
 
-    .ichie__cap {
+    .reunion__cap {
       position: absolute;
       left: 0;
       top: calc(100% + 0.9 * var(--ic-u));
@@ -2825,8 +2846,8 @@
        not only the ones with a visible animation: --cam is inherited, and an
        inline value written before the preference changed would otherwise
        still be in play. */
-    .js .ichie__copy { transform: none; }
-    .js .ichie__plate { transform: translateZ(var(--z)); }
+    .js .reunion__copy { transform: none; }
+    .js .reunion__plate { transform: translateZ(var(--z)); }
   }
 
   /* =====================================================================
@@ -2866,8 +2887,8 @@
        to marks that state nothing — the rule under the eyebrow, the ring around
        the photograph. Anything a guest reads or clicks takes --menu-accent
        (4.8:1) or --res-gold, which clears 3:1 as a non-text boundary. */
-    --res-hair: #D4AD7E;
-    --res-gold: #B8813F;
+    --res-hair: #D9B98A;
+    --res-gold: #9C7230;
 
     --res-eyebrow:  clamp(0.66rem, 2.85vw, 0.76rem);
     --res-title:    clamp(2.35rem, 11.9vw, 3.6rem);
@@ -3268,7 +3289,7 @@
 
     /* Vertically centred on the section's own axis rather than pinned to the
        comp's y-positions. The comp leaves its bottom 22.7% to a vertical
-       Japanese lockup and a contour texture, neither of which is being built;
+       a lockup and a contour texture, neither of which is being built;
        holding its offsets without them would leave a fifth of the section empty
        at the foot and read as an unfinished page.
 
@@ -3403,8 +3424,16 @@
        vertical presence. Reaching that ratio honestly would need caps
        1595px wide on a 1440px screen, so width is spent instead: the mark
        runs to ~92% of the viewport, which is as large as it can be and
-       still read as MISONO rather than as a cropped M and O. */
-    --end-mark:   clamp(4.4rem, 19.9vw, 20rem);
+       still read as a word rather than as a cropped first and last letter.
+       That 92% is the target --end-mark is solved against; see it above. */
+    /* RE-SOLVED 2026-08-26 for a four-glyph wordmark. The size above was
+       fitted so MISONO's six caps ran to ~92% of the viewport; LI'S set at
+       the same size measured 43.4%, which is not a smaller wordmark but a
+       different composition — the mark stopped being the closing gesture and
+       became a caption. Everything is scaled by 92/43.4 = 2.12, the clamp
+       ends included, so the cap at 2560 still bites at the same fraction it
+       always did. Re-solve again if the string ever changes length. */
+    --end-mark:   clamp(9.3rem, 42.2vw, 42.4rem);
     /* The last 15% of height comes from the block, not the size — see
        .ending__mark. */
     --end-stretch: 1.15;
@@ -3417,7 +3446,7 @@
        the total span and the even gaps are trustworthy. */
     --end-link:   max(10.5px, 0.76vw);
     --end-note:   max(9.5px, 0.72vw);
-    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the three links  */
+    --end-gap:    clamp(26px, 2.58vw, 46px);   /* between the five links   */
 
     position: relative;
     display: flex;
@@ -3469,7 +3498,7 @@
     line-height: 0.653;
     letter-spacing: 0.16em;
     white-space: nowrap;
-    color: rgba(47, 27, 25, 0.045);
+    color: rgba(36, 26, 20, 0.045);
     user-select: none;
     /* Once the mark is as wide as the screen allows, height is the only
        axis left. A 1.15 vertical scale thickens Cormorant's horizontal
@@ -3499,7 +3528,13 @@
     margin-top: clamp(8px, 0.68vw, 14px);
     display: flex;
     justify-content: center;
+    /* Five links, not the three this was fitted to. Unwrapped they measured
+       102.1% of a 390px viewport — an overflow, not a tight fit. Wrapping is
+       the right answer rather than shrinking the type: the links are already
+       at a 10.5px floor. */
+    flex-wrap: wrap;
     gap: var(--end-gap);
+    row-gap: clamp(10px, 1.2vw, 18px);
     padding-inline: 7.18%;   /* the inset the section gave up, kept here */
   }
 
@@ -3556,7 +3591,7 @@
   .ending__link:focus-visible::after { transform: scaleX(1); }
 
   .ending__link:focus-visible {
-    outline: 1px solid var(--misono-indigo);
+    outline: 1px solid var(--li-red);
     outline-offset: 4px;
     border-radius: 1px;
   }
@@ -3593,14 +3628,17 @@
 
   /* Phones. The desktop ratio already runs the mark to ~92% of the
      viewport, so there is almost nothing left to give here — 20vw is the
-     same 92%, and anything past it starts cropping the M. The phone gets
+     same 92%, and anything past it starts cropping the first letter. The phone gets
      its height from the stretch instead, pushed a little harder because a
      390px screen has proportionally more empty cream to fill. The 72svh
      minimum goes: on a phone the closing frame is as tall as its contents
      and no taller. */
   @media (max-width: 639px) {
     .ending {
-      --end-mark: 20vw;
+      /* Scaled by the same 2.12 as the desktop clamp when the wordmark went
+         from six glyphs to four. 20vw held MISONO at 92% of a phone; it held
+         LI'S at 43.6%. */
+      --end-mark: 42.4vw;
       --end-stretch: 1.22;
       min-height: 0;
       padding-top: clamp(64px, 22vw, 108px);
@@ -3627,7 +3665,7 @@
     --cream: var(--ground);
   }
 
-  /* 1. The gold that bounds the WhatsApp button. index.html picked #B8813F
+  /* 1. The gold that bounds the WhatsApp button. index.html picked #9C7230
         precisely because it clears 3:1 as a non-text boundary — on cream it
         makes it by 0.18, at 3.18:1. The peach is darker, and that margin was
         not there to spend: it falls to 2.81:1 and fails. Darkened until it
@@ -3635,7 +3673,7 @@
         ever decorative here (the rule, the ring), so no minimum applies to
         it, and on the button's dark hover state it still reads at 7.8:1. */
   .reserve {
-    --res-gold: #AC7634;
+    --res-gold: #9C7230;
   }
 
   /* 2. The closing gradient's tail is a literal, so --cream cannot reach it.
@@ -3644,7 +3682,7 @@
         settles". Same step applied to the peach rather than a new value
         chosen by eye. Leaves the footer links at 6.2:1 at their dimmest. */
   .ending {
-    background: linear-gradient(180deg, var(--ground) 0%, #F5E5DB 100%);
+    background: linear-gradient(180deg, var(--ground) 0%, #F4EBDD 100%);
   }
 
   /* 3. The wordmark needed NO change, which is worth recording because it
@@ -3664,9 +3702,10 @@
     <!--
       Sourced for this section, not from the restaurant's own nine frames —
       all of those are plated dishes, and the brief asked for the making
-      rather than the made. An itamae finishing seared nigiri on slate at a
-      hinoki counter, guests bokeh'd behind him. Pexels 16388599, free
-      licence, no attribution required.
+      rather than the made. PLACEHOLDER — Pexels 8093845, a cook finishing a
+      plate of dumplings at a dark pass. Baked by bake-lis-photography.py to
+      2400x1800 and mean 71, the band the frame it replaces measured at.
+      Pexels Licence: commercial use, no attribution required.
 
       The original is portrait, 4000x6000. The band shipped here is y
       1500..4500 of it, downscaled to 2400 wide at q62. Two bands were cut
@@ -3682,11 +3721,11 @@
     -->
     <div class="opening__media">
       <picture>
-        <source type="image/avif" sizes="104.2vw"
-                srcset="assets/img/r/about-craft-1020.avif 1020w, assets/img/r/about-craft-1250.avif 1250w, assets/img/r/about-craft-1490.avif 1490w, assets/img/r/about-craft-1920.avif 1920w, assets/img/r/about-craft-2400.avif 2400w">
-        <source type="image/webp" sizes="104.2vw"
-                srcset="assets/img/r/about-craft-1020.webp 1020w, assets/img/r/about-craft-2400.webp 2400w">
-        <img class="opening__img" src="assets/img/about-craft.jpg" alt=""
+        <source type="image/avif" sizes="104.6vw"
+                srcset="assets/img/r/about-opening-1070.avif 1070w, assets/img/r/about-opening-1540.avif 1540w, assets/img/r/about-opening-1930.avif 1930w, assets/img/r/about-opening-2400.avif 2400w">
+        <source type="image/webp" sizes="104.6vw"
+                srcset="assets/img/r/about-opening-1070.webp 1070w, assets/img/r/about-opening-2400.webp 2400w">
+        <img class="opening__img" src="assets/img/about-opening.jpg" alt=""
            fetchpriority="high" decoding="sync" width="2400" height="1800" loading="eager">
       </picture>
     </div>
@@ -3698,7 +3737,7 @@
     <div class="opening__lift"></div>
 
     <header class="topbar">
-      <a class="topbar__brand" href="index.html">Misono</a>
+      <a class="topbar__brand" href="index.html">Li&rsquo;s</a>
 
       <nav class="topbar__nav" aria-label="Primary">
         <a class="topbar__link" href="menu.html">Menu</a>
@@ -3727,21 +3766,33 @@
     <div class="statement__inner">
 
       <h2 class="stmt__title" id="statement-title">
-        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">BOLD, UNIQUE,</span></span></span></span>
+        <!-- Five authored lines, not a wrap, and each is its own depth plane.
+             THE LONGEST LINE SETS THE TYPE SIZE: the block was fitted to 13
+             characters ("BOLD, UNIQUE," and "CRAFTSMANSHIP"). These five run
+             9 / 8 / 3 / 12 / 7, so the widest is one glyph inside the
+             measured envelope and the composition has more clearance than it
+             was solved for, not less. Re-measure if any line passes 13. -->
+        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">GENEROUS,</span></span></span></span>
+        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">PRECISE,</span></span></span></span>
         <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">AND</span></span></span></span>
-        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">UNMATCHED</span></span></span></span>
-        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">CULINARY</span></span></span></span>
-        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">CRAFTSMANSHIP</span></span></span></span>
+        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">UNMISTAKABLY</span></span></span></span>
+        <span class="stmt__row"><span class="stmt__plane"><span class="stmt__clip"><span class="stmt__ink">CHINESE</span></span></span></span>
       </h2>
 
       <div class="stmt__row stmt__body">
         <div class="stmt__plane">
+          <!-- Built from Li's own published words — "the finest ingredients,
+               masterful technique, and genuine hospitality" — rather than
+               written from nothing. The coast origin and the Kenyan sourcing
+               are both claims Li's makes about itself. Nothing here asserts a
+               founding year, because none is published. -->
           <p class="stmt__copy">
-            At Misono, tradition is not kept behind glass. It is practised nightly at
-            the counter &mdash; in the angle of a blade, the temperature of the rice,
-            the single evening an ingredient is chosen for. Centuries of discipline,
-            carried by a kitchen still curious. Not a meal you remember, but one you
-            return to.
+            Li&rsquo;s began on the coast, which is why the seafood is the part the
+            kitchen is proudest of. Meat, fish and vegetables are sourced across
+            Kenya; what happens after that is technique &mdash; a wok hot enough to
+            change a dish in seconds, and a steamer that will not be hurried. The
+            welcome is the third thing, and this house has never treated it as the
+            smallest.
           </p>
         </div>
       </div>
@@ -3753,12 +3804,12 @@
     The plate. One frame, full bleed, nothing over it. Client-supplied; see
     the block at the foot of the <style> for the crop and quality reasoning.
   -->
-  <section class="plate" aria-label="The counter at Misono">
+  <section class="plate" aria-label="A dish from the Li&rsquo;s kitchen">
     <picture>
       <source type="image/avif" sizes="100vw"
-              srcset="assets/img/r/about-plate-980.avif 980w, assets/img/r/about-plate-1230.avif 1230w, assets/img/r/about-plate-1536.avif 1536w">
+              srcset="assets/img/r/about-plate-1230.avif 1230w, assets/img/r/about-plate-1536.avif 1536w">
       <source type="image/webp" sizes="100vw"
-              srcset="assets/img/r/about-plate-980.webp 980w, assets/img/r/about-plate-1536.webp 1536w">
+              srcset="assets/img/r/about-plate-1020.webp 1020w, assets/img/r/about-plate-1536.webp 1536w">
       <img class="plate__img" src="assets/img/about-plate.jpg" alt=""
          loading="lazy" decoding="async" width="1536" height="1024" fetchpriority="low">
     </picture>
@@ -3770,27 +3821,43 @@
     still sits on top. The finished numbers are in the markup — the script
     zeroes them only once it knows it can count them back up.
   -->
-  <section class="figures" aria-label="Misono in numbers">
+  <section class="figures" aria-label="Li&rsquo;s in numbers">
+    <!-- ALL FOUR ARE SOURCED, which reverses what stood here. The previous
+         set (14 years, 50+ preparations, 12 seats, 9 courses) was invented
+         outright, and two of them were checkable claims a guest could hold
+         the restaurant to. These four come from Li's own menu and its public
+         listings, read 2026-08-26:
+
+           2    Nyali Mombasa and Gigiri Nairobi.
+           150+ Counted off the published carte — 34 starters, 30 seafood,
+                32 meat, 18 vegetable, 14 soups, 13 rice and noodles, 5
+                desserts and the rest. Drinks are not counted. Conservative.
+           30   Seafood dishes on that same carte, and the reason this one
+                is here rather than a seat count: it is the thing the coast
+                kitchen is actually known for.
+           6    Tuesday to Sunday. Both branches close Mondays.
+
+         Anything added here needs a source, not an estimate. -->
     <dl class="figures__row">
 
       <div class="figure">
-        <dt class="figure__label">Years in practice</dt>
-        <dd class="figure__num"><span class="figure__val" data-to="14">14</span></dd>
+        <dt class="figure__label">Restaurants</dt>
+        <dd class="figure__num"><span class="figure__val" data-to="2">2</span></dd>
       </div>
 
       <div class="figure">
-        <dt class="figure__label">Signature preparations</dt>
-        <dd class="figure__num"><span class="figure__val" data-to="50">50</span><span class="figure__suf">+</span></dd>
+        <dt class="figure__label">Dishes on the carte</dt>
+        <dd class="figure__num"><span class="figure__val" data-to="150">150</span><span class="figure__suf">+</span></dd>
       </div>
 
       <div class="figure">
-        <dt class="figure__label">Seats at the counter</dt>
-        <dd class="figure__num"><span class="figure__val" data-to="12">12</span></dd>
+        <dt class="figure__label">Ways with seafood</dt>
+        <dd class="figure__num"><span class="figure__val" data-to="30">30</span></dd>
       </div>
 
       <div class="figure">
-        <dt class="figure__label">Courses each evening</dt>
-        <dd class="figure__num"><span class="figure__val" data-to="9">9</span></dd>
+        <dt class="figure__label">Nights a week</dt>
+        <dd class="figure__num"><span class="figure__val" data-to="6">6</span></dd>
       </div>
 
     </dl>
@@ -3806,21 +3873,20 @@
     the numeral track is aria-hidden, because it says in roman numerals what
     the chapter label beside it says in words.
 
-    On the copy: no number appears anywhere in this section, deliberately.
-    The figures section above it already carries four invented counts that
-    CLAUDE.md records as placeholder, and doubling that with invented
-    sourcing or timing claims makes more to unpick later. What is asserted
-    here is posture — how the cooking is arranged and what the guest is
-    facing — plus the counter, which the statement section already claims
-    and which is already flagged for checking.
+    On the copy: no number appears anywhere in this section, deliberately —
+    the figures section above carries the counts, and they are sourced. What
+    is asserted here is posture: how Chinese cooking is arranged and what a
+    guest is facing. The one restaurant-specific claim is that Li's opened in
+    Mombasa, which Li's says about itself. No founding year is given, because
+    none is published.
   -->
   <section class="chapters" aria-labelledby="chapters-title">
     <div class="chapters__pin">
       <div class="chapters__stage">
 
         <header class="chapters__mast">
-          <p class="chapters__eyebrow">The Misono practice</p>
-          <h2 id="chapters-title" class="chapters__title">The Way an Evening<br>Is Built</h2>
+          <p class="chapters__eyebrow">The Li&rsquo;s practice</p>
+          <h2 id="chapters-title" class="chapters__title">The Way a Meal<br>Is Built</h2>
         </header>
 
         <div class="chapters__body">
@@ -3847,19 +3913,19 @@
           <figure class="ch-photo" style="--i:0">
             <picture>
               <source type="image/avif" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch1-teppan-340.avif 340w, assets/img/r/about-ch1-teppan-430.avif 430w, assets/img/r/about-ch1-teppan-510.avif 510w, assets/img/r/about-ch1-teppan-690.avif 690w, assets/img/r/about-ch1-teppan-820.avif 820w">
+                      srcset="assets/img/r/about-ch1-wok-260.avif 260w, assets/img/r/about-ch1-wok-340.avif 340w, assets/img/r/about-ch1-wok-510.avif 510w, assets/img/r/about-ch1-wok-690.avif 690w, assets/img/r/about-ch1-wok-820.avif 820w">
               <source type="image/webp" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch1-teppan-340.webp 340w, assets/img/r/about-ch1-teppan-820.webp 820w">
-              <img class="ch-photo__img" src="assets/img/about-ch1-teppan.jpg" alt=""
+                      srcset="assets/img/r/about-ch1-wok-260.webp 260w, assets/img/r/about-ch1-wok-820.webp 820w">
+              <img class="ch-photo__img" src="assets/img/about-ch1-wok.jpg" alt=""
                  width="1100" height="1466" decoding="async" loading="lazy" fetchpriority="low" data-warm=".chapters">
             </picture>
           </figure>
           <figure class="ch-photo" style="--i:1">
             <picture>
               <source type="image/avif" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch2-hand-340.avif 340w, assets/img/r/about-ch2-hand-430.avif 430w, assets/img/r/about-ch2-hand-510.avif 510w, assets/img/r/about-ch2-hand-690.avif 690w, assets/img/r/about-ch2-hand-820.avif 820w">
+                      srcset="assets/img/r/about-ch2-hand-260.avif 260w, assets/img/r/about-ch2-hand-340.avif 340w, assets/img/r/about-ch2-hand-510.avif 510w, assets/img/r/about-ch2-hand-690.avif 690w, assets/img/r/about-ch2-hand-820.avif 820w">
               <source type="image/webp" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch2-hand-340.webp 340w, assets/img/r/about-ch2-hand-820.webp 820w">
+                      srcset="assets/img/r/about-ch2-hand-260.webp 260w, assets/img/r/about-ch2-hand-820.webp 820w">
               <img class="ch-photo__img" src="assets/img/about-ch2-hand.jpg" alt=""
                  width="1100" height="1466" decoding="async" loading="lazy" fetchpriority="low" data-warm=".chapters">
             </picture>
@@ -3867,105 +3933,84 @@
           <figure class="ch-photo" style="--i:2">
             <picture>
               <source type="image/avif" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch3-ingredient-340.avif 340w, assets/img/r/about-ch3-ingredient-430.avif 430w, assets/img/r/about-ch3-ingredient-510.avif 510w, assets/img/r/about-ch3-ingredient-690.avif 690w, assets/img/r/about-ch3-ingredient-820.avif 820w">
+                      srcset="assets/img/r/about-ch3-coast-260.avif 260w, assets/img/r/about-ch3-coast-340.avif 340w, assets/img/r/about-ch3-coast-510.avif 510w, assets/img/r/about-ch3-coast-690.avif 690w, assets/img/r/about-ch3-coast-820.avif 820w">
               <source type="image/webp" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch3-ingredient-340.webp 340w, assets/img/r/about-ch3-ingredient-820.webp 820w">
-              <img class="ch-photo__img" src="assets/img/about-ch3-ingredient.jpg" alt=""
+                      srcset="assets/img/r/about-ch3-coast-260.webp 260w, assets/img/r/about-ch3-coast-820.webp 820w">
+              <img class="ch-photo__img" src="assets/img/about-ch3-coast.jpg" alt=""
                  width="1100" height="1466" decoding="async" loading="lazy" fetchpriority="low" data-warm=".chapters">
             </picture>
           </figure>
           <figure class="ch-photo" style="--i:3">
             <picture>
               <source type="image/avif" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch4-room-340.avif 340w, assets/img/r/about-ch4-room-430.avif 430w, assets/img/r/about-ch4-room-510.avif 510w, assets/img/r/about-ch4-room-690.avif 690w, assets/img/r/about-ch4-room-820.avif 820w">
+                      srcset="assets/img/r/about-ch4-table-260.avif 260w, assets/img/r/about-ch4-table-340.avif 340w, assets/img/r/about-ch4-table-510.avif 510w, assets/img/r/about-ch4-table-690.avif 690w, assets/img/r/about-ch4-table-820.avif 820w">
               <source type="image/webp" sizes="(max-width: 600px) 62vw, (max-width: 700px) 51vw, (max-width: 900px) 48.9vw, (max-width: 1000px) 34vw, (max-width: 1800px) 20.5vw, 18.4vw"
-                      srcset="assets/img/r/about-ch4-room-340.webp 340w, assets/img/r/about-ch4-room-820.webp 820w">
-              <img class="ch-photo__img" src="assets/img/about-ch4-room.jpg" alt=""
+                      srcset="assets/img/r/about-ch4-table-260.webp 260w, assets/img/r/about-ch4-table-820.webp 820w">
+              <img class="ch-photo__img" src="assets/img/about-ch4-table.jpg" alt=""
                  width="1100" height="1466" decoding="async" loading="lazy" fetchpriority="low" data-warm=".chapters">
             </picture>
           </figure>
 
           <article class="ch-panel" style="--i:0">
-            <p class="ch__label">Chapter I &mdash; The teppan</p>
-            <h3 class="ch__head">Cooked in Front of You</h3>
-            <p class="ch__lede">The teppan is not a kitchen you are shown to. It is the
-              table itself &mdash; a steel plate held at temperature, an arm's length from
-              where you are sitting. Nothing arrives already made. You watch the sear go
-              on, you hear it, and the plate reaches you at the moment it is ready rather
-              than the moment it can be carried.</p>
+            <p class="ch__label">Chapter I &mdash; The wok</p>
+            <h3 class="ch__head">Hot Enough to Change It</h3>
+            <p class="ch__lede">A wok burner runs far hotter than any domestic hob, and that is the whole technique. Food goes in dry, moves constantly, and comes out before it has time to stew. What people taste and call <em>wok hei</em> is not a seasoning &mdash; it is what that heat does to an ingredient in the few seconds it is given.</p>
             <dl class="ch__notes">
               <div class="ch__note">
-                <dt>Zoned heat</dt>
-                <dd>The plate is worked in zones rather than turned up and down &mdash; a
-                  searing edge, a resting middle, a cool margin for what is already done.</dd>
+                <dt>One pan at a time</dt>
+                <dd>Each dish is cooked in its own wok, to order. Nothing is held back; a stir-fry that waits is a different dish by the time it reaches the table.</dd>
               </div>
               <div class="ch__note">
-                <dt>Direct service</dt>
-                <dd>There is no window between the cooking and the eating. What leaves the
-                  steel goes straight in front of the person it was cooked for.</dd>
+                <dt>Seconds, not minutes</dt>
+                <dd>The cooking is the fast part. Everything slow &mdash; the stock, the cut, the marinade &mdash; happened long before the doors opened.</dd>
               </div>
             </dl>
           </article>
 
           <article class="ch-panel" style="--i:1">
             <p class="ch__label">Chapter II &mdash; The hand</p>
-            <h3 class="ch__head">Nothing Hurried</h3>
-            <p class="ch__lede">Speed at the counter is a by-product, never the aim. A cut
-              is placed where it is placed because the grain runs that way; a garnish is set
-              down once. Most of the work you watch took its shape hours earlier, in the
-              preparation nobody is seated for.</p>
+            <h3 class="ch__head">Folded, Not Machined</h3>
+            <p class="ch__lede">Dim sum is the part of a kitchen no machine has ever improved. A wrapper is rolled until the filling shows through it, then pleated shut by hand, one at a time, in numbers nobody sensible would count. It is the least glamorous work in the building and the first thing a good kitchen gets judged on.</p>
             <dl class="ch__notes">
               <div class="ch__note">
-                <dt>One angle</dt>
-                <dd>Fish is cut across the muscle at a held angle, so that every slice
-                  carries the same texture &mdash; the reason a good piece needs nothing on it.</dd>
+                <dt>By the piece</dt>
+                <dd>A basket is assembled item by item. There is no batch that makes the next one easier, and no way to catch up later.</dd>
               </div>
               <div class="ch__note">
-                <dt>Before service</dt>
-                <dd>Stocks, cures and pickles are started long before the doors open. An
-                  evening is the assembly of decisions already made.</dd>
+                <dt>Steam is unforgiving</dt>
+                <dd>A thick wrapper is obvious and a thin one badly folded is worse. Both declare themselves the moment the lid comes off.</dd>
               </div>
             </dl>
           </article>
 
           <article class="ch-panel" style="--i:2">
-            <p class="ch__label">Chapter III &mdash; The ingredient</p>
-            <h3 class="ch__head">Chosen, Then Left Alone</h3>
-            <p class="ch__lede">The shortest dishes are the hardest to hide behind. Where a
-              single cut is the whole plate, the choosing is most of the cooking and the
-              restraint that follows is the rest of it. Seasoning is there to finish
-              something, not to fix it.</p>
+            <p class="ch__label">Chapter III &mdash; The coast</p>
+            <h3 class="ch__head">It Starts Before the Kitchen</h3>
+            <p class="ch__lede">Li&rsquo;s opened in Mombasa, and a coastal kitchen learns early that seafood is decided where it is bought rather than where it is cooked. Prawns, crab, squid and whole fish are the part of this menu with the most ways to go wrong and the fewest places to hide.</p>
             <dl class="ch__notes">
               <div class="ch__note">
-                <dt>Chosen by piece</dt>
-                <dd>Selection happens per item rather than per box. What does not meet the
-                  standard is not worked around; it is simply not served.</dd>
+                <dt>Sourced across Kenya</dt>
+                <dd>Meat, seafood and produce come from around the country rather than off one standing order.</dd>
               </div>
               <div class="ch__note">
-                <dt>Seasoned last</dt>
-                <dd>Salt, a brush of tare, a grate of wasabi. When a dish seems to want a
-                  fourth thing, the question is usually the first one.</dd>
+                <dt>Cooked plainly on purpose</dt>
+                <dd>A whole fish steamed with light soya has nothing on it at all. That is the point of the dish, and it is also the test of it.</dd>
               </div>
             </dl>
           </article>
 
           <article class="ch-panel" style="--i:3">
-            <p class="ch__label">Chapter IV &mdash; The room</p>
-            <h3 class="ch__head">An Evening, Not a Meal</h3>
-            <p class="ch__lede">You are seated facing the work, and that changes what dinner
-              is. Courses come at the pace of the room rather than the clock, conversation
-              runs across the counter as often as around the table, and the last plate lands
-              when the evening is ready for it.</p>
+            <p class="ch__label">Chapter IV &mdash; The table</p>
+            <h3 class="ch__head">Everything to the Middle</h3>
+            <p class="ch__lede">A Chinese table is not a set of separate dinners that happen to be next to each other. Dishes arrive as they are ready, go to the centre, and belong to everyone &mdash; which is why ordering is a conversation, why the table is round, and why two people will always order worse than six.</p>
             <dl class="ch__notes">
               <div class="ch__note">
-                <dt>Seated facing in</dt>
-                <dd>The counter turns you toward the cooking rather than away from it. The
-                  chef is someone you talk to, not someone you are told about.</dd>
+                <dt>Ordered together</dt>
+                <dd>A good spread is roughly one dish per person and one more for the table. The balance between them matters more than any single choice on it.</dd>
               </div>
               <div class="ch__note">
-                <dt>Paced by the room</dt>
-                <dd>Nothing is fired to a timer. The next course begins when the one in
-                  front of you is finished.</dd>
+                <dt>Paced by the kitchen</dt>
+                <dd>Courses come as the woks come free rather than in a fixed order. The meal has a shape rather than a schedule.</dd>
               </div>
             </dl>
           </article>
@@ -3981,11 +4026,11 @@
 
         <header class="experience__mast">
           <p class="experience__eyebrow">Our experience</p>
-          <h2 id="experience-title" class="experience__title">Thoughtfully Crafted.<br>Beautifully Experienced.</h2>
-          <p class="experience__lede">Nothing here is left to chance. The Teppan is brought to
-            temperature, the fish cut to a thickness, the room lit to an hour, the service paced
-            to your table. Every part of the evening is a decision made long before you sat
-            down.</p>
+          <h2 id="experience-title" class="experience__title">Thoughtfully Cooked.<br>Generously Served.</h2>
+          <p class="experience__lede">Nothing here is left to chance. The wok is brought to heat,
+            the wrappers folded by hand, the fish chosen at the market, the table laid so the
+            dishes can reach the middle of it. Most of the meal was decided long before anyone
+            sat down.</p>
         </header>
 
         <div class="experience__stage">
@@ -4055,20 +4100,20 @@
             <figure class="ex-card__frame">
               <picture>
                 <source type="image/avif" sizes="(max-width: 600px) 88.9vw, (max-width: 700px) 72vw, (max-width: 820px) 61.7vw, (max-width: 900px) 52.7vw, (max-width: 1000px) 48vw, (max-width: 1200px) 43.2vw, 13.9vw"
-                        srcset="assets/img/r/about-ex1-teppan-260.avif 260w, assets/img/r/about-ex1-teppan-360.avif 360w, assets/img/r/about-ex1-teppan-430.avif 430w, assets/img/r/about-ex1-teppan-890.avif 890w, assets/img/r/about-ex1-teppan-1080.avif 1080w">
+                        srcset="assets/img/r/about-ex1-fire-260.avif 260w, assets/img/r/about-ex1-fire-450.avif 450w, assets/img/r/about-ex1-fire-1080.avif 1080w">
                 <source type="image/webp" sizes="(max-width: 600px) 88.9vw, (max-width: 700px) 72vw, (max-width: 820px) 61.7vw, (max-width: 900px) 52.7vw, (max-width: 1000px) 48vw, (max-width: 1200px) 43.2vw, 13.9vw"
-                        srcset="assets/img/r/about-ex1-teppan-260.webp 260w, assets/img/r/about-ex1-teppan-1080.webp 1080w">
-                <img class="ex-card__img" src="assets/img/about-ex1-teppan.jpg"
+                        srcset="assets/img/r/about-ex1-fire-260.webp 260w, assets/img/r/about-ex1-fire-1080.webp 1080w">
+                <img class="ex-card__img" src="assets/img/about-ex1-fire.jpg"
                    width="1100" height="1467" decoding="async"
-                   alt="A chef working the teppan behind a wall of flame." loading="lazy" fetchpriority="low" data-warm=".experience">
+                   alt="Flame rising off a wok in a dark kitchen." loading="lazy" fetchpriority="low" data-warm=".experience">
               </picture>
               <span class="ex-card__badge" aria-hidden="true">01</span>
             </figure>
             <div class="ex-card__cap">
-              <h3 class="ex-card__title">Teppanyaki Experience</h3>
-              <p class="ex-card__body">Steel brought to temperature, a knife that does not
-                hesitate, and dinner made an arm's length away. The chef works in front of you,
-                not behind a door.</p>
+              <h3 class="ex-card__title">Wok &amp; Fire</h3>
+              <p class="ex-card__body">A burner hotter than anything a home kitchen can reach,
+                and a pan that never stops moving. It is the loudest part of the building and
+                the reason a stir-fry tastes of more than what went into it.</p>
             </div>
           </article>
 
@@ -4076,20 +4121,20 @@
             <figure class="ex-card__frame">
               <picture>
                 <source type="image/avif" sizes="(max-width: 600px) 88.9vw, (max-width: 700px) 72vw, (max-width: 820px) 61.7vw, (max-width: 900px) 52.7vw, (max-width: 1000px) 48vw, (max-width: 1200px) 43.2vw, 13.9vw"
-                        srcset="assets/img/r/about-ex2-craft-260.avif 260w, assets/img/r/about-ex2-craft-360.avif 360w, assets/img/r/about-ex2-craft-430.avif 430w, assets/img/r/about-ex2-craft-890.avif 890w, assets/img/r/about-ex2-craft-1080.avif 1080w">
+                        srcset="assets/img/r/about-ex2-dimsum-260.avif 260w, assets/img/r/about-ex2-dimsum-370.avif 370w, assets/img/r/about-ex2-dimsum-450.avif 450w, assets/img/r/about-ex2-dimsum-1080.avif 1080w">
                 <source type="image/webp" sizes="(max-width: 600px) 88.9vw, (max-width: 700px) 72vw, (max-width: 820px) 61.7vw, (max-width: 900px) 52.7vw, (max-width: 1000px) 48vw, (max-width: 1200px) 43.2vw, 13.9vw"
-                        srcset="assets/img/r/about-ex2-craft-260.webp 260w, assets/img/r/about-ex2-craft-1080.webp 1080w">
-                <img class="ex-card__img" src="assets/img/about-ex2-craft.jpg"
+                        srcset="assets/img/r/about-ex2-dimsum-260.webp 260w, assets/img/r/about-ex2-dimsum-1080.webp 1080w">
+                <img class="ex-card__img" src="assets/img/about-ex2-dimsum.jpg"
                    width="1100" height="1467" decoding="async"
-                   alt="Slices of kingfish under caviar and a warm citrus dressing." loading="lazy" fetchpriority="low" data-warm=".experience">
+                   alt="A bamboo steamer being lifted, steam rising off the basket." loading="lazy" fetchpriority="low" data-warm=".experience">
               </picture>
               <span class="ex-card__badge" aria-hidden="true">02</span>
             </figure>
             <div class="ex-card__cap">
-              <h3 class="ex-card__title">Japanese Craftsmanship</h3>
-              <p class="ex-card__body">Every cut is measured and every plate composed. The
-                technique is generations old, the fish is chosen for one evening only, and
-                nothing on it is improvised.</p>
+              <h3 class="ex-card__title">Dim Sum by Hand</h3>
+              <p class="ex-card__body">Rolled thin, filled, and pleated shut one piece at a
+                time. The technique is generations old, no part of it has been improved by a
+                machine, and the steamer shows every shortcut.</p>
             </div>
           </article>
 
@@ -4097,20 +4142,20 @@
             <figure class="ex-card__frame">
               <picture>
                 <source type="image/avif" sizes="(max-width: 600px) 88.9vw, (max-width: 700px) 72vw, (max-width: 820px) 61.7vw, (max-width: 900px) 52.7vw, (max-width: 1000px) 48vw, (max-width: 1200px) 43.2vw, 13.9vw"
-                        srcset="assets/img/r/about-ex3-room-260.avif 260w, assets/img/r/about-ex3-room-360.avif 360w, assets/img/r/about-ex3-room-430.avif 430w, assets/img/r/about-ex3-room-890.avif 890w, assets/img/r/about-ex3-room-1080.avif 1080w">
+                        srcset="assets/img/r/about-ex3-room-260.avif 260w, assets/img/r/about-ex3-room-370.avif 370w, assets/img/r/about-ex3-room-450.avif 450w, assets/img/r/about-ex3-room-890.avif 890w, assets/img/r/about-ex3-room-1080.avif 1080w">
                 <source type="image/webp" sizes="(max-width: 600px) 88.9vw, (max-width: 700px) 72vw, (max-width: 820px) 61.7vw, (max-width: 900px) 52.7vw, (max-width: 1000px) 48vw, (max-width: 1200px) 43.2vw, 13.9vw"
                         srcset="assets/img/r/about-ex3-room-260.webp 260w, assets/img/r/about-ex3-room-1080.webp 1080w">
                 <img class="ex-card__img" src="assets/img/about-ex3-room.jpg"
                    width="1100" height="1467" decoding="async"
-                   alt="The dining room, timber battens and low pendant light." loading="lazy" fetchpriority="low" data-warm=".experience">
+                   alt="A dim sum service laid out on dark timber under low warm light." loading="lazy" fetchpriority="low" data-warm=".experience">
               </picture>
               <span class="ex-card__badge" aria-hidden="true">03</span>
             </figure>
             <div class="ex-card__cap">
-              <h3 class="ex-card__title">The Misono Experience</h3>
-              <p class="ex-card__body">Timber, quiet light, and a room that never hurries you.
-                An evening here is measured in courses rather than hours, and you leave later
-                than you meant to.</p>
+              <h3 class="ex-card__title">The Li&rsquo;s Table</h3>
+              <p class="ex-card__body">Dishes to the centre, a table that turns, and nobody
+                eating alone. A meal here is measured in what gets shared rather than in
+                courses, and you order more than you meant to.</p>
             </div>
           </article>
 
@@ -4119,49 +4164,55 @@
     </div>
   </section>
 
-  <section class="ichie" aria-labelledby="ichie-title">
-    <div class="ichie__inner">
+  <section class="reunion" aria-labelledby="reunion-title">
+    <div class="reunion__inner">
 
-      <div class="ichie__copy">
-        <p class="ichie__eyebrow">Ichigo ichie</p>
-        <h2 id="ichie-title" class="ichie__title">This Evening<br>Happens Once.</h2>
-        <hr class="ichie__rule">
-        <p class="ichie__body">Ichigo ichie is a phrase from the tea ceremony, and the tea
-          masters meant it plainly: this room, these people, this order of dishes, will not
-          happen again. It is why the fish is cut after you are seated rather than before,
-          why the Teppan is taken back to bare steel between courses, and why the chef
-          watches your plate instead of the clock. Nothing here is built to be repeated —
-          it is built to be attended.</p>
+      <div class="reunion__copy">
+        <p class="reunion__eyebrow">Tu&aacute;ny&uacute;an</p>
+        <h2 id="reunion-title" class="reunion__title">The Table<br>Comes Together.</h2>
+        <hr class="reunion__rule">
+        <!-- The page's closing beat, designed from nothing rather than from a
+             reference. 团圆 is the reunion dinner — the meal a family comes
+             back for — and by extension any table with everyone at it. It
+             carries the same closing weight the phrase here used to,
+             without reaching for a lantern to do it. Nothing in this
+             paragraph is a service claim, which is deliberate: the version
+             it replaces made two, and both needed checking. -->
+        <p class="reunion__body">Tu&aacute;ny&uacute;an is the word for a family coming back
+          together &mdash; the reunion dinner, and by extension any table with everybody
+          at it. It is why a Chinese table is round, why the dishes go to the middle
+          instead of in front of one person, and why nobody here is brought a separate
+          dinner of their own. Very little on this menu was designed to be eaten alone.</p>
       </div>
 
       <!-- Two planes, not two pictures. Neither is lazy: they share a
            perspective box and a lazy frame would arrive undecoded and pop
            forward at its own Z. -->
-      <div class="ichie__stage">
+      <div class="reunion__stage">
 
-        <figure class="ichie__plate ichie__plate--back">
+        <figure class="reunion__plate reunion__plate--back">
           <picture>
             <source type="image/avif" sizes="(max-width: 390px) 88.9vw, (max-width: 600px) 91.7vw, (max-width: 1200px) 94.3vw, 22.7vw"
-                    srcset="assets/img/r/about-ic1-counter-420.avif 420w, assets/img/r/about-ic1-counter-590.avif 590w, assets/img/r/about-ic1-counter-700.avif 700w, assets/img/r/about-ic1-counter-900.avif 900w, assets/img/r/about-ic1-counter-1100.avif 1100w">
+                    srcset="assets/img/r/about-ic1-duck-350.avif 350w, assets/img/r/about-ic1-duck-420.avif 420w, assets/img/r/about-ic1-duck-590.avif 590w, assets/img/r/about-ic1-duck-900.avif 900w, assets/img/r/about-ic1-duck-1100.avif 1100w">
             <source type="image/webp" sizes="(max-width: 390px) 88.9vw, (max-width: 600px) 91.7vw, (max-width: 1200px) 94.3vw, 22.7vw"
-                    srcset="assets/img/r/about-ic1-counter-420.webp 420w, assets/img/r/about-ic1-counter-1100.webp 1100w">
-            <img class="ichie__img" src="assets/img/about-ic1-counter.jpg"
+                    srcset="assets/img/r/about-ic1-duck-350.webp 350w, assets/img/r/about-ic1-duck-1100.webp 1100w">
+            <img class="reunion__img" src="assets/img/about-ic1-duck.jpg"
                width="1100" height="1467" decoding="async"
-               alt="A chef's hand setting a piece of nigiri onto a slate at the counter." loading="lazy" fetchpriority="low" data-warm=".ichie">
+               alt="Sliced Peking duck on a dark platter with cucumber, spring onion, pancakes and two sauces." loading="lazy" fetchpriority="low" data-warm=".reunion">
           </picture>
         </figure>
 
-        <figure class="ichie__plate ichie__plate--front">
+        <figure class="reunion__plate reunion__plate--front">
           <picture>
             <source type="image/avif" sizes="(max-width: 390px) 88.9vw, (max-width: 600px) 91.7vw, (max-width: 1200px) 94.3vw, 32.6vw"
-                    srcset="assets/img/r/about-ic2-brush-600.avif 600w, assets/img/r/about-ic2-brush-900.avif 900w, assets/img/r/about-ic2-brush-1100.avif 1100w">
+                    srcset="assets/img/r/about-ic2-table-420.avif 420w, assets/img/r/about-ic2-table-600.avif 600w, assets/img/r/about-ic2-table-840.avif 840w, assets/img/r/about-ic2-table-1200.avif 1200w">
             <source type="image/webp" sizes="(max-width: 390px) 88.9vw, (max-width: 600px) 91.7vw, (max-width: 1200px) 94.3vw, 32.6vw"
-                    srcset="assets/img/r/about-ic2-brush-600.webp 600w, assets/img/r/about-ic2-brush-1100.webp 1100w">
-            <img class="ichie__img" src="assets/img/about-ic2-brush.jpg"
+                    srcset="assets/img/r/about-ic2-table-420.webp 420w, assets/img/r/about-ic2-table-1200.webp 1200w">
+            <img class="reunion__img" src="assets/img/about-ic2-table.jpg"
                width="1100" height="825" decoding="async"
-               alt="A brush glazing a piece of nigiri, close." loading="lazy" fetchpriority="low" data-warm=".ichie">
+               alt="A round table laid with dishes under warm light, scrolls on the wall behind." loading="lazy" fetchpriority="low" data-warm=".reunion">
           </picture>
-          <figcaption class="ichie__cap">One time, one meeting.</figcaption>
+          <figcaption class="reunion__cap">One table, everyone at it.</figcaption>
         </figure>
 
       </div>
@@ -4209,15 +4260,15 @@
       </svg>
       <div class="reserve__frame">
         <picture>
-          <source type="image/avif" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
-                  srcset="assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
-          <source type="image/webp" sizes="(max-width: 1000px) 100.3vw, 62.2vw"
-                  srcset="assets/img/r/reserve-interior-1150.webp 1150w, assets/img/r/reserve-interior-1400.webp 1400w">
+          <source type="image/avif" sizes="(max-width: 1000px) 100.9vw, 62.6vw"
+                  srcset="assets/img/r/reserve-interior-640.avif 640w, assets/img/r/reserve-interior-770.avif 770w, assets/img/r/reserve-interior-920.avif 920w, assets/img/r/reserve-interior-1150.avif 1150w, assets/img/r/reserve-interior-1400.avif 1400w">
+          <source type="image/webp" sizes="(max-width: 1000px) 100.9vw, 62.6vw"
+                  srcset="assets/img/r/reserve-interior-640.webp 640w, assets/img/r/reserve-interior-1400.webp 1400w">
           <img class="reserve__img" src="assets/img/reserve-interior.jpg"
              width="1400" height="1576"
-             alt="A dim Japanese dining room: dark wood tables set with ceramic
-                  dishes and vermilion lacquer cups, two small glass pendants
-                  lit warm above a counter, shoji screens behind." loading="lazy" decoding="async" fetchpriority="low">
+             alt="A warm, low-lit dining room: dark timber, a long run of small
+                  pendant lights, tables laid and waiting along one side."
+             loading="lazy" decoding="async" fetchpriority="low">
         </picture>
       </div>
     </figure>
@@ -4229,12 +4280,12 @@
 
       <hr class="reserve__rule" aria-hidden="true">
 
-      <p class="reserve__body">A counter, a season, and a chef who decides the
-        order. Tell us when you would like to sit and how many are coming &mdash;
-        the evening is arranged from there.</p>
+      <p class="reserve__body">A round table, a duck that wants ordering ahead, and
+        a kitchen that would rather know you are coming. Tell us when, and how many
+        &mdash; the rest is arranged from there.</p>
 
       <a class="reserve__cta"
-         href="https://wa.me/254700000000?text=Hello%20Misono%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
+         href="https://wa.me/254746815106?text=Hello%20Li%E2%80%99s%20%E2%80%94%20I%E2%80%99d%20like%20to%20reserve%20a%20table.%0A%0AName%3A%0ABranch%20(Nairobi%20or%20Mombasa)%3A%0ADate%3A%0ATime%3A%0ANumber%20of%20guests%3A%0A%0AThank%20you."
          target="_blank" rel="noopener">
         <span class="reserve__ctalbl">Reserve now</span>
         <svg class="reserve__arrow" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
@@ -4251,25 +4302,26 @@
             <path d="M12 7.1V12l3.4 2"/>
           </svg>
           <span class="reserve__metalbl">Opening hours</span>
-          <!-- CONFIRMED BY THE CLIENT 2026-08-20, and this reverses the
-               2026-08-17 change. Between 17 and 20 August the site carried
-               "Nairobi 12:00-21:30 / Mombasa 12:00-21:00", taken from public
-               listings (misono.co.ke, EatOut, Foursquare) because those were
-               judged more likely to be current than a phrase remembered from
-               conversation. That judgement was wrong: asked directly, the
-               client confirmed the hours they gave on 2026-08-15 — one
-               schedule for both branches, noon to 11pm, every day.
+          <!-- RESEARCHED 2026-08-26 from Li's own site and the Mombasa
+               listing, and NOT YET CONFIRMED BY THE CLIENT. Both branches are
+               closed Mondays and open Tuesday to Sunday from 11:00; they close
+               at DIFFERENT times — Nairobi 22:30, Mombasa 21:00.
 
-               The listings are therefore stale, not the brief. Worth
-               remembering the next time a public source disagrees with the
-               person who owns the restaurant.
+               This block is byte-copied to four pages, so it cannot carry a
+               closing time without asserting one branch's hours as the whole
+               house's. "Closed Mondays" is true of both, which is why it is
+               what stands here; the exact times live in the location bands and
+               the FAQ on contact.html, where they are allowed to differ.
+
+               Keep it in step with that FAQ answer. It is the same claim made
+               twice on one page and the pair has drifted apart before.
 
                Two lines, not three. The copy column is an aspect-locked block
                of 48.1u of measured ink, verified to fit one screen from
                1000x700 to 2560x1440; a third line changes that height and the
-               fit has to be re-solved. Both lines here are shorter than the
-               branch lines they replace, so the fit can only improve. -->
-          <span class="reserve__metaval">Monday &ndash; Sunday<br>12:00 &ndash; 23:00</span>
+               fit has to be re-solved. Both lines here are no longer than the
+               ones they replace, so the fit can only improve. -->
+          <span class="reserve__metaval">Tuesday &ndash; Sunday<br>Closed Mondays</span>
         </li>
         <li class="reserve__metaitem">
           <svg class="reserve__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -4285,25 +4337,26 @@
   </section>
 </main>
 
-<!-- ========================================================= ending ==== -->
+<!-- ================================================== ending ==== -->
 <footer class="ending">
   <!-- Decorative repeat of the hero's h1. Hidden from assistive tech so the
        brand name is not announced twice on the way out. -->
-  <p class="ending__mark" aria-hidden="true">MISONO</p>
+  <p class="ending__mark" aria-hidden="true">LI&rsquo;S</p>
 
-  <!-- All three now point at real pages, which is what the placeholder note
-       that used to sit above this block was waiting for. Contact went to
-       #reserve until 2026-08-17 — that was the site's only link INTO the
-       reservation block, so the booking CTA is now reached by scrolling
-       rather than by navigating. Noted in CLAUDE.md; it is a consequence of
-       the link change, not an oversight. -->
+  <!-- Five links, not three. Locations and Reservations were added on
+       2026-08-26: both are places a reader actually wants to reach from the
+       foot of any page, and neither had a route that was not a scroll.
+       #reserve resolves on the page the reader is already on, because all
+       four carry the block. -->
   <nav class="ending__nav" aria-label="Footer">
     <a class="ending__link" href="menu.html">Menu</a>
     <a class="ending__link" href="about.html" aria-current="page">About</a>
     <a class="ending__link" href="contact.html">Contact</a>
+    <a class="ending__link" href="contact.html#locations">Locations</a>
+    <a class="ending__link" href="#reserve">Reservations</a>
   </nav>
 
-  <p class="ending__note">&copy; 2026 Misono</p>
+  <p class="ending__note">&copy; 2026 Li&rsquo;s Chinese Restaurant</p>
 </footer>
 
 <script>
@@ -4416,7 +4469,7 @@
      -1 .. +1 and each plate multiplies it by its own --k in CSS — the same
      one-number-per-element contract as the two above, and the reason this
      section needs no script of its own. */
-  track(document.querySelector('.ichie'), '--cam', 1);
+  track(document.querySelector('.reunion'), '--cam', 1);
 
   /* ---------------------------------------------------------- chapters */
 

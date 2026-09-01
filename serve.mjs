@@ -203,7 +203,7 @@ server.on('error', (err) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Misono server → http://localhost:${PORT}   [${PROD ? 'PROD headers' : 'dev headers'}]`);
+  console.log(`Li's server → http://localhost:${PORT}   [${PROD ? 'PROD headers' : 'dev headers'}]`);
   console.log(`Serving ${ROOT}`);
   if (!PROD) console.log('brotli/gzip on; caching set to revalidate. PROD=1 for immutable asset caching.');
 });

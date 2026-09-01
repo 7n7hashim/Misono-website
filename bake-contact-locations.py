@@ -20,10 +20,11 @@ Sources, both delivered at 1800 tall and cropped here to 16:9:
     9833516   Nairobi — Uhuru Park and the skyline behind it.
 
 BOTH ARE PLACEHOLDERS and are flagged as such in the markup. Neither is a
-photograph of Misono's actual surroundings: 13418220 is the Mombasa waterfront
-rather than Links Road, and 9833516 is Uhuru Park and the CBD, roughly 5km from
-Adams Arcade. A location section implies the picture is the place. Replace both
-with real frames before launch.
+photograph of Li's actual surroundings: 13418220 is the Mombasa waterfront
+rather than Links Road in Nyali, and 9833516 is Uhuru Park and the CBD, roughly
+10km south of Gigiri. A location section implies the picture IS the place, which
+is why these two matter more than the dish frames. Replace both with real frames
+before launch.
 
 
 A FOURTH GRADING BAND: 108-118

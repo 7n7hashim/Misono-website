@@ -59,7 +59,7 @@ async function sampler(buf) {
     const g = c.getContext('2d', { willReadFrequently: true });
     g.drawImage(img, 0, 0);
     window.__s = { c, g };
-  }, buf.toString('base64'));
+  }, Buffer.from(buf).toString('base64'));
 }
 
 const meanLuma = (x0, y0, x1, y1) => page.evaluate((a) => {

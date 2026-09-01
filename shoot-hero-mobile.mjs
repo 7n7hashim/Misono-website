@@ -72,7 +72,7 @@ async function sampler(buf) {
     const g = c.getContext('2d', { willReadFrequently: true });
     g.drawImage(img, 0, 0);
     window.__s = { c, g, dpr: img.naturalWidth / window.innerWidth };
-  }, buf.toString('base64'));
+  }, Buffer.from(buf).toString('base64'));
 }
 
 /* Both instruments in one pass, over CSS-pixel coordinates. */

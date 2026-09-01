@@ -30,7 +30,7 @@
       90-108. An encoder that shifts levels would move a frame out of its
       band silently, and PSNR alone would not show it.
 
-   4. chirashi-plate is WEBP-ONLY, and that is not an oversight. It is the
+   4. duck-plate is WEBP-ONLY, and that is not an oversight. It is the
       one alpha cutout on the site, ffmpeg's AVIF path cannot carry an
       alpha channel here (libsvtav1 has no gray encoder for the aux
       stream), and the failure is SILENT — the encode succeeds and returns
@@ -82,7 +82,7 @@ const ROLE_OF = {
 const roleFor = (src) => ROLE_OF[src] ?? (src.includes('/gallery/') ? 'tile' : 'feature');
 
 /* WebP only. See note 4. */
-const ALPHA = new Set(['assets/img/chirashi-plate.webp']);
+const ALPHA = new Set(['assets/img/duck-plate.webp']);
 
 const sh = (cmd, args) => execFileSync(cmd, args, { maxBuffer: 1 << 30 });
 
@@ -110,17 +110,40 @@ function ladder(observed, natural) {
        fetch, not quantisation, was the thing worth fixing there.
 
      1.18 is the cluster ratio: any two needs closer than that would produce
-     files a reader could never tell apart, and five rungs is the ceiling —
-     a sixth saves single-digit kilobytes and grows the bake. */
+     files a reader could never tell apart. Five rungs is the target; see the
+     thinning rule below for when a sixth and seventh earn their place. */
   const caps = [...new Set(seen.map((n) => Math.min(natural, Math.ceil(n * 1.02 / 10) * 10)))].sort((a, b) => b - a);
-  const keep = [];
+  let keep = [];
   for (const w of caps) {
     if (!keep.length || w < keep[keep.length - 1] / 1.18) keep.push(w);
   }
-  /* Thin from the middle if there are more than five, so the two ends —
-     the smallest phone and the largest desktop — always survive. */
-  while (keep.length > 5) keep.splice(Math.floor(keep.length / 2), 1);
-  return keep.filter((w) => w >= 240).sort((a, b) => a - b);
+  /* Thin by GAP, not by position. The old rule spliced from the middle
+     until five remained, which is right only when the demand is narrow.
+     lis-hero is asked for at 101.4vw on index.html and 15.2vw on menu.html
+     — a 6.1x span — and middle-thinning removed exactly the rungs menu.html
+     needs, leaving [280, 350, 1210, 1450, 1717]: a 3.46x hole where every
+     other ladder on the site sits between 1.2 and 2.1. A 390px phone then
+     fetched the 1210 rung, 36KB, to paint a 450px frame, and it did it at
+     fetchpriority=high on that page's LCP path.
+
+     So: drop whichever rung leaves the smallest hole behind, keep both ends
+     always, and stop early if the cheapest remaining removal would open a
+     hole wider than GAP_MAX. Five is still the target; seven is the ceiling
+     for an image whose demand genuinely spans that far. Rungs cost disk and
+     bake time, not reader bytes — a reader still downloads exactly one. */
+  const GAP_MAX = 1.60, SOFT = 5, HARD = 7;
+  keep = keep.filter((w) => w >= 240).sort((a, b) => a - b);
+  while (keep.length > SOFT) {
+    let bi = -1, best = Infinity;
+    for (let i = 1; i < keep.length - 1; i++) {
+      const gap = keep[i + 1] / keep[i - 1];      // the hole removing i would open
+      if (gap < best) { best = gap; bi = i; }
+    }
+    if (bi < 0) break;
+    if (keep.length <= HARD && best > GAP_MAX) break;
+    keep.splice(bi, 1);
+  }
+  return keep;
 }
 
 /* ------------------------------------------------------------- measuring */
@@ -236,12 +259,20 @@ page = await browser.newPage();
 const manifest = {};
 let srcTotal = 0, outTotal = 0;
 const problems = [];
+const pruned = [];
 
 for (const j of jobs) {
   const stem = j.src.replace(/^assets\/img\//, '').replace(/\.[a-z0-9]+$/i, '');
   const cfg = ROLES[j.role];
   const alpha = ALPHA.has(j.src);
-  const entry = { src: j.src, sizes: j.sizes, width: j.nw, height: j.nh, role: j.role, avif: [], webp: [] };
+  /* sizesByPage MUST be carried through. `sizes` is per PAGE, not per file —
+     lis-hero is a full-viewport hero on index.html and a 15vw framed
+     photograph on menu.html — and apply-responsive-markup.mjs reads its
+     hint from THIS manifest, not from img-sizes.json. Dropping the field
+     here silently defeated the per-page fix on every re-run of the
+     pipeline: menu.html was handed index's 101.4vw and preloaded a 1210px
+     rung, at fetchpriority=high, to paint a frame 150px wide. */
+  const entry = { src: j.src, sizes: j.sizes, sizesByPage: j.sizesByPage, width: j.nw, height: j.nh, role: j.role, avif: [], webp: [] };
   const srcBytes = statSync(j.src).size;
   srcTotal += srcBytes;
   const line = [];
@@ -316,6 +347,27 @@ for (const j of jobs) {
     }
   }
 
+  /* Drop any rung that a WIDER rung already beats on bytes.
+
+     The CRF search runs per rung against that rung's own downscaled
+     reference, so two neighbours can settle on different points of a coarse
+     grid: menu-seafood came out 152K at 710 and 145K at 900. A rung like
+     that is strictly dominated — the wider file is sharper AND smaller — so
+     a phone picking it by `sizes` downloads more to see less. Pruning is
+     safe because every surviving rung has already cleared the same PSNR
+     floor; it only ever moves a request UP the ladder. Widest first, so a
+     run of dominated rungs collapses in one pass, and the top rung, which
+     nothing is wider than, always survives. */
+  for (const list of [entry.avif, entry.webp]) {
+    let best = Infinity;
+    for (let i = list.length - 1; i >= 0; i--) {
+      if (list[i].bytes >= best) {
+        pruned.push(`${list[i].file.replace(OUTDIR + '/', '')} ${(list[i].bytes / 1024).toFixed(0)}K — a wider rung is smaller`);
+        list.splice(i, 1);
+      } else best = list[i].bytes;
+    }
+  }
+
   /* A derivative that is not meaningfully smaller than the original is
      just another file to cache-miss on. The tiles are where this bites:
      a 306px JPEG is already near the floor of what any codec can do. */
@@ -341,5 +393,6 @@ rmSync(TMP, { recursive: true, force: true });
 writeFileSync('img-manifest.json', JSON.stringify(manifest, null, 2));
 
 console.log(`\noriginals ${(srcTotal / 1024 / 1024).toFixed(2)}MB  →  derivatives ${(outTotal / 1024 / 1024).toFixed(2)}MB across every rung and both formats`);
+if (pruned.length) { console.log('\nPRUNED (a wider rung is both sharper and smaller):'); for (const p of pruned) console.log('  ' + p); }
 if (problems.length) { console.log('\nBELOW QUALITY FLOOR:'); for (const p of problems) console.log('  ' + p); }
 else console.log('every variant met its PSNR floor');

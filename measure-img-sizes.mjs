@@ -66,16 +66,42 @@ for (const v of VIEWS) {
   await page.setViewport({ width: v.w, height: v.h, deviceScaleFactor: v.dpr });
   for (const path of PAGES) {
     await page.goto(BASE + path, { waitUntil: 'networkidle0', timeout: 90000 });
-    await page.evaluate(async () => {
-      for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight) {
-        window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 25));
+    /* Take the WIDEST each image is ever painted, sampled right through the
+       scroll — not one reading at the end of it.
+
+       getBoundingClientRect includes transform scale, and this site animates:
+       frames arrive out of depth over ~2s, the duck plate turns forever, and
+       both photographic heroes are overscaled to give a parallax somewhere to
+       travel. A single reading therefore catches whatever the choreography
+       happened to be doing, and it caught something different on every run —
+       the ladders churned by up to 40px with nothing in the design changed.
+
+       Measuring at rest instead (prefers-reduced-motion) is repeatable but
+       wrong in the other direction: about-opening rests at 1440 and is painted
+       at 1499 while the parallax runs, so a ladder built from the rest width
+       put its nearest rung at 1500 against a real request of 1500.5 and the
+       page fetched the 1880 rung. A max is both stable — it converges however
+       the frames are sampled — and the quantity that actually matters, since
+       under-serving the peak is what makes a photograph look soft. */
+    const rows = await page.evaluate(async () => {
+      const max = new Map();
+      const sample = () => {
+        for (const i of document.images) {
+          const w = i.getBoundingClientRect().width;
+          if (!(w > 0)) continue;
+          const src = (i.getAttribute('src') || i.currentSrc).replace(location.origin + '/', '');
+          if (w > (max.get(src) ?? 0)) max.set(src, w);
+        }
+      };
+      const settle = (ms) => new Promise((r) => setTimeout(r, ms));
+      for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight / 2) {
+        window.scrollTo(0, y);
+        for (let k = 0; k < 3; k++) { await settle(25); sample(); }
       }
-      window.scrollTo(0, 0); await new Promise((r) => setTimeout(r, 60));
+      window.scrollTo(0, 0);
+      for (let k = 0; k < 8; k++) { await settle(60); sample(); }
+      return [...max].map(([src, w]) => ({ src, w }));
     });
-    const rows = await page.evaluate(() => [...document.images].map((i) => ({
-      src: (i.getAttribute('src') || i.currentSrc).replace(location.origin + '/', ''),
-      w: i.getBoundingClientRect().width,
-    })).filter((r) => r.w > 0));
     for (const r of rows) {
       let c = rec.get(r.src);
       if (!c) {
@@ -101,6 +127,16 @@ for (const v of VIEWS) {
          built from merged maxima has no rung below 810, so menu.html
          fetched 178KB to paint a 295px frame. */
       (c.devAll ??= []).push(Math.round(r.w * v.dpr));
+      /* A desktop-width viewport at dpr 1 as well. Every desktop row in the
+         table above assumes retina, but a 1080p or 1440p external monitor is
+         the commonest desktop configuration there is, and its demand is just
+         the CSS width. It goes into devAll only — `sizes` is derived from
+         `vw`, which is dpr-independent, so the hints are untouched and the
+         transplanted reserve block stays byte-identical. Without this the
+         locale bands' nearest rung sat at 1220 against a real request of
+         1228, and a 1440 desktop fetched the 1570 rung: 422KB to paint
+         1228 pixels. */
+      if (v.dpr > 1 && v.w >= 1000) c.devAll.push(Math.round(r.w));
       rec.set(r.src, c);
     }
   }

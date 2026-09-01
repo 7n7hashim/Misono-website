@@ -73,11 +73,19 @@ async function run(url, label) {
 
 console.log('page'.padEnd(10), 'build'.padEnd(9), 'frames'.padStart(7), 'median'.padStart(7), 'p95'.padStart(7), 'worst'.padStart(7), '>16.7ms'.padStart(9), '>50ms'.padStart(7));
 console.log('-'.repeat(72));
+/* The `before` column reads `_baseline-*.html`, copies of the pre-optimisation
+   pages. Those were tidied away, so the fetch 404s, the scroll runs over an
+   error body, no frames are collected and `at()` returns undefined — which
+   surfaces as a TypeError on .toFixed() rather than as "the baseline is
+   missing". Same class of stale-baseline failure compare-layout.mjs was cured
+   of; it exits 2 and says so. Here the row is simply skipped. */
 for (const page of PAGES) {
   for (const [label, url] of [
     ['before', `${BASE}/_baseline-${page}.html`],
     ['after', `${BASE}/${page === 'index' ? '' : page + '.html'}`],
   ]) {
+    const probe = await fetch(url).catch(() => null);
+    if (!probe || !probe.ok) { console.log(page.padEnd(10), label.padEnd(9), '  — not present, skipped'); continue; }
     const s = await run(url, label);
     console.log(
       page.padEnd(10), label.padEnd(9),

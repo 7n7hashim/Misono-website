@@ -40,34 +40,45 @@ const manifest = JSON.parse(readFileSync('img-manifest.json', 'utf8'));
              before their turn. */
 const POLICY = {
   'index.html': {
-    'assets/img/hero-omakase-1717.jpg': { mode: 'eager', priority: 'high', preload: true },
-    'assets/img/teppanyaki-counter.jpg': { mode: 'lazy' },
-    'assets/img/chirashi-plate.webp': { mode: 'lazy' },
+    'assets/img/lis-hero.jpg': { mode: 'eager', priority: 'high', preload: true },
+    'assets/img/wok-counter.jpg': { mode: 'lazy' },
+    'assets/img/duck-plate.webp': { mode: 'lazy' },
     'assets/img/reserve-interior.jpg': { mode: 'lazy' },
     '*gallery*': { mode: 'warm', warm: '.beyond' },
   },
   'menu.html': {
     /* The opening composition is above the fold on every viewport and is
        the measured LCP element. All four frames arrive together out of
-       depth; a lazy one would arrive late into a two-second choreography. */
-    'assets/img/hero-omakase-1717.jpg': { mode: 'eager', priority: 'high', preload: true },
-    'assets/img/teppanyaki-flambe.jpg': { mode: 'eager' },
-    'assets/img/chirashi-plate.webp': { mode: 'eager' },
-    'assets/img/gallery/food7.jpg': { mode: 'eager' },
+       depth; a lazy one would arrive late into a two-second choreography.
+
+       The PRELOAD goes on menu-duck, and which frame carries it is measured
+       rather than assumed. It sat on lis-hero — index.html's hero, carried
+       across with the policy — where it is the SMALLEST of the four frames:
+       151px on a phone against menu-seafood's 189. So the page spent its one
+       high-priority fetch on a frame that is not the LCP, and the frame that
+       is waited its turn behind three others. Chrome reports the LCP element
+       here as menu-duck: not the largest by area, because the entrance runs
+       two seconds and LCP lands on whichever frame reaches full opacity
+       first with real area. Re-measure with a throttled profile before
+       moving this — the answer is not the one geometry predicts. */
+    'assets/img/menu-duck.jpg': { mode: 'eager', priority: 'high', preload: true },
+    'assets/img/lis-hero.jpg': { mode: 'eager' },
+    'assets/img/menu-dimsum.jpg': { mode: 'eager' },
+    'assets/img/menu-seafood.jpg': { mode: 'eager' },
     'assets/img/reserve-interior.jpg': { mode: 'lazy' },
   },
   'about.html': {
-    'assets/img/about-craft.jpg': { mode: 'eager', priority: 'high', preload: true },
+    'assets/img/about-opening.jpg': { mode: 'eager', priority: 'high', preload: true },
     'assets/img/about-plate.jpg': { mode: 'lazy' },
-    'assets/img/about-ch1-teppan.jpg': { mode: 'warm', warm: '.chapters' },
+    'assets/img/about-ch1-wok.jpg': { mode: 'warm', warm: '.chapters' },
     'assets/img/about-ch2-hand.jpg': { mode: 'warm', warm: '.chapters' },
-    'assets/img/about-ch3-ingredient.jpg': { mode: 'warm', warm: '.chapters' },
-    'assets/img/about-ch4-room.jpg': { mode: 'warm', warm: '.chapters' },
-    'assets/img/about-ex1-teppan.jpg': { mode: 'warm', warm: '.experience' },
-    'assets/img/about-ex2-craft.jpg': { mode: 'warm', warm: '.experience' },
+    'assets/img/about-ch3-coast.jpg': { mode: 'warm', warm: '.chapters' },
+    'assets/img/about-ch4-table.jpg': { mode: 'warm', warm: '.chapters' },
+    'assets/img/about-ex1-fire.jpg': { mode: 'warm', warm: '.experience' },
+    'assets/img/about-ex2-dimsum.jpg': { mode: 'warm', warm: '.experience' },
     'assets/img/about-ex3-room.jpg': { mode: 'warm', warm: '.experience' },
-    'assets/img/about-ic1-counter.jpg': { mode: 'warm', warm: '.ichie' },
-    'assets/img/about-ic2-brush.jpg': { mode: 'warm', warm: '.ichie' },
+    'assets/img/about-ic1-duck.jpg': { mode: 'warm', warm: '.reunion' },
+    'assets/img/about-ic2-table.jpg': { mode: 'warm', warm: '.reunion' },
     'assets/img/reserve-interior.jpg': { mode: 'lazy' },
   },
   'contact.html': {
@@ -111,7 +122,18 @@ for (const page of Object.keys(POLICY)) {
   /* Idempotency at file level rather than per-tag: once a page has been
      rewritten, re-running would nest <picture> inside <picture>. Re-baking
      and re-running means restoring the four pages first. */
-  if (html.includes('<picture>')) {
+  /* Test for a real ELEMENT, not for the string. Every page's CSS carries
+     two comments that mention `<picture>` by name — the box-tree note and
+     the performance header — so a substring test reports "already wrapped"
+     on a page that has been unwrapped back to bare <img>, takes the refresh
+     branch, finds nothing to refresh, and reports success having done
+     nothing. That is what happened on 2026-08-26, and the only symptom was
+     a "0 <picture> candidate lists" line that reads like a no-op.
+
+     The tag must be followed IMMEDIATELY by <source or <img. A looser
+     "<picture> ... <img somewhere after it" test still matched, because
+     prose in the very next comment block contains both. */
+  if (/<picture>\s*<(?:source|img)\b/.test(html)) {
     /* Already wrapped: refresh the candidate lists in place instead of
        wrapping again. A re-bake changes the ladder, and the <source> lists
        have to follow it or the page offers rungs that no longer exist. */
